@@ -1,11 +1,16 @@
 // src/App.js
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'; // Import BrowserRouter
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'; 
+import './App.css'
+
+// Import Component
 import Header from './component/header/Header';
+import Footer from './component/footer/Footer';
 import Home from './component/home/Home';
 import Profile from './component/profile/Profile';
 import Products from './component/products/Poducts';
 import Demand from './component/demand/Demand';
+
 
 
 function App() {
@@ -21,6 +26,7 @@ function App() {
             <Route path="/demand" element={<Demand />} />  
           </Routes>
         </div>
+        <Footer/>
       </div>
     </Router>
   );
