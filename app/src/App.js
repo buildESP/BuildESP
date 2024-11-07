@@ -1,24 +1,34 @@
-import logo from './logo.svg';
-import './App.css';
+// src/App.js
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'; 
+import './App.css'
+
+// Import Component
+import Header from './component/header/Header';
+import Footer from './component/footer/Footer';
+import Home from './component/home/Home';
+import Profile from './component/profile/Profile';
+import Products from './component/products/Poducts';
+import Demand from './component/demand/Demand';
+
+
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router> {/* Wrap the application in BrowserRouter */}
+      <div className="App">
+        <Header /> {/* This will now have access to the Router context */}
+        <div style={{ padding: '20px' }}>
+          <Routes>
+          <Route path="/" element={<Home />} />
+           <Route path="/profile" element={<Profile />} />
+            <Route path="/products" element={<Products />} />
+            <Route path="/demand" element={<Demand />} />  
+          </Routes>
+        </div>
+        <Footer/>
+      </div>
+    </Router>
   );
 }
 
