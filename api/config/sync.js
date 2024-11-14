@@ -1,3 +1,5 @@
+// config/sync.js
+
 const { sequelize } = require('./db');
 const User = require('../models/User');
 

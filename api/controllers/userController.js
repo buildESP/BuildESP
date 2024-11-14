@@ -1,5 +1,8 @@
+// controllers/userController.js
+
 const User = require('../models/User');
 
+// Create user
 exports.createUser = async (req, res) => {
   try {
     const { name, firstname, email, password, address, postcode, phone, rating, picture, isAdmin } = req.body;
@@ -17,7 +20,6 @@ exports.createUser = async (req, res) => {
       isAdmin,
     });
 
-    // Retourner une réponse avec l'utilisateur créé
     res.status(201).json({ message: 'User creation success', user: newUser });
   } catch (error) {
     console.error(error);
@@ -25,7 +27,7 @@ exports.createUser = async (req, res) => {
   }
 };
 
-// Récupérer tous les utilisateurs
+// Get all users
 exports.getUsers = async (req, res) => {
   try {
     const users = await User.findAll();
@@ -36,7 +38,7 @@ exports.getUsers = async (req, res) => {
   }
 };
 
-// Récupérer un utilisateur par ID
+// Get user by id
 exports.getUserById = async (req, res) => {
   try {
     const userId = req.params.id_utilisateur;
@@ -53,7 +55,7 @@ exports.getUserById = async (req, res) => {
   }
 };
 
-// Mise à jour d'un utilisateur par ID
+// Update user by id
 exports.updateUser = async (req, res) => {
   try {
     const userId = req.params.id_utilisateur;
@@ -65,12 +67,11 @@ exports.updateUser = async (req, res) => {
       return res.status(404).json({ message: 'User not found' });
     }
 
-    // Mise à jour des informations de l'utilisateur
     await user.update({
       name,
       prénom,
       email,
-      password,  // Le mot de passe sera automatiquement haché si modifié
+      password,
       address,
       postcode,
       phone,
@@ -86,7 +87,7 @@ exports.updateUser = async (req, res) => {
   }
 };
 
-// Supprimer un utilisateur par ID
+// Delete user by id
 exports.deleteUser = async (req, res) => {
   try {
     const userId = req.params.id_utilisateur;
