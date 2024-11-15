@@ -2,6 +2,7 @@
 const express = require('express');
 const router = express.Router();
 const userController = require('../controllers/userController');
+const authenticateToken = require('../middlewares/authMiddleware');
 
 /**
  * @swagger
@@ -52,7 +53,7 @@ const userController = require('../controllers/userController');
  *       500:
  *         description: Server error during user creation
  */
-router.post('/users', userController.createUser);
+router.post('/users', authenticateToken, userController.createUser);
 
 /**
  * @swagger
@@ -101,7 +102,7 @@ router.post('/users', userController.createUser);
  *                     type: boolean
  *                     description: If the user is an administrator
  */
-router.get('/users', userController.getUsers);
+router.get('/users', authenticateToken, userController.getUsers);
 
 /**
  * @swagger
