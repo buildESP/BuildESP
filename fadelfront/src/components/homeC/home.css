@@ -1,0 +1,62 @@
+.intro {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    background-color: rgb(0, 0, 0);
+    height: 20vh;
+    width: 100%;
+}
+
+#entraide {
+    height: 80%;
+    width: 15%;
+}
+
+#quartier {
+    height: 80%;
+    width: 22%;
+}
+
+#textpresentation {
+    color: white;
+    font-style: italic;
+    font-weight: bold;
+    width: 600px;
+}
+
+.base {
+    height: 100%;
+}
+
+#textpresentation h2 {
+    margin-bottom: 2.5vh;
+}
+
+.search-input {
+    width: 80%; 
+    max-width: 600px; 
+    padding: 10px 15px;
+    border: 1px solid #ddd;
+    border-radius: 20px;
+    outline: none;
+    font-size: 1rem;
+    background-color: #333; 
+    color: white;
+    transition: all 0.3s ease-in-out;
+}
+
+.search-input:hover,
+.search-input:focus {
+    border-color: white;
+    background-color: #444;
+}
+
+.articles-section {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    padding: 20px;
+}
+
