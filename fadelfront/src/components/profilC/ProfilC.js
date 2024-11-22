@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import CardsC from '../cardsC/CardsC';
+import CardsOffersC from '../cardsC/CardsOffersC';
 import FooterC from '../footerC/FooterC';
 import HeaderC from '../headerC/HeaderC';
 import "./profile.css";
@@ -9,7 +9,7 @@ const ProfilC = () => {
     const [articles, setArticles] = useState([]);
 
     useEffect(() => {
-        fetch('./articles.json')
+        fetch('./json/articles.json')
             .then((response) => response.json())
             .then((data) => {
                 const filteredArticles = data.filter(article => article.author === "John Doe");
@@ -36,7 +36,7 @@ const ProfilC = () => {
                 <h3>Articles publiés</h3>
                 <div className="articles-list">
                     {articles.map((article) => (
-                        <CardsC
+                        <CardsOffersC
                             key={article.id}
                             title={article.title}
                             author={article.author}

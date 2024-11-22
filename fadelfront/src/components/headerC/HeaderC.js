@@ -1,10 +1,19 @@
-import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import './header.css';
 
 const HeaderC = () => {
+    const [isDesktop, setIsDesktop] = useState(window.innerWidth >= 1024); // Détecte si on est sur un écran de bureau
 
-    const navigate = useNavigate();
+    // Vérifier la taille de l'écran au redimensionnement
+    useEffect(() => {
+        const handleResize = () => {
+            setIsDesktop(window.innerWidth >= 1024);
+        };
+
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
 
     return (
         <header className="header">
@@ -12,8 +21,8 @@ const HeaderC = () => {
                 <div className="logo">
                     <img src="./media/pics/logo.png" alt="Logo" />
                 </div>
-
-                <div className="search-bar">
+                {isDesktop && (
+                    <div className="search-bar">
                     <input type="text" placeholder="Rechercher..." />
                     <button className="search-button">
                         <svg
@@ -27,12 +36,16 @@ const HeaderC = () => {
                         </svg>
                     </button>
                 </div>
+                )}
+                
 
                 <div className="nav-buttons">
-                    <button className="add-button">Ajouter une annonce</button>
+                    {!isDesktop && (
+                        <Link to="/home" className="offres-button">Offres</Link>
+                    )}
+                    <Link to='/addAnAnnounce' className="add-button">Ajouter une annonce</Link>
                     <Link to='/onDemand' className="nav-button">Demandes</Link>
-                    <Link to='/profil' className="nav-button">Profil</Link>
-
+                    <Link to='/profile' className="nav-button">Profil</Link>
                 </div>
             </div>
         </header>

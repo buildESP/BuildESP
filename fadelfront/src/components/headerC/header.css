@@ -1,3 +1,4 @@
+/* Styles de base pour le header */
 .header {
     display: flex;
     align-items: center;
@@ -25,7 +26,7 @@
 
 .search-bar {
     display: flex;
-    align-items: center; 
+    align-items: center;
     flex: 1;
     max-width: 400px;
     margin: 0 20px;
@@ -39,11 +40,11 @@
     border-radius: 20px 0 0 20px;
     outline: none;
     font-size: 1rem;
-    height: 18px; 
+    height: 18px;
 }
 
 .search-bar .search-button {
-    padding: 0 15px; 
+    padding: 0 15px;
     height: 40px;
     background-color: #333;
     border: 1px solid #333;
@@ -57,7 +58,7 @@
 }
 
 .search-bar .search-button:hover {
-    background-color:  #333;
+    background-color: #333;
 }
 
 .nav-buttons {
@@ -67,7 +68,6 @@
 
 .nav-button, .add-button {
     text-decoration: none;
-
     padding: 10px 20px;
     border: none;
     border-radius: 20px;
@@ -90,4 +90,85 @@
 
 .add-button:hover {
     background-color: #333;
+}
+
+/* Responsiveness */
+
+/* Pour tablettes (max-width: 1024px) */
+@media (max-width: 1024px) {
+    .header-container {
+        flex-direction: row; /* Conserver les éléments sur une ligne */
+        align-items: center; /* Centrer verticalement */
+    }
+
+    .search-bar {
+        max-width: 300px; /* Réduire la taille de la barre de recherche */
+        margin: 0 10px; /* Espacement réduit */
+    }
+
+    .nav-buttons {
+        gap: 10px; /* Réduire l'espace entre les boutons */
+    }
+
+    .nav-button, .add-button {
+        font-size: 0.9rem; /* Réduire la taille du texte des boutons */
+    }
+}
+
+/* Pour smartphones (max-width: 768px) */
+@media (max-width: 768px) {
+    .header-container {
+        flex-direction: row; /* Conserver les éléments sur une ligne */
+        align-items: center; /* Centrer verticalement */
+        padding: 10px;
+    }
+
+    .logo img {
+        height: 30px; /* Réduire la taille du logo */
+    }
+
+    .search-bar {
+        width: 100%; /* Prendre toute la largeur */
+        margin: 10px 0;
+    }
+
+    .nav-buttons {
+        gap: 12px;
+        justify-content: center; /* Centrer les boutons */
+        width: auto; /* Garder une largeur adaptée */
+    }
+
+    .nav-button, .add-button {
+        font-size: 0.9rem; /* Réduire la taille des boutons */
+        padding: 8px 15px; /* Ajuster les paddings */
+    }
+}
+
+/* Pour très petits écrans - smartphones étroits (max-width: 480px) */
+@media (max-width: 480px) {
+    .header-container {
+        flex-direction: row; /* Toujours aligné horizontalement */
+        align-items: center;
+        padding: 5px;
+    }
+
+    .logo img {
+        height: 25px; /* Réduire la taille du logo */
+    }
+
+    .search-bar {
+        width: 100%;
+        max-width: 280px; /* Limiter la largeur de la barre de recherche */
+    }
+
+    .nav-buttons {
+        gap: 8px;
+        width: auto;
+        justify-content: center; /* Centrer les boutons */
+    }
+
+    .nav-button, .add-button {
+        font-size: 0.8rem; /* Taille des boutons plus petite */
+        padding: 6px 12px; /* Réduire le padding */
+    }
 }
