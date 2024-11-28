@@ -19,7 +19,7 @@ const HeaderC = () => {
         <header className="header">
             <div className="header-container">
                 <div className="logo">
-                    <img src="./media/pics/logo.png" alt="Logo" />
+                   <Link to="/home" id="homeHeader">  <img src="./media/pics/logo.png" alt="Logo" /></Link>
                 </div>
                 {isDesktop && (
                     <div className="search-bar">

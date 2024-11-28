@@ -6,6 +6,12 @@
       "id": 1
     },
     {
+      "Author": "John Doe",
+      "Title": "Pince a linge",
+      "Description": "Pour la lessive du dimanche/",
+      "id": 14
+    },
+    {
       "Author": "Jane Smith",
       "Title": "SpaCy",
       "Description": "Une bibliothèque Python puissante pour le traitement du langage naturel, utile pour l'analyse de texte.",

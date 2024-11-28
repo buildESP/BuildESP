@@ -1,6 +1,4 @@
 import React, { useState } from 'react';
-import FooterC from '../footerC/FooterC';
-import HeaderC from '../headerC/HeaderC';
 import './addc.css';
 
 const AddC = () => {
@@ -27,7 +25,6 @@ const AddC = () => {
 
     return (
         <>
-            <HeaderC />
             <div className="add-container">
                 <div className="title-toggle">
                     <button
@@ -120,7 +117,6 @@ const AddC = () => {
                     </button>
                 </form>
             </div>
-            <FooterC />
         </>
     );
 };

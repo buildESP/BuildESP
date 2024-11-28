@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import CardsDemandsC from '../cardsC/CardsDemandsC';
-import FooterC from '../footerC/FooterC';
-import HeaderC from '../headerC/HeaderC';
 import './../homeC/home.css';
 import './demands.css';
 
@@ -29,7 +27,7 @@ const DemandC = () => {
 
     return (
         <>
-            <HeaderC />
+            
             <div className='base'>
                 <div className='intro'>
                         <img src="./media/pics/entraide.png" alt="" id="entraide"/>
@@ -56,7 +54,6 @@ const DemandC = () => {
                                     description={demand.Description}
                                 />
                                 </div>
-
                             ))}
                         </div>
                     ) : (
@@ -76,8 +73,6 @@ const DemandC = () => {
             )}
 
             </div>
-            
-            <FooterC />
         </>
     );
 };
