@@ -1,30 +1,30 @@
-const { Item } = require('../models'); // Import des modèles
-const { Op } = require('sequelize'); // Opérateur de Sequelize pour les filtres avancés
+const Item = require('../models/Item');
+const User = require('../models/User');
+const Subcategory = require('../models/Subcategory');
 
-// Créer un nouvel item
+// Create item
 exports.createItem = async (req, res) => {
   try {
-    const {
-      name,
-      description,
-      user_id,
-      subcategory_id,
-      daily_rate,
-      deposit,
-      max_rental_duration,
-      picture,
-      status,
-    } = req.body;
+    const { user_id, subcategory_id, name, description, picture, status } = req.body;
 
-    // Crée un nouvel item
+    // Vérifier si l'utilisateur existe
+    const user = await User.findByPk(user_id);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    // Vérifier si la sous-catégorie existe
+    const subcategory = await Subcategory.findByPk(subcategory_id);
+    if (!subcategory) {
+      return res.status(404).json({ message: 'Subcategory not found' });
+    }
+
+    // Créer un nouvel item
     const newItem = await Item.create({
-      name,
-      description,
       user_id,
       subcategory_id,
-      daily_rate,
-      deposit,
-      max_rental_duration,
+      name,
+      description,
       picture,
       status,
     });
@@ -32,136 +32,103 @@ exports.createItem = async (req, res) => {
     res.status(201).json({ message: 'Item created successfully', item: newItem });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Error creating item' });
+    res.status(500).json({ error: 'Error during item creation' });
   }
 };
 
-// Récupérer tous les items
+// Get all items
 exports.getItems = async (req, res) => {
   try {
-    const items = await Item.findAll();
+    const items = await Item.findAll({
+      include: [
+        { model: User, as: 'user' },         // Inclure les informations sur l'utilisateur
+        { model: Subcategory, as: 'subcategory' }, // Inclure les informations sur la sous-catégorie
+      ],
+    });
     res.status(200).json(items);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Error fetching items' });
+    res.status(500).json({ error: 'Error during getting items' });
   }
 };
 
-// Récupérer un item par son ID
+// Get item by ID
 exports.getItemById = async (req, res) => {
   try {
-    const { id } = req.params;
-
-    const item = await Item.findOne({
-      where: { id },
+    const itemId = req.params.item_id;
+    const item = await Item.findByPk(itemId, {
+      include: [
+        { model: User, as: 'user' },
+        { model: Subcategory, as: 'subcategory' },
+      ],
     });
 
     if (!item) {
-      return res.status(404).json({ error: 'Item not found' });
+      return res.status(404).json({ message: 'Item not found' });
     }
 
     res.status(200).json(item);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Error fetching item' });
+    res.status(500).json({ error: 'Error during fetching item' });
   }
 };
 
-// Mettre à jour un item
+// Update item by ID
 exports.updateItem = async (req, res) => {
   try {
-    const { id } = req.params;
-    const {
-      name,
-      description,
-      user_id,
-      subcategory_id,
-      daily_rate,
-      deposit,
-      max_rental_duration,
-      picture,
-      status,
-    } = req.body;
+    const itemId = req.params.item_id;
+    const { user_id, subcategory_id, name, description, picture, status } = req.body;
 
-    // Vérifie si l'item existe
-    const item = await Item.findOne({ where: { id } });
+    const item = await Item.findByPk(itemId);
 
     if (!item) {
-      return res.status(404).json({ error: 'Item not found' });
+      return res.status(404).json({ message: 'Item not found' });
     }
 
-    // Met à jour l'item avec les nouvelles données
-    item.name = name || item.name;
-    item.description = description || item.description;
-    item.user_id = user_id || item.user_id;
-    item.subcategory_id = subcategory_id || item.subcategory_id;
-    item.daily_rate = daily_rate || item.daily_rate;
-    item.deposit = deposit || item.deposit;
-    item.max_rental_duration = max_rental_duration || item.max_rental_duration;
-    item.picture = picture || item.picture;
-    item.status = status || item.status;
+    // Vérifier si l'utilisateur existe
+    const user = await User.findByPk(user_id);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
 
-    await item.save(); // Enregistre les modifications
+    // Vérifier si la sous-catégorie existe
+    const subcategory = await Subcategory.findByPk(subcategory_id);
+    if (!subcategory) {
+      return res.status(404).json({ message: 'Subcategory not found' });
+    }
+
+    // Mettre à jour l'item
+    await item.update({
+      user_id,
+      subcategory_id,
+      name,
+      description,
+      picture,
+      status,
+    });
 
     res.status(200).json({ message: 'Item updated successfully', item });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Error updating item' });
+    res.status(500).json({ error: 'Error during item update' });
   }
 };
 
-// Supprimer un item
+// Delete item by ID
 exports.deleteItem = async (req, res) => {
   try {
-    const { id } = req.params;
-
-    const item = await Item.findOne({ where: { id } });
+    const itemId = req.params.item_id;
+    const item = await Item.findByPk(itemId);
 
     if (!item) {
-      return res.status(404).json({ error: 'Item not found' });
+      return res.status(404).json({ message: 'Item not found' });
     }
 
-    await item.destroy(); // Supprime l'item
-
+    await item.destroy();
     res.status(200).json({ message: 'Item deleted successfully' });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Error deleting item' });
-  }
-};
-
-// Récupérer les items d'un utilisateur spécifique (par exemple : récupérer les items d'un user connecté)
-exports.getUserItems = async (req, res) => {
-  try {
-    const { user_id } = req.params; // Utilisateur spécifié
-
-    const items = await Item.findAll({
-      where: { user_id },
-    });
-
-    if (items.length === 0) {
-      return res.status(404).json({ error: 'No items found for this user' });
-    }
-
-    res.status(200).json(items);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Error fetching user items' });
-  }
-};
-
-// Récupérer les items disponibles (status: "Available")
-exports.getAvailableItems = async (req, res) => {
-  try {
-    const availableItems = await Item.findAll({
-      where: {
-        status: 'Available',
-      },
-    });
-
-    res.status(200).json(availableItems);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Error fetching available items' });
+    res.status(500).json({ error: 'Error during item deletion' });
   }
 };

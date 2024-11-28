@@ -1,26 +1,22 @@
+// routes/itemRoutes.js
+
 const express = require('express');
 const router = express.Router();
-const itemController = require('../controllers/itemController');
+const ItemController = require('../controllers/itemController');
 
-// Route pour créer un nouvel item
-router.post('/', itemController.createItem);
+// Route pour créer un item
+router.post('/items', ItemController.createItem);
 
-// Route pour récupérer tous les items
-router.get('/', itemController.getItems);
+// Route pour obtenir tous les items
+router.get('/items', ItemController.getItems);
 
-// Route pour récupérer un item spécifique par ID
-router.get('/:id', itemController.getItemById);
+// Route pour obtenir un item par ID
+router.get('/items/:id', ItemController.getItemById);
 
 // Route pour mettre à jour un item
-router.put('/:id', itemController.updateItem);
+router.put('/items/:id', ItemController.updateItem);
 
 // Route pour supprimer un item
-router.delete('/:id', itemController.deleteItem);
-
-// Route pour récupérer les items d'un utilisateur spécifique (par ID de l'utilisateur)
-router.get('/user/:user_id', itemController.getUserItems);
-
-// Route pour récupérer les items disponibles (status = 'Available')
-router.get('/available', itemController.getAvailableItems);
+router.delete('/items/:id', ItemController.deleteItem);
 
 module.exports = router;

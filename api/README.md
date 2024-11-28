@@ -14,7 +14,7 @@ You will find in this README some informations about uses cases, dependencies de
 3. Edit the .env file with rights informations.
 
 4. Sync db structure :
-> node config/sync.js
+> npm run sync
 
 5. Start the project :
 > npm start

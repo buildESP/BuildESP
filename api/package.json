@@ -4,8 +4,9 @@
   "description": "api for buildinguerie app - esp project",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node app.js"
+    "start": "node app.js",
+    "sync": "node config/sync.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "buildinguerie team",
   "license": "ISC",

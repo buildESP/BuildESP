@@ -1,7 +1,9 @@
+// models/Item.js
+
 const { DataTypes } = require('sequelize');
 const { sequelize } = require('../config/db');
-const User = require('./User'); // Assurez-vous que le modèle User est importé
-// const Subcategory = require('./subcategory'); // Assurez-vous que le modèle Subcategory est importé
+const User = require('./User');
+const Subcategory = require('./Subcategory');
 
 const Item = sequelize.define(
   'Item',
@@ -20,32 +22,20 @@ const Item = sequelize.define(
         key: 'id',
       },
     },
+    subcategory_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: Subcategory,
+        key: 'id',
+      },
+    },
     name: {
       type: DataTypes.STRING(100),
       allowNull: false,
     },
     description: {
       type: DataTypes.TEXT,
-      allowNull: false,
-    },
-    // subcategory_id: {
-    //   type: DataTypes.INTEGER,
-    //   allowNull: false,
-    //   references: {
-    //     model: Subcategory,
-    //     key: 'id',
-    //   },
-    // },
-    daily_rate: {
-      type: DataTypes.FLOAT,
-      allowNull: false,
-    },
-    deposit: {
-      type: DataTypes.FLOAT,
-      allowNull: false,
-    },
-    max_rental_duration: {
-      type: DataTypes.INTEGER,
       allowNull: false,
     },
     picture: {
@@ -64,8 +54,5 @@ const Item = sequelize.define(
     underscored: true,
   }
 );
-
-Item.belongsTo(User, { foreignKey: 'user_id' });
-Item.belongsTo(Subcategory, { foreignKey: 'subcategory_id' });
 
 module.exports = Item;
