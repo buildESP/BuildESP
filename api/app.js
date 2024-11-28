@@ -9,6 +9,7 @@ const swaggerOptions = require('./swaggerOptions');
 const jwt = require('jsonwebtoken');
 const userRoutes = require('./routes/userRoutes');
 const authRoutes = require('./routes/authRoutes');
+const cors = require('cors');
 
 const JWT_SECRET = process.env.JWT_SECRET;
 const app = express();
@@ -21,6 +22,7 @@ const swaggerSpec = swaggerJsdoc(swaggerOptions);
 app.use('/doc', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // Routes
+app.use(cors({ origin: true }));
 app.use('/api', userRoutes);
 app.use('/api', authRoutes);
 

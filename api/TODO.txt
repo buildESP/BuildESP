@@ -1,0 +1,14 @@
+- autres entités
+
+- migrations et fixtures
+
+- scripts npm pour build, migrate, tests ?
+
+- droits d'accès aux routes
+un user peut accéder qu'à son user:id par exemple
+
+- gestion des permissions
+admin, user... comment on les assigne ?
+Un admin peut accéder à tous les users, par un user
+
+- middleware de vérification de isADmin, de validateUserData...?

@@ -17,12 +17,12 @@ const authenticateToken = require('../middlewares/authMiddleware');
  *           schema:
  *             type: object
  *             properties:
- *               name:
- *                 type: string
- *                 description: User's last name
  *               firstname:
  *                 type: string
  *                 description: User's first name
+ *               lastname:
+ *                 type: string
+ *                 description: User's last name
  *               email:
  *                 type: string
  *                 description: User's email address
@@ -39,12 +39,12 @@ const authenticateToken = require('../middlewares/authMiddleware');
  *                 type: string
  *                 description: User's phone number
  *               rating:
- *                 type: integer
+ *                 type: number
  *                 description: User's rating score
  *               picture:
  *                 type: string
  *                 description: URL of the user's profile picture
- *               isAdmin:
+ *               is_admin:
  *                 type: boolean
  *                 description: Indicates if the user is an administrator
  *     responses:
@@ -74,12 +74,12 @@ router.post('/users', authenticateToken, userController.createUser);
  *                   id:
  *                     type: string
  *                     description: User's ID
- *                   name:
- *                     type: string
- *                     description: User's last name
  *                   firstname:
  *                     type: string
  *                     description: User's first name
+ *                   lastname:
+ *                     type: string
+ *                     description: User's last name
  *                   email:
  *                     type: string
  *                     description: User's email
@@ -93,26 +93,26 @@ router.post('/users', authenticateToken, userController.createUser);
  *                     type: string
  *                     description: User's phone number
  *                   rating:
- *                     type: integer
+ *                     type: number
  *                     description: User's rating score
  *                   picture:
  *                     type: string
  *                     description: URL of user's profile picture
- *                   isAdmin:
+ *                   is_admin:
  *                     type: boolean
- *                     description: If the user is an administrator
+ *                     description: Indicates if the user is an administrator
  */
 router.get('/users', authenticateToken, userController.getUsers);
 
 /**
  * @swagger
- * /api/users/{id_utilisateur}:
+ * /api/users/{user_id}:
  *   get:
  *     summary: Retrieves a user by ID
  *     tags: [Users]
  *     parameters:
  *       - in: path
- *         name: id_utilisateur
+ *         name: user_id
  *         required: true
  *         schema:
  *           type: string
@@ -123,17 +123,17 @@ router.get('/users', authenticateToken, userController.getUsers);
  *       404:
  *         description: User not found
  */
-router.get('/users/:id_utilisateur', userController.getUserById);
+router.get('/users/:user_id', userController.getUserById);
 
 /**
  * @swagger
- * /api/users/{id_utilisateur}:
+ * /api/users/{user_id}:
  *   put:
  *     summary: Updates a user by ID
  *     tags: [Users]
  *     parameters:
  *       - in: path
- *         name: id_utilisateur
+ *         name: user_id
  *         required: true
  *         schema:
  *           type: string
@@ -145,12 +145,12 @@ router.get('/users/:id_utilisateur', userController.getUserById);
  *           schema:
  *             type: object
  *             properties:
- *               name:
- *                 type: string
- *                 description: User's last name
  *               firstname:
  *                 type: string
  *                 description: User's first name
+ *               lastname:
+ *                 type: string
+ *                 description: User's last name
  *               email:
  *                 type: string
  *                 description: User's email address
@@ -167,12 +167,12 @@ router.get('/users/:id_utilisateur', userController.getUserById);
  *                 type: string
  *                 description: User's phone number
  *               rating:
- *                 type: integer
+ *                 type: number
  *                 description: User's rating score
  *               picture:
  *                 type: string
  *                 description: URL of the user's profile picture
- *               isAdmin:
+ *               is_admin:
  *                 type: boolean
  *                 description: Indicates if the user is an administrator
  *     responses:
@@ -183,17 +183,17 @@ router.get('/users/:id_utilisateur', userController.getUserById);
  *       500:
  *         description: Server error during user update
  */
-router.put('/users/:id_utilisateur', userController.updateUser);
+router.put('/users/:user_id', userController.updateUser);
 
 /**
  * @swagger
- * /api/users/{id_utilisateur}:
+ * /api/users/{user_id}:
  *   delete:
  *     summary: Deletes a user by ID
  *     tags: [Users]
  *     parameters:
  *       - in: path
- *         name: id_utilisateur
+ *         name: user_id
  *         required: true
  *         schema:
  *           type: string
@@ -206,6 +206,6 @@ router.put('/users/:id_utilisateur', userController.updateUser);
  *       500:
  *         description: Server error during user deletion
  */
-router.delete('/users/:id_utilisateur', userController.deleteUser);
+router.delete('/users/:user_id', userController.deleteUser);
 
 module.exports = router;
