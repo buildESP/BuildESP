@@ -1,14 +1,14 @@
 // controllers/subcategoryController.js
 
-const Subcategory = require('../models/Subcategory'); // Assurez-vous que le modèle Subcategory est importé
-const Category = require('../models/Category'); // Assurez-vous que le modèle Category est importé
+const Subcategory = require('../models/Subcategory');
+const Category = require('../models/Category');
 
-// Créer une nouvelle sous-catégorie
+
+// create a subcategory
 exports.createSubcategory = async (req, res) => {
   try {
     const { category_id, name } = req.body;
 
-    // Vérifiez si la catégorie existe avant de créer la sous-catégorie
     const category = await Category.findByPk(category_id);
     if (!category) {
       return res.status(404).json({ message: 'Category not found' });
@@ -26,7 +26,8 @@ exports.createSubcategory = async (req, res) => {
   }
 };
 
-// Récupérer toutes les sous-catégories
+
+// get all subcategories
 exports.getSubcategories = async (req, res) => {
   try {
     const subcategories = await Subcategory.findAll();
@@ -37,7 +38,7 @@ exports.getSubcategories = async (req, res) => {
   }
 };
 
-// Récupérer une sous-catégorie par ID
+// get subcategory by ID
 exports.getSubcategoryById = async (req, res) => {
   try {
     const subcategoryId = req.params.subcategory_id;
@@ -54,7 +55,7 @@ exports.getSubcategoryById = async (req, res) => {
   }
 };
 
-// Mettre à jour une sous-catégorie par ID
+// update subcategory
 exports.updateSubcategory = async (req, res) => {
   try {
     const subcategoryId = req.params.subcategory_id;
@@ -75,7 +76,7 @@ exports.updateSubcategory = async (req, res) => {
   }
 };
 
-// Supprimer une sous-catégorie par ID
+// delete subcategory
 exports.deleteSubcategory = async (req, res) => {
   try {
     const subcategoryId = req.params.subcategory_id;

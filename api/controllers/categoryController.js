@@ -2,6 +2,7 @@
 
 const Category = require('../models/Category');
 
+// create a category
 exports.createCategory = async (req, res) => {
   try {
     const { name } = req.body;
@@ -17,20 +18,37 @@ exports.createCategory = async (req, res) => {
   }
 };
 
+// get all categories
 exports.getCategories = async (req, res) => {
   try {
-    const categories = await Category.findAll();
+    const categories = await Category.findAll({
+      include: [
+        {
+          model: require('../models/Subcategory'),
+          as: 'subcategories',
+        },
+      ],
+    });
     res.status(200).json(categories);
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Error during fetching categories' });
+    console.error('Error fetching categories:', error);
+    res.status(500).json({ error: 'Error during fetching categories', details: error.message });
   }
 };
 
+// get category by ID
 exports.getCategoryById = async (req, res) => {
   try {
     const categoryId = req.params.category_id;
-    const category = await Category.findByPk(categoryId);
+
+    const category = await Category.findByPk(categoryId, {
+      include: [
+        {
+          model: require('../models/Subcategory'),
+          as: 'subcategories',
+        },
+      ],
+    });
 
     if (!category) {
       return res.status(404).json({ message: 'Category not found' });
@@ -38,11 +56,12 @@ exports.getCategoryById = async (req, res) => {
 
     res.status(200).json(category);
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Error during fetching category' });
+    console.error('Error fetching category by ID:', error);
+    res.status(500).json({ error: 'Error during fetching category', details: error.message });
   }
 };
 
+// update category
 exports.updateCategory = async (req, res) => {
   try {
     const categoryId = req.params.category_id;
@@ -63,6 +82,7 @@ exports.updateCategory = async (req, res) => {
   }
 };
 
+// delete category
 exports.deleteCategory = async (req, res) => {
   try {
     const categoryId = req.params.category_id;

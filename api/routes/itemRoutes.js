@@ -11,12 +11,12 @@ router.post('/items', ItemController.createItem);
 router.get('/items', ItemController.getItems);
 
 // Route pour obtenir un item par ID
-router.get('/items/:id', ItemController.getItemById);
+router.get('/items/:item_id', ItemController.getItemById);
 
 // Route pour mettre à jour un item
-router.put('/items/:id', ItemController.updateItem);
+router.put('/items/:item_id', ItemController.updateItem);
 
 // Route pour supprimer un item
-router.delete('/items/:id', ItemController.deleteItem);
+router.delete('/items/:item_id', ItemController.deleteItem);
 
 module.exports = router;

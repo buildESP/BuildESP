@@ -53,6 +53,7 @@ exports.getUsers = async (req, res) => {
 exports.getUserById = async (req, res) => {
   try {
     const userId = req.params.user_id;
+    console.log(userId);
     const user = await User.findByPk(userId);
 
     if (!user) {
