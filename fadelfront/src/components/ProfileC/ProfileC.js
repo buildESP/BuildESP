@@ -7,6 +7,7 @@ import "./profile.css";
 const ProfileC = () => {
   const [articles, setArticles] = useState([]);
   const [selectedDemand, setSelectedDemand] = useState(null); // État pour la carte sélectionnée
+  const [selectedArticle, setSelectedArticle] = useState(null); // New state for the selected article
   const [demandes, setDemandes] = useState([]);
   const navigate = useNavigate();
 
@@ -44,9 +45,21 @@ const ProfileC = () => {
       console.log("Test unitaire");
     };
 
-  const handleCardClick = (article) => {
-    navigate(`/productDetails/${article.id}`, { state: { article } });
-  };
+    const cardDetailsArticlesClick = (article) => {
+      setSelectedArticle(article); // Set the selected article
+      console.log(article);
+    };
+    
+    const closeModalArticles = () => {
+      setSelectedArticle(null); // Reset the selected article
+      console.log("Closing article modal");
+    };
+    
+
+
+  // const handleCardClick = (article) => {
+  //   navigate(`/productDetails/${article.id}`, { state: { article } });
+  // };
 
   return (
     <>
@@ -66,16 +79,31 @@ const ProfileC = () => {
               </div>
               {articles.map((article) => (
                 <>
+                <div key={article.id} onClick={() => cardDetailsArticlesClick(article)}>
                   <CardsOffersC
                     key={article.id} 
                     title={article.title} 
                     author={article.author} 
                     image={article.image} 
-                    onClick={() => handleCardClick(article)}
+                    // onClick={() => handleCardClick(article)}
                   />
+                  </div>
                 </>
                
               ))}
+              {selectedArticle && ( // Display the modal if an article is selected
+                <div className="modal-demands">
+                  <div className="modal-content-demands">
+                    <h2>{selectedArticle.title}</h2>
+                    <br />
+                    <img src={selectedArticle.image} alt={selectedArticle.title} className="card-image" />
+                    <p><strong>Par :</strong> {selectedArticle.author}</p>
+                    {/* Add other fields if necessary */}
+                    <button className="offer-button-demands">Supprimer cet article</button>
+                    <button className="close-button-demands" onClick={closeModalArticles}>Fermer</button>
+                  </div>
+                </div>
+              )}
             </div>
             <div className="articles-list">
               <div className="articles-list-title">
@@ -88,7 +116,7 @@ const ProfileC = () => {
                     title={demande.Title} 
                     author={demande.Author} 
                     description={demande.Description} 
-                    onClick={() => handleCardClick(demande)}
+                    // onClick={() => handleCardClick(demande)}
                   />
                   </div>
               ))}

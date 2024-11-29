@@ -65,14 +65,18 @@ const EditProfileC = () => {
                                 </span>
                             )}
                         </div>
-                        <input
+                        
+                       
+                    </div>
+                    <div> 
+                            <input
                             type="file"
                             id="profilePicture"
                             accept="image/*"
                             onChange={handlePictureChange}
                             className="profile-picture-input"
                         />
-                    </div>
+                        </div>
                     <div className="form-group">
                         <label htmlFor="nom">Nom:</label>
                         <input
