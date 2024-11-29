@@ -1,8 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import FooterwavesC from '../footerWavesC/FooterwavesC';
-import HeaderC from '../headerC/HeaderC';
 import './home.css';
-import FooterC from '../footerC/FooterC';
 import CardsOffersC from '../cardsC/CardsOffersC';
 
 const HomeC = () => {
@@ -18,7 +15,6 @@ const HomeC = () => {
 
     return (
         <div>
-            <HeaderC />
             <div className='base'>
                 <div className='intro'>
                     <img src="./media/pics/entraide.png" alt="" id="entraide"/>
@@ -46,7 +42,6 @@ const HomeC = () => {
                     ))}
                 </div>
             </div>
-            <FooterC />
 
             {/* <FooterwavesC /> */}
         </div>

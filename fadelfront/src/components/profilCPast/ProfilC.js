@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import CardsOffersC from '../cardsC/CardsOffersC';
-import FooterC from '../footerC/FooterC';
-import HeaderC from '../headerC/HeaderC';
 import "./profile.css";
 
 const ProfilC = () => {
@@ -20,7 +18,6 @@ const ProfilC = () => {
 // ./media/pics/photoprofilexample.jpg
     return (
         <>
-            <HeaderC />
             <div className="profile-container">
             <div className="profile-card">
                 <img
@@ -46,8 +43,6 @@ const ProfilC = () => {
                 </div>
             </div>
         </div>
-            <FooterC />
-
         </>
     );
 };

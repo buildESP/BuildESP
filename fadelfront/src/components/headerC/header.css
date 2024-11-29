@@ -92,6 +92,11 @@
     background-color: #333;
 }
 
+#homeHeader {
+    text-decoration: none;
+    color: black;
+}
+
 /* Responsiveness */
 
 /* Pour tablettes (max-width: 1024px) */

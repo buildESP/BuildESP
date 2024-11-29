@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import HeaderC from '../headerC/HeaderC';
 import "./messages.css"
 
 const MessagesC = () => {
@@ -35,7 +34,6 @@ const MessagesC = () => {
 
     return (
         <>
-            <HeaderC />
             <div className="messaging-app">
                 <div className="sidebar">
                     <h3>Discussions</h3>
