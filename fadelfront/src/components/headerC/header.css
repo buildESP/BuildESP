@@ -92,9 +92,67 @@
     background-color: #333;
 }
 
-#homeHeader {
+/* Barre des catégories */
+.categories-bar {
+    background-color: #f8f9fa;
+    border-top: 1px solid #ddd;
+    padding: 10px 20px;
+    position: sticky;
+    top: 50px; /* Ajusté pour s'aligner sous le header */
+    z-index: 900;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.categories-list {
+    display: flex;
+    gap: 20px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    width: 40%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.category-item {
+    position: relative;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: bold;
+    color: #333;
+}
+
+.category-item:hover {
+    text-decoration: underline;
+}
+
+.subcategories-list {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background-color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+    padding: 10px;
+    list-style: none;
+    margin: 0;
+    z-index: 1000;
+}
+
+.subcategory-item {
+    padding: 5px 10px;
+    white-space: nowrap;
+}
+
+.subcategory-item a {
     text-decoration: none;
-    color: black;
+    color: #333;
+    font-size: 0.9rem;
+}
+
+.subcategory-item:hover {
+    background-color: #f1f1f1;
+    border-radius: 4px;
 }
 
 /* Responsiveness */
@@ -117,6 +175,19 @@
 
     .nav-button, .add-button {
         font-size: 0.9rem; /* Réduire la taille du texte des boutons */
+    }
+
+    .categories-bar {
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+
+    .categories-list {
+        gap: 10px;
+    }
+
+    .category-item {
+        font-size: 0.9rem;
     }
 }
 

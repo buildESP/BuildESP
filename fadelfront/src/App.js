@@ -28,6 +28,7 @@ const App = () => {
                 <Route path="/onDemand" element={<DemandP />} />
                 <Route path="/messages" element={<MessagesP />} />
                 <Route path="/addAnAnnounce" element={<AddP />} />
+                <Route path="/category/*" element={<HomeP />} />
 
                 {/* Si jamais ce n'est pas un path correct */}
                 <Route path="*" element={<HomeP />} />
