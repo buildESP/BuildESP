@@ -2,16 +2,22 @@
     padding: 20px;
     max-width: 600px;
     margin: 0 auto;
+    
 }
 
 .edit-profile-container h2 {
     text-align: center;
     margin-bottom: 20px;
+   
 }
 
 .profile-picture-section {
     margin-bottom: 20px;
     text-align: center;
+    border: solid;
+    display: flex;
+    justify-content: center;
+
 }
 
 .profile-picture-label {
