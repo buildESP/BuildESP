@@ -53,7 +53,7 @@ const authenticateToken = require('../middlewares/authMiddleware');
  *       500:
  *         description: Server error during user creation
  */
-router.post('/users', authenticateToken, userController.createUser);
+router.post('/users', userController.createUser);
 
 /**
  * @swagger
