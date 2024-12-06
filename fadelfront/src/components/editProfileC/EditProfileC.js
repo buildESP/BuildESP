@@ -47,7 +47,7 @@ const EditProfileC = () => {
         <>
             <div className="edit-profile-container">
                 <h2>Edit Profile</h2>
-                <form onSubmit={handleSubmit}>
+                <form className='form-container' onSubmit={handleSubmit}>
                     <div className="profile-picture-section">
                         {/* <label htmlFor="profilePicture" className="profile-picture-label">
                             Profile Picture:
@@ -97,26 +97,7 @@ const EditProfileC = () => {
                             onChange={handleChange}
                         />
                     </div>
-                    <div className="form-group">
-                        <label htmlFor="email">Email:</label>
-                        <input
-                            type="email"
-                            id="email"
-                            name="email"
-                            value={formData.email}
-                            onChange={handleChange}
-                        />
-                    </div>
-                    <div className="form-group">
-                        <label htmlFor="motDePasse">Mot de passe:</label>
-                        <input
-                            type="password"
-                            id="motDePasse"
-                            name="motDePasse"
-                            value={formData.motDePasse}
-                            onChange={handleChange}
-                        />
-                    </div>
+                    
                     <div className="form-group">
                         <label htmlFor="adresse">Adresse:</label>
                         <input
@@ -144,6 +125,27 @@ const EditProfileC = () => {
                             id="numeroDeTelephone"
                             name="numeroDeTelephone"
                             value={formData.numeroDeTelephone}
+                            onChange={handleChange}
+                        />
+                    </div>
+
+                    <div className="form-group">
+                        <label htmlFor="email">Email:</label>
+                        <input
+                            type="email"
+                            id="email"
+                            name="email"
+                            value={formData.email}
+                            onChange={handleChange}
+                        />
+                    </div>
+                    <div className="form-group">
+                        <label htmlFor="motDePasse">Mot de passe:</label>
+                        <input
+                            type="password"
+                            id="motDePasse"
+                            name="motDePasse"
+                            value={formData.motDePasse}
                             onChange={handleChange}
                         />
                     </div>

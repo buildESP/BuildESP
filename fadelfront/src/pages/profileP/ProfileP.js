@@ -1,6 +1,5 @@
 import React from 'react';
-// import ProfilC from '../../components/profilC/ProfilC';
-import ProfileC from '../../components/ProfileC/ProfileC';
+import ProfileC from '../../components/profileC/ProfileC';
 //import ProfilC from '../../components/ProfilCompBertin/ProfilC';
 
 

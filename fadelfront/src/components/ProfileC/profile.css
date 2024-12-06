@@ -4,6 +4,8 @@
     align-items: center;
     height: 100vh; 
     background-color: #f4f4f4;
+  
+   
 }
 
 .profile-card {
@@ -14,6 +16,8 @@
     text-align: center;
     max-width: 300px;
     width: 100%;
+    
+    
 }
 
 .profile-img {
@@ -22,6 +26,7 @@
     border-radius: 50%;
     margin-bottom: 20px;
     object-fit: cover;
+    
 }
 
 .profile-name {
@@ -29,11 +34,14 @@
     font-weight: bold;
     color: #333;
     margin-bottom: 10px;
+ 
 }
 
 .profile-description {
     font-size: 1.1rem;
     color: #777;
+    
+    
 }
 
 
@@ -45,6 +53,8 @@
     height: 100%;
     background-color: #f4f4f4;
     padding: 20px;
+
+    
 }
 
 .profile-card {
@@ -56,6 +66,8 @@
     max-width: 300px;
     width: 100%;
     margin-bottom: 40px;
+    
+    
 }
 
 .profile-img {
@@ -82,6 +94,9 @@
     width: 40%;
     max-width: 1200px;
     text-align: center;
+    
+    width: 100%;
+
 }
 
 .articles-list {
@@ -89,6 +104,14 @@
     flex-wrap: wrap;
     gap: 20px;
     justify-content: center;
+    /* justify-content: space-evenly; */
+
+    width: 100%;
+ 
+
+
+   
+
 }
 
 .article-card {
@@ -98,6 +121,8 @@
     width: 250px;
     padding: 15px;
     text-align: center;
+   
+    
 }
 
 .article-image {
@@ -119,10 +144,19 @@
 }
 
 .articles-list-container {
-    display: flex;
+    /* display: flex; */
+
+
+    width: 100%;
+    
 }
 
 .articles-list-title{
     width: 100%;
     max-height: 50px;
+    
 }
+
+/* .container {
+    border:solid
+} */
