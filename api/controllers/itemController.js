@@ -37,10 +37,10 @@ exports.createItem = async (req, res) => {
 exports.getItems = async (req, res) => {
   try {
     const items = await Item.findAll({
-      // include: [
-      //   { model: User, as: 'user' },
-      //   { model: Subcategory, as: 'subcategory' },
-      // ],
+      include: [
+        { model: User, as: 'user' },
+        { model: Subcategory, as: 'subcategory' },
+      ],
     });
     res.status(200).json(items);
   } catch (error) {
@@ -54,10 +54,10 @@ exports.getItemById = async (req, res) => {
   try {
     const itemId = req.params.item_id;
     const item = await Item.findByPk(itemId, {
-      // include: [
-      //   { model: User, as: 'user' },
-      //   { model: Subcategory, as: 'subcategory' },
-      // ],
+      include: [
+        { model: User, as: 'user' },
+        { model: Subcategory, as: 'subcategory' },
+      ],
     });
 
     if (!item) {

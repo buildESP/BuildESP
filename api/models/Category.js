@@ -1,8 +1,5 @@
-// models/Category.js
-
 const { DataTypes } = require('sequelize');
 const { sequelize } = require('../config/db');
-const Subcategory = require('./Subcategory');
 
 const Category = sequelize.define(
   'Category',
@@ -22,9 +19,10 @@ const Category = sequelize.define(
     tableName: 'Categories',
     timestamps: true,
     underscored: true,
+    createdAt: 'created_at',
+    updatedAt: 'updated_at',
+    deletedAt: 'deleted_at'
   }
 );
-
-Category.hasMany(Subcategory, { foreignKey: 'category_id', as: 'subcategories' });
 
 module.exports = Category;

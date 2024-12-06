@@ -1,5 +1,3 @@
-// models/Subcategory.js
-
 const { DataTypes } = require('sequelize');
 const { sequelize } = require('../config/db');
 
@@ -25,6 +23,9 @@ const Subcategory = sequelize.define(
     tableName: 'Subcategories',
     timestamps: true,
     underscored: true,
+    createdAt: 'created_at',
+    updatedAt: 'updated_at',
+    deletedAt: 'deleted_at'
   }
 );
 

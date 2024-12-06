@@ -1,22 +1,146 @@
 // routes/categoryRoutes.js
-
 const express = require('express');
 const router = express.Router();
 const categoryController = require('../controllers/categoryController');
 
-// Créer une catégorie
+/**
+ * @swagger
+ * /api/categories:
+ *   post:
+ *     summary: Creates a new category
+ *     tags: [Categories]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *                 description: Name of the category
+ *     responses:
+ *       201:
+ *         description: Category created successfully
+ *       500:
+ *         description: Error during category creation
+ */
 router.post('/categories', categoryController.createCategory);
 
-// Récupérer toutes les catégories
+/**
+ * @swagger
+ * /api/categories:
+ *   get:
+ *     summary: Retrieves a list of all categories
+ *     tags: [Categories]
+ *     responses:
+ *       200:
+ *         description: A list of categories
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: string
+ *                     description: Category's ID
+ *                   name:
+ *                     type: string
+ *                     description: Category's name
+ *                   subcategories:
+ *                     type: array
+ *                     description: List of subcategories under the category
+ *                     items:
+ *                       type: object
+ *                       properties:
+ *                         id:
+ *                           type: string
+ *                           description: Subcategory's ID
+ *                         name:
+ *                           type: string
+ *                           description: Subcategory's name
+ */
 router.get('/categories', categoryController.getCategories);
 
-// Récupérer une catégorie par ID
+/**
+ * @swagger
+ * /api/categories/{category_id}:
+ *   get:
+ *     summary: Retrieves a category by ID
+ *     tags: [Categories]
+ *     parameters:
+ *       - in: path
+ *         name: category_id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The category's ID
+ *     responses:
+ *       200:
+ *         description: Category found successfully
+ *       404:
+ *         description: Category not found
+ *       500:
+ *         description: Error during fetching category
+ */
 router.get('/categories/:category_id', categoryController.getCategoryById);
 
-// Mettre à jour une catégorie par ID
+/**
+ * @swagger
+ * /api/categories/{category_id}:
+ *   put:
+ *     summary: Updates a category by ID
+ *     tags: [Categories]
+ *     parameters:
+ *       - in: path
+ *         name: category_id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The category's ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *                 description: The new name of the category
+ *     responses:
+ *       200:
+ *         description: Category updated successfully
+ *       404:
+ *         description: Category not found
+ *       500:
+ *         description: Error during category update
+ */
 router.put('/categories/:category_id', categoryController.updateCategory);
 
-// Supprimer une catégorie par ID
+/**
+ * @swagger
+ * /api/categories/{category_id}:
+ *   delete:
+ *     summary: Deletes a category by ID
+ *     tags: [Categories]
+ *     parameters:
+ *       - in: path
+ *         name: category_id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The category's ID
+ *     responses:
+ *       200:
+ *         description: Category deleted successfully
+ *       404:
+ *         description: Category not found
+ *       500:
+ *         description: Error during category deletion
+ */
 router.delete('/categories/:category_id', categoryController.deleteCategory);
 
 module.exports = router;

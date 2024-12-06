@@ -53,7 +53,7 @@ const authenticateToken = require('../middlewares/authMiddleware');
  *       500:
  *         description: Server error during user creation
  */
-router.post('/users', authenticateToken, userController.createUser);
+router.post('/users', userController.createUser);
 
 /**
  * @swagger
@@ -102,7 +102,7 @@ router.post('/users', authenticateToken, userController.createUser);
  *                     type: boolean
  *                     description: Indicates if the user is an administrator
  */
-router.get('/users', authenticateToken, userController.getUsers);
+router.get('/users', userController.getUsers);
 
 /**
  * @swagger

@@ -15,3 +15,13 @@ un user peut accéder qu'à son user:id par exemple
 (- middleware de vérification de isADmin, de validateUserData...?)
 
 - autres entités à définir
+
+
+
+catégories:
+
+outillage
+maison
+jardin
+livres
+électronique
