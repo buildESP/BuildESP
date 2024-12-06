@@ -27,7 +27,7 @@ exports.generateAccessToken = async (req, res) => {
     const payload = { id: user.id, isAdmin: user.isAdmin };
     const token = jwt.sign(payload, JWT_SECRET, { expiresIn: '1h' });
 
-    return res.json({ token });
+    return res.json({ token, userId: user.id });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Server error' });
