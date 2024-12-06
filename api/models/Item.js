@@ -1,9 +1,5 @@
-// models/Item.js
-
 const { DataTypes } = require('sequelize');
 const { sequelize } = require('../config/db');
-const User = require('./User');
-const Subcategory = require('./Subcategory');
 
 const Item = sequelize.define(
   'Item',
@@ -17,18 +13,10 @@ const Item = sequelize.define(
     user_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      references: {
-        model: User,
-        key: 'id',
-      },
     },
     subcategory_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      references: {
-        model: Subcategory,
-        key: 'id',
-      },
     },
     name: {
       type: DataTypes.STRING(100),
