@@ -55,6 +55,16 @@ const ProfileC = () => {
       console.log("Closing article modal");
     };
     
+    const signalArticles = () => {
+      alert("article signalé ⛔, nous allons examiner votre demande ") // Reset the selected article
+      console.log("Closing article modal");
+    };
+
+    const signalDemande = () => {
+      alert("demande signalé ⛔, nous allons examiner votre demande ") // Reset the selected article
+      console.log("Closing article modal");
+    };
+    
 
 
   // const handleCardClick = (article) => {
@@ -79,7 +89,7 @@ const ProfileC = () => {
               </div>
               {articles.map((article) => (
                 <>
-                <div key={article.id} onClick={() => cardDetailsArticlesClick(article)}>
+                <div  key={article.id} onClick={() => cardDetailsArticlesClick(article)}>
                   <CardsOffersC
                     key={article.id} 
                     title={article.title} 
@@ -101,6 +111,7 @@ const ProfileC = () => {
                     {/* Add other fields if necessary */}
                     <button className="offer-button-demands">Supprimer cet article</button>
                     <button className="close-button-demands" onClick={closeModalArticles}>Fermer</button>
+                    <button className="close-button-demands" onClick={signalArticles}>signaler </button>
                   </div>
                 </div>
               )}
@@ -110,7 +121,7 @@ const ProfileC = () => {
                 <h3>Articles demandés</h3>
               </div>
               {demandes.map((demande) => (
-                  <div key={demande.Id} onClick={() => cardDetailsClick(demande)}>
+                  <div  key={demande.Id} onClick={() => cardDetailsClick(demande)}>
                   <CardsDemandsC 
                     key={demande.Id} 
                     title={demande.Title} 
@@ -129,6 +140,7 @@ const ProfileC = () => {
                         <p><strong>Description : </strong>{selectedDemand.Description}</p>
                         <button className="offer-button-demands">Supprimer cette demande</button>
                         <button className="close-button-demands" onClick={closeModal}>Fermer</button>
+                        <button className="close-button-demands" onClick={signalDemande}>signaler</button>
                     </div>
                 </div>
             )}

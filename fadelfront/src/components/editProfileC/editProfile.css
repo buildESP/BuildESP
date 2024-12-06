@@ -1,3 +1,16 @@
+.form-container{
+   
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    overflow: hidden;
+    padding: 40px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    /* transition: transform 0.3s ease, box-shadow 0.3s ease; */
+
+
+ 
+}
 .edit-profile-container {
     padding: 20px;
     max-width: 600px;
@@ -14,7 +27,6 @@
 .profile-picture-section {
     margin-bottom: 20px;
     text-align: center;
-    border: solid;
     display: flex;
     justify-content: center;
 
@@ -56,12 +68,14 @@
 
 .form-group {
     margin-bottom: 15px;
+   
 }
 
 .form-group label {
     display: block;
     margin-bottom: 5px;
     font-weight: bold;
+    
 }
 
 .form-group input {
@@ -70,12 +84,13 @@
     border: 1px solid #ccc;
     border-radius: 4px;
     font-size: 14px;
+    
 }
 
 .submit-button {
     display: block;
     width: 100%;
-    background-color: #4CAF50;
+    /* background-color: #4CAF50; */
     color: white;
     padding: 10px 15px;
     border: none;
@@ -88,3 +103,4 @@
 .submit-button:hover {
     background-color: #45a049;
 }
+
