@@ -1,6 +1,5 @@
 const { DataTypes } = require('sequelize');
 const { sequelize } = require('../config/db');
-const Subcategory = require('./Subcategory'); // Import du modèle Subcategory
 
 const Category = sequelize.define(
   'Category',
@@ -19,10 +18,11 @@ const Category = sequelize.define(
   {
     tableName: 'Categories',
     timestamps: true,
-    underscored: true, // Utilise snake_case pour les noms de colonnes
+    underscored: true,
+    createdAt: 'created_at',
+    updatedAt: 'updated_at',
+    deletedAt: 'deleted_at'
   }
 );
-
-
 
 module.exports = Category;

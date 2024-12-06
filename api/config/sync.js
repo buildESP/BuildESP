@@ -1,8 +1,10 @@
+// config/sync.js
+
 const { sequelize } = require('./db');
 const { User, Category, Subcategory, Item } = require('../models/associations');
 
 sequelize
-  .sync({ alter: true }) // Utilisation de `alter` pour conserver les données
+  .sync({ alter: true })
   .then(() => {
     console.log('Tables synchronized');
   })

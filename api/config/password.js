@@ -1,3 +1,5 @@
+// config/password.js
+
 const bcrypt = require('bcrypt');
 
 async function generatePasswordHash() {

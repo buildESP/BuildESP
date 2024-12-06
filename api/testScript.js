@@ -1,8 +1,5 @@
 const { sequelize } = require('./config/db');
-const User = require('./models/User');
-const Category = require('./models/Category');
-const Subcategory = require('./models/Subcategory');
-const Item = require('./models/Item');
+const { User, Category, Subcategory, Item } = require('./models/associations');
 
 (async () => {
   try {
@@ -10,57 +7,87 @@ const Item = require('./models/Item');
     await sequelize.authenticate();
     console.log('Connexion réussie à la base de données.');
 
-    // Étape 1 : Insérer un utilisateur avec tous les champs requis
-    const user = await User.create({
-      firstname: 'John5',
-      lastname: 'Doe5',
-      email: 'test5@example.com',
-      password: 'securepassword2', // Assurez-vous que le mot de passe est sécurisé
-    });
+    // Étape 1 : Créer 5 utilisateurs
+    const users = await Promise.all(
+      Array.from({ length: 5 }, (_, i) => 
+        User.create({
+          firstname: `User${i + 1}`,
+          lastname: `LastName${i + 1}`,
+          email: `user${i + 1}@example.com`,
+          password: `password${i + 1}`,
+          address: `123 Rue Exemple ${i + 1}`,
+          postcode: `7500${i}`,
+          phone: `010203040${i}`,
+          rating: (Math.random() * 5).toFixed(2), // Note aléatoire entre 0 et 5
+          picture: `https://example.com/images/user${i + 1}.jpg`,
+          is_admin: i === 0, // Le premier utilisateur est admin
+        })
+      )
+    );
 
-    // Étape 2 : Insérer une catégorie
-    const category = await Category.create({
-      name: 'Électronique',
-    });
+    console.log('Utilisateurs créés avec succès.');
 
-    // Étape 3 : Insérer une sous-catégorie liée à la catégorie
-    const subcategory = await Subcategory.create({
-      name: 'Téléphones',
-      category_id: category.id, // Associe cette sous-catégorie à la catégorie créée
-    });
+    // Étape 2 : Créer les catégories et leurs sous-catégories
+    const categories = [
+      {
+        name: 'Outillage',
+        subcategories: ['Perceuses', 'Tournevis'],
+      },
+      {
+        name: 'Maison',
+        subcategories: ['Décoration', 'Meubles'],
+      },
+      {
+        name: 'Jardin',
+        subcategories: ['Plantes', 'Mobilier de jardin'],
+      },
+      {
+        name: 'Livres',
+        subcategories: ['Romans', 'BD'],
+      },
+      {
+        name: 'Électronique',
+        subcategories: ['Téléphones', 'Ordinateurs'],
+      },
+    ];
 
-    // Étape 4 : Insérer un article lié à l'utilisateur et à la sous-catégorie
-    await Item.create({
-      name: 'iPhone',
-      description: 'Un smartphone moderne avec des fonctionnalités avancées.',
-      user_id: user.id, // Associe cet article à l'utilisateur créé
-      subcategory_id: subcategory.id, // Associe cet article à la sous-catégorie créée
-    });
+    for (const categoryData of categories) {
+      // Créer une catégorie
+      const category = await Category.create({ name: categoryData.name });
 
-    console.log('Données insérées avec succès.');
+      console.log(`Catégorie "${category.name}" créée avec succès.`);
 
-    // Étape 5 : Récupérer les données avec les relations
-    const fetchedCategory = await Category.findOne({
-      where: { name: 'Électronique' }, // Recherche la catégorie par son nom
-      include: [
-        {
-          model: Subcategory,
-          as: 'subcategories', // Alias défini dans les relations
-          include: [
-            {
-              model: Item,
-              as: 'items', // Alias défini dans les relations
-            },
-          ],
-        },
-      ],
-    });
+      // Créer les sous-catégories associées
+      for (const subcategoryName of categoryData.subcategories) {
+        const subcategory = await Subcategory.create({
+          name: subcategoryName,
+          category_id: category.id,
+        });
 
-    // Affichage des résultats au format JSON pour une meilleure lisibilité
-    console.log('Catégorie récupérée :', JSON.stringify(fetchedCategory, null, 2));
+        console.log(`Sous-catégorie "${subcategory.name}" créée pour la catégorie "${category.name}".`);
+
+        // Créer 2 items par sous-catégorie
+        for (let i = 0; i < 2; i++) {
+          const randomUser = users[Math.floor(Math.random() * users.length)];
+
+          await Item.create({
+            name: `${subcategoryName} - Item ${i + 1}`,
+            description: `Un exemple d'article ${i + 1} dans la sous-catégorie ${subcategoryName}.`,
+            picture: `https://example.com/images/${subcategoryName.toLowerCase()}${i + 1}.jpg`,
+            status: i % 3 === 0 ? 'Available' : i % 3 === 1 ? 'Rented' : 'Unavailable',
+            user_id: randomUser.id,
+            subcategory_id: subcategory.id,
+          });
+
+          console.log(`Item "${subcategoryName} - Item ${i + 1}" ajouté à la sous-catégorie "${subcategory.name}".`);
+        }
+      }
+    }
+
+    console.log('Toutes les données ont été insérées avec succès.');
   } catch (error) {
     // Gestion des erreurs
-    console.error('Erreur lors du test :', error);
+    console.error('Erreur lors de l\'insertion des données :', error);
   } finally {
     // Fermer la connexion à la base de données
     await sequelize.close();

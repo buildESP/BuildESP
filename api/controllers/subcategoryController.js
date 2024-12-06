@@ -1,7 +1,6 @@
 // controllers/subcategoryController.js
 
-const Subcategory = require('../models/Subcategory');
-const Category = require('../models/Category');
+const { Category, Subcategory, Item } = require('../models/associations');
 
 
 // create a subcategory
@@ -30,13 +29,19 @@ exports.createSubcategory = async (req, res) => {
 // get all subcategories
 exports.getSubcategories = async (req, res) => {
   try {
-    const subcategories = await Subcategory.findAll();
+    const subcategories = await Subcategory.findAll({
+      include: [
+        { model: Category, as: 'category'},
+        { model: Item, as: 'items' },
+      ],
+    });
     res.status(200).json(subcategories);
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Error during fetching subcategories' });
   }
 };
+
 
 // get subcategory by ID
 exports.getSubcategoryById = async (req, res) => {

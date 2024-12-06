@@ -1,9 +1,10 @@
+// models/associations.js
+
 const Category = require('./Category');
 const Subcategory = require('./Subcategory');
 const Item = require('./Item');
 const User = require('./User');
 
-// Définir les relations
 Category.hasMany(Subcategory, { foreignKey: 'category_id', as: 'subcategories' });
 Subcategory.belongsTo(Category, { foreignKey: 'category_id', as: 'category' });
 

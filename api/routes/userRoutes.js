@@ -102,7 +102,7 @@ router.post('/users', authenticateToken, userController.createUser);
  *                     type: boolean
  *                     description: Indicates if the user is an administrator
  */
-router.get('/users', authenticateToken, userController.getUsers);
+router.get('/users', userController.getUsers);
 
 /**
  * @swagger

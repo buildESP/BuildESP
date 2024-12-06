@@ -53,7 +53,6 @@ Relative to items.
 | `name`        | VARCHAR(100)  | Name of the item                  |
 | `description` | TEXT          | Detailed description              |
 | `subcategory_id` | INT (FK)   | Belongs to a subcategory          |
-| `exchanges_id`| INT (FK)      | Has many exchanges                |
 | `picture`     | VARCHAR(255)  | URL pointing to item’s picture    |
 | `status`      | ENUM          | Item status: available, rented, not available |
 
