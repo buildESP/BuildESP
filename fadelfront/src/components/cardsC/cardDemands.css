@@ -1,0 +1,46 @@
+.card-demands {
+    width: 300px; /* Taille fixe en largeur pour toutes les cartes */
+    height: 200px; /* Taille fixe en hauteur */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+    margin: 10px;
+    box-sizing: border-box; /* Inclure padding/border dans la taille */
+    overflow: hidden; /* Éviter que le contenu déborde */
+    transition: transform 0.3s ease-out, box-shadow 0.3s ease-out, border-color 0.3s ease-out;
+    transform: scale(0.9);
+}
+
+/* Effet au survol */
+.card-demands:hover {
+    transform: scale(1); 
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.card-content-demands {
+    padding: 10px;
+    text-align: center;
+}
+
+.card-title-demands {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+.card-author-demands {
+    font-size: 14px;
+    margin-bottom: 6px;
+    color: #555;
+}
+
+.card-description-demands {
+    font-size: 14px;
+    color: #666;
+}
+
