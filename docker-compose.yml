@@ -17,7 +17,7 @@ services:
 
   frontend:
     build:
-      context: ./app
+      context: ./fadelfront
       dockerfile: Dockerfile
     ports:
       - "80:80"
