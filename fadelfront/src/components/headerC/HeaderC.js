@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom'; // Importer useNavigate pour la redirection
+import axios from 'axios';
 import './header.css';
 
 const HeaderC = () => {
     const [isDesktop, setIsDesktop] = useState(window.innerWidth >= 1024);
     const [activeCategory, setActiveCategory] = useState(null);
+    const [categories, setCategories] = useState([]);
     const navigate = useNavigate(); // Utilisation de useNavigate pour changer de page
 
     // Gestion de la taille de l'écran
@@ -17,41 +19,37 @@ const HeaderC = () => {
         return () => window.removeEventListener('resize', handleResize);
     }, []);
 
-    // Données des catégories et sous-catégories
-    const categories = [
-        {
-            name: 'Immobilier',
-            subcategories: ['Locations', 'Ventes', 'Colocations', 'Bureaux & Commerces'],
-        },
-        {
-            name: 'Véhicules',
-            subcategories: ['Voitures', 'Motos', 'Utilitaires', 'Caravaning'],
-        },
-        {
-            name: 'Emploi',
-            subcategories: ['Offres d’emploi', 'Stages', 'Services à domicile'],
-        },
-        {
-            name: 'Mode',
-            subcategories: ['Vêtements', 'Chaussures', 'Accessoires', 'Montres & Bijoux'],
-        },
-        {
-            name: 'Maison',
-            subcategories: ['Meubles', 'Électroménager', 'Décoration', 'Jardinage'],
-        },
-        {
-            name: 'Loisirs',
-            subcategories: ['Livres', 'Instruments de musique', 'Jeux & Jouets', 'Sports & Hobbies'],
-        },
-        {
-            name: 'Services',
-            subcategories: ['Cours particuliers', 'Déménagement', 'Réparation', 'Transport'],
-        },
-    ];
+    // Récupérer les catégories depuis l'API
+    useEffect(() => {
+        const fetchCategories = async () => {
+            try {
+                const response = await axios.get('http://localhost:4000/api/categories');
+                const formattedCategories = response.data.map((category) => ({
+                    name: category.name,
+                    subcategories: category.subcategories.map((sub) => ({
+                        name: sub.name,
+                        id: sub.id, // Inclure l'ID de la sous-catégorie
+                    })),
+                }));
+                setCategories(formattedCategories);
+            } catch (error) {
+                console.error("Erreur lors de la récupération des catégories :", error);
+            }
+        };
+
+        fetchCategories();
+    }, []);
 
     // Fonction pour gérer le clic sur une sous-catégorie
-    const handleSubcategoryClick = (subcategory) => {
-        navigate('/home', { state: { selectedSubcategory: subcategory } });
+    const handleSubcategoryClick = (category, subcategory) => {
+        localStorage.setItem('subcategory_id', subcategory.id); // Stocker l'ID dans le localStorage
+        navigate(`/home/${category.name}/${subcategory.name}`, { state: { selectedSubcategory: subcategory.name } });
+    };
+
+    // Fonction pour gérer le clic sur le bouton "Tout"
+    const handleAllClick = () => {
+        localStorage.removeItem('subcategory_id'); // Supprimer la sous-catégorie du localStorage
+        navigate('/home'); // Rediriger vers la page d'accueil sans sous-catégorie
     };
 
     return (
@@ -59,22 +57,12 @@ const HeaderC = () => {
             <header className="header">
                 <div className="header-container">
                     <div className="logo">
-                        <img src="./media/pics/logo.png" alt="Logo" />
+                    <Link to="/home" id="quartier">
+                        <img src="./media/pics/logo.png" alt="Logo" onClick={handleAllClick}/>                        
+                    </Link>
+                        
                     </div>
-                    <div className="search-bar">
-                        <input type="text" placeholder="Rechercher..." />
-                        <button className="search-button">
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                width="20"
-                                height="20"
-                                fill="currentColor"
-                                viewBox="0 0 16 16"
-                            >
-                                <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.415l-3.85-3.85a1.007 1.007 0 0 0-.115-.098zm-5.442 1.398a5.5 5.5 0 1 1 0-11 5.5 5.5 0 0 1 0 11z" />
-                            </svg>
-                        </button>
-                    </div>
+                    
                     <div className="nav-buttons">
                         <Link to="/addAnAnnounce" className="add-button">
                             Ajouter une annonce
@@ -104,9 +92,9 @@ const HeaderC = () => {
                                         <li
                                             key={subIndex}
                                             className="subcategory-item"
-                                            onClick={() => handleSubcategoryClick(sub)}
+                                            onClick={() => handleSubcategoryClick(category, sub)}
                                         >
-                                            {sub}
+                                            {sub.name}
                                         </li>
                                     ))}
                                 </ul>

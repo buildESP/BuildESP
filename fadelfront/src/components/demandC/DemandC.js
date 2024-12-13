@@ -30,14 +30,12 @@ const DemandC = () => {
             
             <div className='base'>
                 <div className='intro'>
-                        <img src="./media/pics/entraide.png" alt="" id="entraide"/>
                         <div id="textpresentation">
                             <h2>Buildinguerie</h2>
                             <div>
                             <input type="text" placeholder="Rechercher..." className="search-input" />
                             </div>
                         </div>
-                        <img src="./media/pics/quartier.webp" alt="" id="quartier" />
                 </div>
                 <div className='offersList'>
                     <h2>Liste des demandes</h2>
