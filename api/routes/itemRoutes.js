@@ -98,6 +98,8 @@ router.post('/items', ItemController.createItem);
  */
 router.get('/items', ItemController.getItems);
 
+router.get('/items/sub/:subcategory_id', ItemController.getItemsBySubcategoryId);
+
 /**
  * @swagger
  * /api/items/{item_id}:
@@ -120,6 +122,8 @@ router.get('/items', ItemController.getItems);
  *         description: Error during fetching item
  */
 router.get('/items/:item_id', ItemController.getItemById);
+
+
 
 /**
  * @swagger
