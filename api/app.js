@@ -11,7 +11,7 @@ const cors = require('cors');
 
 const JWT_SECRET = process.env.JWT_SECRET;
 const app = express();
-const port = process.env.PORT || 4000;
+const port = process.env.PORT || 3000;
 
 const authRoutes = require('./routes/authRoutes');
 const userRoutes = require('./routes/userRoutes');
