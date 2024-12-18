@@ -193,9 +193,9 @@ const LoginC = () => {
         {isLogin && <div className="divider"><span>OU</span></div>}
         {isLogin && (
           <div className="social-buttons">
-            <img src="./media/pics/facebook.webp" id="facebook" alt="Facebook" />
-            <img src="./media/pics/google.png" id="google" alt="Google" />
-            <img src="./media/pics/linkedln.webp" id="linkedln" alt="LinkedIn" />
+            <img src="media/pics/facebook.webp" id="facebook" alt="Facebook" />
+            <img src="media/pics/google.png" id="google" alt="Google" />
+            <img src="media/pics/linkedln.webp" id="linkedln" alt="LinkedIn" />
           </div>
         )}
       </form>
