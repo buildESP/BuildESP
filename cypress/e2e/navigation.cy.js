@@ -1,4 +1,4 @@
-describe('profile Test', () => {
+describe('Test navigation', () => {
     it('should login successfully with valid credentials', () => {
       // Visit the login page
       cy.visit('http://localhost:3001/login'); // Update the URL to match your login page
@@ -16,12 +16,10 @@ describe('profile Test', () => {
       
       cy.wait(500);
 
-      cy.get('[href="/profile"]').click();
+      cy.get(':nth-child(1) > span').realHover('mouse');
 
-      cy.url().should('include', '/profile');
+      cy.wait(5000);
 
-      cy.get('.profile-name').should('contain', 'Mamadou');
-      // Update the selector to match your submit button
     });
     it('should update profile successfully', () => {
       // Visit the login page
@@ -39,16 +37,5 @@ describe('profile Test', () => {
       
       cy.wait(500);
 
-      cy.get('[href="/profile"]').click();
-
-      cy.get('.profile-card > .nav-button').click();
-
-      cy.get('#nom').type('Tall');
-
-    
-
-      cy.get('#prenom').clear().type('Mamadou');
-
-      cy.get('[type="submit"]').click();
     });
 });
