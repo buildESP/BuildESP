@@ -11,6 +11,13 @@
     height: 50px;
 }
 
+.logo img {
+    height: 40px;
+    border: solid black 1px;
+    border-radius: 50px;
+}
+ 
+
 .header-container {
     display: flex;
     justify-content: space-between;
@@ -22,6 +29,11 @@
 
 .logo img {
     height: 40px;
+}
+
+.homelogo {
+    height: 20px;
+    border-radius: 50px;
 }
 
 .search-bar {

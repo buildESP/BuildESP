@@ -58,7 +58,7 @@ const HeaderC = () => {
                 <div className="header-container">
                     <div className="logo">
                     <Link to="/home" id="quartier">
-                        <img src="./media/pics/logo.png" alt="Logo" onClick={handleAllClick}/>                        
+                        <img src="./media/pics/logo.png" className='homelogo' alt="Logo" onClick={handleAllClick}/>                        
                     </Link>
                         
                     </div>

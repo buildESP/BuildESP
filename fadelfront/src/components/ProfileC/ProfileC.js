@@ -86,7 +86,7 @@ const ProfileC = () => {
         <div className="profile-card">
           <img src={userProfile[0].picture} alt="Profil" className="profile-img" />
           <h2 className="profile-name">{userProfile[0].firstname}</h2>
-          <p className="profile-description">Développeur Front-end</p>
+          <p className="profile-description">{Number(userProfile[0].rating)}</p>
           <Link to="/editProfile" className="nav-button">
             Editer profil
           </Link>

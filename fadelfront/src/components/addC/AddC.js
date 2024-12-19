@@ -46,7 +46,7 @@ const AddC = () => {
         };
 
         try {
-            const response = await axios.post('http://localhost:4000/api/items', postData);
+            const response = await axios.post('http://localhost:3000/api/items', postData);
             console.log('Response from server:', response.data);
             alert('Data successfully submitted!');
         } catch (error) {

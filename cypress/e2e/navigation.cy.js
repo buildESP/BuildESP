@@ -15,8 +15,9 @@ describe('Test navigation', () => {
       cy.get('.login-button').click(); 
       
       cy.wait(500);
-
-      cy.get(':nth-child(1) > span').realHover('mouse');
+    
+      cy.get(':nth-child(1) > span').should('be.visible');
+      cy.get(':nth-child(1) > span').trigger('mouseover');
 
       cy.wait(5000);
 
