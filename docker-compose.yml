@@ -24,6 +24,7 @@ services:
       - "3001:3000"
     depends_on:
       - backend
+    image: stephb421/buildesp-app:latest
   
 
   db:
