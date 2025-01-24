@@ -18,10 +18,10 @@ services:
 
   frontend:
     build:
-      context: ./fadelfront
+      context: ./app
       dockerfile: Dockerfile
     ports:
-      - "3001:3000"
+      - "8080:3000"
     depends_on:
       - backend
     image: stephb421/buildesp-app:latest
