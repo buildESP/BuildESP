@@ -15,10 +15,11 @@ services:
       - JWT_SECRET=cD8WjQGtWK1TiUmu0hufQ8KjkOLxCNAsgZa3mbIdlXuPShMYYIq9OTA4U8PfM4SZGNoUFxmFl3VrBoxRxxbrLA==
     depends_on:
       - db
+    image: stephb421/buildesp-backend:latest
 
   frontend:
     build:
-      context: ./fadelfront
+      context: ./app
       dockerfile: Dockerfile
     ports:
       - "3001:3000"
