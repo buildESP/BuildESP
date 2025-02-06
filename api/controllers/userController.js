@@ -1,6 +1,6 @@
 // controllers/userController.js
 
-const User = require('../models/User');
+const { User } = require('../models/associations');
 
 // Create user
 exports.createUser = async (req, res) => {

@@ -1,6 +1,6 @@
 // controllers/categoryController.js
 
-const { Category } = require('../models/associations');
+const { Category, Subcategory } = require('../models/associations');
 
 // create a category
 exports.createCategory = async (req, res) => {
@@ -24,7 +24,7 @@ exports.getCategories = async (req, res) => {
     const categories = await Category.findAll({
       include: [
         {
-          model: require('../models/Subcategory'),
+          model: Subcategory,
           as: 'subcategories',
         },
       ],
@@ -44,7 +44,7 @@ exports.getCategoryById = async (req, res) => {
     const category = await Category.findByPk(categoryId, {
       include: [
         {
-          model: require('../models/Subcategory'),
+          model: Subcategory,
           as: 'subcategories',
         },
       ],
