@@ -1,12 +1,12 @@
 
-# User Stories pour Buildinguerie
+# User Stories pour NeighBorrow
 
 ## 1. Nouvel utilisateur
 
-Lorsqu'un nouvel utilisateur découvre l'application Buildinguerie, il a besoin de s'inscrire pour accéder aux fonctionnalités principales. L'inscription doit être rapide et facile pour maximiser l'engagement.
+Lorsqu'un nouvel utilisateur découvre l'application NeighBorrow, il a besoin de s'inscrire pour accéder aux fonctionnalités principales. L'inscription doit être rapide et facile pour maximiser l'engagement.
 
 ### Titre : Création d'un compte utilisateur
-- **En tant que** : Nouvel utilisateur découvrant Buildinguerie pour la première fois
+- **En tant que** : Nouvel utilisateur découvrant NeighBorrow pour la première fois
 - **Je veux** : M'inscrire en utilisant mon adresse e-mail ou un réseau social (Google, Facebook)
 - **Afin de** : Accéder à la plateforme, découvrir les offres, et commencer à prêter ou emprunter des objets
 

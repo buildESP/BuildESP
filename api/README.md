@@ -1,4 +1,4 @@
-# Welcome to BUILDINGUERIE RESTful API.
+# Welcome to NEIGHBORROW RESTful API.
 
 You will find in this README some informations about uses cases, dependencies details & versionning, logic of current architecture and details about present files.
 
@@ -9,7 +9,7 @@ You will find in this README some informations about uses cases, dependencies de
 1. For installing dependencies :
 > npm install
 
-2. Create a buildinguerie_dev_db in mariadb / mysql.
+2. Create a neighborrow_dev_db in mariadb / mysql.
 
 3. Edit the .env file with rights informations.
 
@@ -25,7 +25,7 @@ You will find in this README some informations about uses cases, dependencies de
 
 - **bcrypt, v5.1.1** for encrypting passwords
 - **dotenv, v16.4.5** for reading env variables in .env file in a code context
-- **express, v4.21.1** the js framework for building app, based on node.js
+- **express, v4.21.1** the js framework for neighborrow app, based on node.js
 - **mysql2, v3.11.3** for handling sql databases connexions inside express app
 - **sequelize, v6.37.4** library orm for mapping object into db using code
 

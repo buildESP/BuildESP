@@ -1,4 +1,4 @@
-# Welcome to BUILDINGUERIE repository
+# Welcome to NEIGHBORROW repository
 
 ## Architecture
 

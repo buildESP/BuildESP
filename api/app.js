@@ -34,6 +34,6 @@ app.use('/api', subcategoryRoutes);
 app.use('/api', itemRoutes);
 
 app.listen(port, () => {
-  console.log(`Good job! Buildinguerie API is running on http://localhost:${port}`);
+  console.log(`Good job! NeighBorrow API is running on http://localhost:${port}`);
   console.log(`Docs available at http://localhost:${port}/doc`);
 });
