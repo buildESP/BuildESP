@@ -18,6 +18,7 @@ const userRoutes = require('./routes/userRoutes');
 const categoryRoutes = require('./routes/categoryRoutes');
 const subcategoryRoutes = require('./routes/subcategoryRoutes');
 const itemRoutes = require('./routes/itemRoutes');
+const groupRoutes = require('./routes/groupRoutes');
 
 app.use(bodyParser.json());
 
@@ -32,6 +33,7 @@ app.use('/api', authRoutes);
 app.use('/api', categoryRoutes);
 app.use('/api', subcategoryRoutes);
 app.use('/api', itemRoutes);
+app.use('/api', groupRoutes);
 
 app.listen(port, () => {
   console.log(`Good job! Buildinguerie API is running on http://localhost:${port}`);
