@@ -4,9 +4,9 @@ const swaggerOptions = {
     definition: {
       openapi: '3.0.0',
       info: {
-        title: 'Buildinguerie API Documentation',
+        title: 'NeighBorrow API Documentation',
         version: '1.0.0',
-        description: 'API for the Buildinguerie app',
+        description: 'API for the NeighBorrow app',
       },
       servers: [
         {

@@ -1,7 +1,7 @@
 {
-  "name": "api_buildinguerie",
+  "name": "api_neighborrow",
   "version": "1.0.0",
-  "description": "api for buildinguerie app - esp project",
+  "description": "api for neighborrow app - esp project",
   "main": "app.js",
   "scripts": {
     "start": "node app.js",
@@ -9,7 +9,7 @@
     "fixtures": "node fixtures/fixtures.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "buildinguerie team",
+  "author": "neighborrow team",
   "license": "ISC",
   "dependencies": {
     "bcrypt": "^5.1.1",
