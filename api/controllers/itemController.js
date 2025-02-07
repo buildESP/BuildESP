@@ -1,6 +1,6 @@
-const Item = require('../models/Item');
-const User = require('../models/User');
-const Subcategory = require('../models/Subcategory');
+// controllers/itemController.js
+
+const { Item, User, Subcategory } = require('../models/associations');
 
 // Create item
 exports.createItem = async (req, res) => {
