@@ -51,7 +51,6 @@ exports.getItems = async (req, res) => {
 
 // Get item by ID
 exports.getItemById = async (req, res) => {
-  console.log("pas bon")
   try {
     const itemId = req.params.item_id;
     const item = await Item.findByPk(itemId, {
@@ -71,27 +70,6 @@ exports.getItemById = async (req, res) => {
     res.status(500).json({ error: 'Error during fetching item' });
   }
 };
-
-// Get item by subCategory
-exports.getItemsBySubcategoryId = async (req, res) => {  
-  console.log("bon")
-  try {    
-    const subcategoryId = req.params.subcategory_id;    
-    const items = await Item.findAll({      
-      where: { subcategory_id: subcategoryId },      
-      include: [        
-        { model: User, as: 'user' },
-        { model: Subcategory, as: 'subcategory' },      
-      ],    
-    });    
-    if (!items) {      
-      return res.status(404).json({ message: 'no Items in this subcategory' });    
-    }    
-    res.status(200).json(items);  
-  } catch (error) {    
-      console.error(error);    
-      res.status(500).json({ error: 'Error during fetching item' });  
-}};
 
 // Update item by ID
 exports.updateItem = async (req, res) => {
