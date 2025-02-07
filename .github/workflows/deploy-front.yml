@@ -25,12 +25,32 @@ jobs:
       - name: Deploy Frontend to EC2
         run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.MY_FRONT_SERVER }}@${{ secrets.EC2_FRONT_HOST }} << 'EOF'
+            echo "🚀 Déploiement en cours sur le serveur..."
+
             cd /var/www/front
+            echo "📥 Pulling latest changes..."
             git pull origin DevOps_ESP-51  # Récupère les nouvelles modifications
-            cd frontend
+
+            cd frontend/app  # Aller dans le bon dossier
             if [ -f package.json ]; then
-              npm install  # Installe les dépendances seulement si package.json existe
+              echo "📦 Installing dependencies..."
+              npm install  # Installe les dépendances
+
+              echo "⚙️  Building frontend..."
               npm run build  # Compile le projet si nécessaire
+            else
+              echo "❌ ERREUR: package.json non trouvé dans /var/www/front/frontend/app/"
+              exit 1
             fi
+
+            echo "🚀 Vérification de PM2..."
+            if ! command -v pm2 &> /dev/null; then
+              echo "⚠️  PM2 non trouvé. Installation en cours..."
+              npm install -g pm2
+            fi
+
+            echo "🔄 Restarting frontend app..."
             pm2 restart front || pm2 start npm --name "front" -- run start  # Démarre ou redémarre l'application
+            
+            echo "✅ Déploiement terminé avec succès !"
           EOF
