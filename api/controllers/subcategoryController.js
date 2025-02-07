@@ -42,7 +42,6 @@ exports.getSubcategories = async (req, res) => {
   }
 };
 
-
 // get subcategory by ID
 exports.getSubcategoryById = async (req, res) => {
   try {
