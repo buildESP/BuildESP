@@ -2,7 +2,7 @@
 
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
-const User = require('../models/User');
+const { User } = require('../models/associations');
 const JWT_SECRET = process.env.JWT_SECRET;
 
 exports.generateAccessToken = async (req, res) => {
