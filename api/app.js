@@ -14,6 +14,7 @@ const JWT_SECRET = process.env.JWT_SECRET;
 const app = express();
 const port = process.env.PORT || 3000;
 
+// import routes
 const authRoutes = require('./routes/authRoutes');
 const userRoutes = require('./routes/userRoutes');
 const categoryRoutes = require('./routes/categoryRoutes');
@@ -29,7 +30,7 @@ app.use(bodyParser.json());
 const swaggerSpec = swaggerJsdoc(swaggerOptions);
 app.use('/doc', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
-// Routes
+// Routes use
 app.use(cors({ origin: true }));
 app.use('/api', userRoutes);
 app.use('/api', authRoutes);
