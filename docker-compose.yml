@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - DB_HOST=db
+      - DB_USER=root
+      - DB_PASSWORD=root
+      - DB_NAME=neighborrow_dev_db
+      - JWT_SECRET=cD8WjQGtWK1TiUmu0hufQ8KjkOLxCNAsgZa3mbIdlXuPShMYYIq9OTA4U8PfM4SZGNoUFxmFl3VrBoxRxxbrLA==
+    depends_on:
+      - db
+    image: stephb421/buildesp-backend:latest
+
+  frontend:
+    build:
+      context: ./app
+      dockerfile: Dockerfile
+    ports:
+      - "8080:3000"
+    depends_on:
+      - backend
+    image: stephb421/buildesp-app:latest
+  
+
+  db:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: neighborrow_dev_db
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+    command: --default-authentication-plugin=caching_sha2_password
+
+
+volumes:
+  mysql-data:

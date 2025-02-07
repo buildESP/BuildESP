@@ -1,0 +1,136 @@
+.flex-container {
+    display: flex;
+    flex-wrap: wrap; /* Permet d'aller à la ligne si nécessaire */
+    justify-content: space-between; /* Espacement entre les lignes */
+    gap: 20px; /* Espacement entre les articles */
+    padding: 20px;
+}
+
+.flex-container > * {
+    flex: 1 1 calc(33.333% - 20px); /* Chaque article occupe environ 1/3 de la largeur */
+    box-sizing: border-box; /* Pour inclure le padding dans la largeur */
+}
+
+.articles-section-demands {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.grid-container-demands {
+    display: grid; /* Active la grille */
+    grid-template-columns: repeat(3, 1fr); /* Définit 3 colonnes de tailles égales */
+    gap: 20px; /* Espacement entre les cartes */
+    justify-content: center; /* Centre la grille horizontalement */
+    padding: 20px; /* Ajoute un espace intérieur au conteneur */
+}
+
+@media (max-width: 768px) {
+    .grid-container-demands {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    .grid-container-demands {
+        grid-template-columns: 1fr; /* Une seule colonne sur petits écrans */
+        gap: 10px;
+    }
+}
+
+/* Modal */
+.modal-demands {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6); /* Fond semi-transparent */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content-demands {
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    width: 90%;
+    max-width: 500px;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.modal-content-demands h2 {
+    margin-bottom: 10px;
+}
+
+.modal-content-demands p {
+    margin: 10px 0;
+}
+
+.offer-button-demands {
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    margin-top: 10px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.close-button-demands {
+    background-color: #f44336;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    margin-top: 10px;
+    cursor: pointer;
+    border-radius: 5px;
+    margin-left: 10px;
+}
+
+
+
+/* Base and intro */
+.base-demands {
+    padding: 20px;
+}
+
+.intro-demands {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+#entraide-demands, #quartier-demands {
+    width: 45%;
+    border-radius: 8px;
+}
+
+/* Texte de présentation */
+#textpresentation-demands {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.search-input-demands {
+    padding: 10px;
+    margin-top: 10px;
+    width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.offersList-demands {
+    margin-bottom: 20px;
+}
+
+h2 {
+    font-size: 24px;
+}

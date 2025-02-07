@@ -1,0 +1,27 @@
+Ayoub:
+
+- swagger sur les categoryRoutes, subcategoryRoutes et itemRoutes
+- faire le schéma pour définir les relations entre les tables
+(voir dans config/sync.js, elles sont détaillées. et dans data_dictionnary)
+- (relations entre les tables ?)
+
+FL:
+
+- relations entre les tables
+
+- droits d'accès aux routes (middleware de role)
+un user peut accéder qu'à son user:id par exemple
+
+(- middleware de vérification de isADmin, de validateUserData...?)
+
+- autres entités à définir
+
+
+
+catégories:
+
+outillage
+maison
+jardin
+livres
+électronique

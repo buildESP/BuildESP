@@ -1,9 +1,12 @@
-const { sequelize } = require('./db');
-const User = require('../models/User');
+// config/sync.js
 
-sequelize.sync({ alter: true })
+const { sequelize } = require('./db');
+const { User, Category, Subcategory, Item } = require('../models/associations');
+
+sequelize
+  .sync({ alter: true })
   .then(() => {
-    console.log('User table is synchronized');
+    console.log('Tables synchronized');
   })
   .catch((err) => {
     console.error('Error during synchronization', err);
