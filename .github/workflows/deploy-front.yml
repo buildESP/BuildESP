@@ -3,36 +3,34 @@ name: Deploy Frontend
 on:
   push:
     branches:
-      - DevOps_ESP-51  # Déclenche le workflow quand on push sur la branche DevOps_ESP-51
+      - DevOps_ESP-51  # Déclenche l'action sur cette branche
     paths:
-      - 'frontend/**'  # Ne déclenche le déploiement que si le frontend est modifié
+      - 'frontend/**'  # Ne déploie que si des fichiers dans frontend/ changent
 
 jobs:
   deploy:
-    runs-on: ubuntu-latest  # Exécute le workflow sur un runner Ubuntu
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v4  # Récupère le code du repository dans l'environnement de travail
+        uses: actions/checkout@v4
 
       - name: Configure SSH
         run: |
-          mkdir -p ~/.ssh  # Crée le dossier SSH si nécessaire
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa  # Ajoute la clé privée SSH
-          chmod 600 ~/.ssh/id_rsa  # Assure-toi que la clé a les bonnes permissions
-          ssh-keyscan -H ${{ secrets.EC2_FRONT_HOST }} >> ~/.ssh/known_hosts  # Ajoute l'hôte distant à known_hosts
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H ${{ secrets.EC2_FRONT_HOST }} >> ~/.ssh/known_hosts
 
       - name: Deploy Frontend to EC2
         run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.MY_FRONT_SERVER }}@${{ secrets.EC2_FRONT_HOST }} << 'EOF'
-            # Se rendre dans le répertoire du frontend
-            cd /var/www/front/frontend  # Assurez-vous que ce chemin est correct
-            # Récupérer les dernières modifications de la branche DevOps_ESP-51
-            git pull origin DevOps_ESP-51
-            # Installer les dépendances du frontend
-            npm install
-            # Compiler le projet
-            npm run build
-            # Redémarrer l'application (si vous utilisez pm2)
-            pm2 restart front
+            cd /var/www/front
+            git pull origin DevOps_ESP-51  # Récupère les nouvelles modifications
+            cd frontend
+            if [ -f package.json ]; then
+              npm install  # Installe les dépendances seulement si package.json existe
+              npm run build  # Compile le projet si nécessaire
+            fi
+            pm2 restart front || pm2 start npm --name "front" -- run start  # Démarre ou redémarre l'application
           EOF
