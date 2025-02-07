@@ -8,6 +8,7 @@ const swaggerUi = require('swagger-ui-express');
 const swaggerOptions = require('./swaggerOptions');
 const jwt = require('jsonwebtoken');
 const cors = require('cors');
+const chalk = require('chalk');
 
 const JWT_SECRET = process.env.JWT_SECRET;
 const app = express();
@@ -37,6 +38,9 @@ app.use('/api', itemRoutes);
 app.use('/api', exchangeRoutes);
 
 app.listen(port, () => {
+  console.log(chalk.green.bold(`🚀 Good job! Buildinguerie API is running on http://localhost:${port}\n`));
+  console.log(chalk.blue(`📚 Docs available at: http://localhost:${port}/doc\n`));
+  console.log(chalk.yellow(`🌐 Environment: ${process.env.NODE_ENV || 'development'}`));
   console.log(`Good job! NeighBorrow API is running on http://localhost:${port}`);
   console.log(`Docs available at http://localhost:${port}/doc`);
 });
