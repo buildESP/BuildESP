@@ -1,6 +1,5 @@
-// fixtures/fixtures.js
-
 const readline = require('readline');
+const chalk = require('chalk');
 const { sequelize } = require('../config/db');
 const { User, Category, Subcategory, Item } = require('../models/associations');
 const userFixtures = require('./userFixtures');
@@ -15,62 +14,58 @@ const rl = readline.createInterface({
 
 const confirmAction = () => {
   return new Promise((resolve) => {
-    rl.question('Are you sure you want to drop all tables and apply the fixtures? (yes/no) ', (answer) => {
-      if (answer.toLowerCase() === 'yes') {
-        resolve(true);
-      } else {
-        resolve(false);
+    rl.question(
+      chalk.yellow('⚠️  Are you sure you want to drop all tables and apply the fixtures? (yes/no) '),
+      (answer) => {
+        resolve(answer.toLowerCase() === 'yes');
       }
-    });
+    );
   });
 };
 
 const applyFixtures = async () => {
   try {
-    // Connexion à la base de données
-    console.log('Successfully connected to the database.');
-
-    // Demander confirmation à l'utilisateur
+    console.log(chalk.cyan('\n🔗 Connecting to the database...'));
+    
+    // Ask for user confirmation
     const confirmed = await confirmAction();
     if (!confirmed) {
-      console.log('Action cancelled.');
+      console.log(chalk.red('❌ Action cancelled.'));
       rl.close();
       return;
     }
 
-    // Étape 1 : Supprimer les anciennes tables et recréer les nouvelles
-    console.log('Dropping old tables...');
-    await sequelize.drop();  // Drop all tables
-
-    // Étape 2 : Recréer toutes les tables selon les modèles
-    console.log('Recreating tables...');
-    await sequelize.sync({ force: true });  // Recreate tables
-
-    console.log('Applying fixtures...');
+    console.log(chalk.yellow('\n🚧 Dropping old tables...'));
+    await sequelize.drop();
     
-    // Insertion des utilisateurs
+    console.log(chalk.green('✅ Old tables dropped successfully.'));
+
+    console.log(chalk.yellow('\n🛠 Recreating tables...'));
+    await sequelize.sync({ force: true });
+    
+    console.log(chalk.green('✅ Tables recreated successfully.'));
+
+    console.log(chalk.blue('\n📥 Applying fixtures...'));
+
     await User.bulkCreate(userFixtures);
-    console.log('Users inserted successfully.');
+    console.log(chalk.green('✅ Users inserted successfully.'));
 
-    // Insertion des catégories
     await Category.bulkCreate(categoryFixtures);
-    console.log('Categories inserted successfully.');
+    console.log(chalk.green('✅ Categories inserted successfully.'));
 
-    // Insertion des sous-catégories
     await Subcategory.bulkCreate(subcategoryFixtures);
-    console.log('Subcategories inserted successfully.');
+    console.log(chalk.green('✅ Subcategories inserted successfully.'));
 
-    // Insertion des articles
     await Item.bulkCreate(itemFixtures);
-    console.log('Items inserted successfully.');
+    console.log(chalk.green('✅ Items inserted successfully.'));
 
-    console.log('Fixtures applied successfully.');
+    console.log(chalk.bold.green('\n🎉 Fixtures applied successfully!'));
   } catch (error) {
-    console.error('Error while applying fixtures:', error);
+    console.error(chalk.red('\n❌ Error while applying fixtures:'), error);
   } finally {
     rl.close();
   }
 };
 
-// Exécution de la fonction d'application des fixtures
+// Execute the fixture application
 applyFixtures();

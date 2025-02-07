@@ -4,6 +4,7 @@ const Category = require('./Category');
 const Subcategory = require('./Subcategory');
 const Item = require('./Item');
 const User = require('./User');
+const Exchange = require('./Exchange');
 const Group = require('./Group');
 
 // Associations between Category and Subcategory
@@ -30,7 +31,11 @@ Exchange.belongsTo(User, { foreignKey: 'lender_user_id', as: 'lender_user' });
 User.hasMany(Exchange, { foreignKey: 'borrow_user_id', as: 'borrow_exchanges' });
 Exchange.belongsTo(User, { foreignKey: 'borrow_user_id', as: 'borrow_user' });
 
-module.exports = { Category, Subcategory, Item, User, Exchange };
+// Associations for Group and User (one-to-many, admin relationship)
+Group.belongsTo(User, { foreignKey: 'group_admin', as: 'admin' });
 
+// Many-to-many relationship between User and Group via the UserGroups table
+User.belongsToMany(Group, { through: 'UserGroups', foreignKey: 'user_id', otherKey: 'group_id', as: 'groups' });
+Group.belongsToMany(User, { through: 'UserGroups', foreignKey: 'group_id', otherKey: 'user_id', as: 'users' });
 
-module.exports = { Category, Subcategory, Item, User, Group };
+module.exports = { Category, Subcategory, Item, User, Exchange, Group };

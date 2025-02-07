@@ -7,7 +7,8 @@
     "start": "node app.js",
     "sync": "node config/sync.js",
     "fixtures": "node fixtures/fixtures.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "make-entity": "node config/makeEntity.js"
   },
   "author": "neighborrow team",
   "license": "ISC",

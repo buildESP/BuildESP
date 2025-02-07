@@ -31,7 +31,10 @@ exports.createGroup = async (req, res) => {
 exports.getGroups = async (req, res) => {
   try {
     const groups = await Group.findAll({
-      include: [{ model: User, as: 'admin' }],
+      include: [
+        { model: User, as: 'admin' },
+        { model: User, as: 'users' }
+      ],
     });
     res.status(200).json(groups);
   } catch (error) {
@@ -46,7 +49,10 @@ exports.getGroupById = async (req, res) => {
     const groupId = req.params.group_id;
 
     const group = await Group.findByPk(groupId, {
-      include: [{ model: User, as: 'admin' }],
+      include: [
+        { model: User, as: 'admin' },
+        { model: User, as: 'users' }
+      ],
     });
 
     if (!group) {

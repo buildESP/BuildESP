@@ -42,12 +42,16 @@ exports.getSubcategories = async (req, res) => {
   }
 };
 
-
 // get subcategory by ID
 exports.getSubcategoryById = async (req, res) => {
   try {
     const subcategoryId = req.params.subcategory_id;
-    const subcategory = await Subcategory.findByPk(subcategoryId);
+    const subcategory = await Subcategory.findByPk(subcategoryId, {
+      include: [
+        { model: Category, as: 'category' },
+        { model: Item, as: 'items' },
+      ],
+    });
 
     if (!subcategory) {
       return res.status(404).json({ message: 'Subcategory not found' });

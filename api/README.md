@@ -1,79 +1,100 @@
 # Welcome to NEIGHBORROW RESTful API.
 
-You will find in this README some informations about uses cases, dependencies details & versionning, logic of current architecture and details about present files.
+You will find in this README some information about use cases, dependencies details & versioning, the logic of the current architecture, and details about present files.
 
-## Getting Started (update: this section is for local dev. You can use docker env instead.)
+## Getting Started
+
+### Note: you can alors use docker, with 'docker-compose up' command
 
 0. Requirement: *node.js v21.7.1*
 
 1. For installing dependencies :
 > npm install
 
-2. Create a neighborrow_dev_db in mariadb / mysql.
+2. Create a `neighborrow_dev_db` in mariadb / mysql.
 
-3. Edit the .env file with rights informations.
+3. Edit the `.env` file with the right information.
 
 4. Sync db structure :
 > npm run sync
 
-5. Start the project :
+5. Run fixtures :
+> npm run fixtures
+
+6. Start the project :
 > npm start
 
-*(after each db update, please run again the 4. command. note that command will erase your db datas)*
+*(after each db update, please run again the 4 & 5. command. Note that this command will erase your db data)*
 
-## Dependencies & Versionning
+## `make-entity`
+
+You can generate a new model/entity using the `make-entity` script. This tool helps you quickly create a model along with its migration file.
+
+To generate a new entity, run:
+> npm run make-entity MyNewEntity
+
+## Dependencies & Versioning
 
 - **bcrypt, v5.1.1** for encrypting passwords
-- **dotenv, v16.4.5** for reading env variables in .env file in a code context
-- **express, v4.21.1** the js framework for neighborrow app, based on node.js
-- **mysql2, v3.11.3** for handling sql databases connexions inside express app
-- **sequelize, v6.37.4** library orm for mapping object into db using code
+- **cors, v2.8.5** for enabling Cross-Origin Resource Sharing (CORS) support
+- **dotenv, v16.4.5** for reading env variables in the `.env` file in a code context
+- **express, v4.21.1** the JS framework for the Neighborrow app, based on node.js
+- **jsonwebtoken, v9.0.2** for handling JWT authentication
+- **mysql2, v3.11.3** for handling SQL database connections inside the express app
+- **sequelize, v6.37.4** library ORM for mapping objects into the DB using code
+- **swagger-jsdoc, v6.2.8** for generating Swagger API docs from JSDoc comments
+- **swagger-ui-express, v5.0.1** for serving the Swagger API documentation via an Express server
+- **mariadb, v2.5.5** (if you're using MariaDB instead of MySQL) for handling MariaDB connections
+- **pg, v8.11.0** (if you're using PostgreSQL) for handling PostgreSQL connections
+- **sequelize-cli, v6.4.0** for CLI support with Sequelize to run migrations and seeders
 
 ## Repository Architecture & Details
 
-*README.md* current file. 
+*README.md* current file.
 
-*.gitignore* file that contains elements that which must not be push. Be careful to not push .env file !
+*.gitignore* file that contains elements that must not be pushed. Be careful not to push the `.env` file!
 
 *.env* contains your environment variables for application dev.
 
-*node_modules/* and *packge-lock.json* automatically generated when npm install or update. Should not be pushed.
+*node_modules/* and *package-lock.json* automatically generated when `npm install` or update. Should not be pushed.
 
-*package.json* file contains meta about app, dependecies version... Important file.
+*package.json* file contains meta about the app, dependencies version... Important file.
 
-*config/* contains file for config:
-- *db.js* contains config for mysql db connexion and sequelize configuration from .env var.
-- *sync.js* contains logic for build db architecture from models
+*config/* contains files for configuration:
+- *db.js* contains the configuration for the MySQL DB connection and Sequelize setup using `.env` variables.
+- *sync.js* contains logic to build the DB architecture from models.
 
-*models/* contains datas architecture for each entity.
+*models/* contains the data architecture for each entity.
+- All associations (relationships between models) are defined in **models/associations.js**. This file centralizes all the relationships (like `hasMany`, `belongsTo`, etc.). **It is important to only import models from `models/associations.js` to ensure all relationships are properly linked.**
 
 *routes/* contains all endpoints for each entity.
 
-*controllers/* implements business logic for each entity.
+*controllers/* implements the business logic for each entity.
 
 *app.js* file is the entry point of our application.
 
 ## Documentation
 
 Documentation will be written using OpenAPI (Swagger Specification).
-Please find it at /doc.
-On this page you can see all endpoints, test them etc...
+Please find it at `/doc`.
+On this page, you can see all endpoints, test them, etc...
 
-A swaggerOptions.js file describe the behavior of Swagger. All annotations are specified on routes files.
+A `swaggerOptions.js` file describes the behavior of Swagger. All annotations are specified in the route files.
 
-## Git conventionnals
+## Git conventions
 
-Please use conventionnals commits specification. You can use the dedicated extension on VSCode store.
+Please use conventional commit specifications. You can use the dedicated extension on the VSCode store.
 
-The work branch is develop/
+The work branch is `develop/`.
 
-Each new user story mean a new branch, that will be fetch on develop branch.
+Each new user story means a new branch, which will be merged into the `develop` branch.
+
+For details, please look at https://buildesp.atlassian.net/wiki/x/AQBmBQ
 
 ## Postman workspace
 
-For requests collections. Useful for developing and functionnals tests. Please contact @Hephel for access.
+For request collections. Useful for development and functional tests. Please contact @Hephel for access.
 
+## Testing Policy
 
-### *to be implemented...*
-- tests policy
-- jwt handling and auth politic
+Work in progress...
