@@ -1,0 +1,33 @@
+name: Deploy Frontend
+
+on:
+  push:
+    branches:
+      - DevOps_ESP-51  # Déclenche le workflow quand on push sur la branche main
+    paths:
+      - 'frontend/**'  # Ne déclenche le déploiement que si le front est modifié
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Configure SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H ${{ secrets.EC2_FRONT_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Deploy Frontend to EC2
+        run: |
+          ssh -o StrictHostKeyChecking=no ${{ secrets.MY_FRONT_SERVER }}@${{ secrets.EC2_FRONT_HOST }} << 'EOF'
+            cd /var/www/front  # Assurez-vous que c'est le bon chemin du front sur votre serveur
+            git pull origin main  # Récupère les dernières modifications
+            npm install  # Installe les dépendances si nécessaires
+            npm run build  # Compile le projet (si nécessaire)
+            pm2 restart front  # Redémarre l'application (si vous utilisez PM2)
+          EOF

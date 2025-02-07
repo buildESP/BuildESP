@@ -1,0 +1,32 @@
+name: Deploy Backend
+
+on:
+  push:
+    branches:
+      - main  # Déclenche le workflow quand on push sur la branche main
+    paths:
+      - 'backend/**'  # Ne déclenche le déploiement que si le backend est modifié
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Configure SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H ${{ secrets.EC2_BACK_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Deploy Backend to EC2 (Bitnami)
+        run: |
+          ssh -o StrictHostKeyChecking=no ${{ secrets.EC2_USER }}@${{ secrets.EC2_BACK_HOST }} << 'EOF'
+            cd /opt/bitnami/apps/backend  # Assurez-vous que c'est le bon chemin de votre backend
+            git pull origin main  # Récupère les dernières modifications
+            npm install  # Installe les dépendances si nécessaires
+            pm2 restart backend || pm2 start server.js --name backend  # Démarre/redémarre le serveur backend avec PM2
+          EOF
