@@ -17,14 +17,30 @@ jobs:
 
       - name: Configure SSH
         run: |
+          # Crée le répertoire .ssh
           mkdir -p ~/.ssh
+          
+          # Ajoute la clé privée SSH à partir du secret
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          
+          # Change les permissions de la clé pour qu'elle soit sécurisée
           chmod 600 ~/.ssh/id_rsa
+          
+          # Ajouter l'hôte à known_hosts pour éviter les questions interactives sur l'authentification de l'hôte
           ssh-keyscan -H ${{ secrets.EC2_BACK_HOST }} >> ~/.ssh/known_hosts
+
+          # Vérifiez que la clé est bien présente (utile pour le débogage)
+          cat ~/.ssh/id_rsa
+
+      - name: Test SSH Connection
+        run: |
+          # Testez la connexion SSH pour voir si ça fonctionne bien
+          ssh -v -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ubuntu@${{ secrets.EC2_BACK_HOST }} "echo 'Connexion SSH réussie!'"
 
       - name: Deploy Backend to EC2
         run: |
-          ssh -o StrictHostKeyChecking=no ${{ secrets.MY_BACK_SERVER }}@${{ secrets.EC2_BACK_HOST }} << 'EOF'
+          # Effectue le déploiement
+          ssh -t -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ubuntu@${{ secrets.EC2_BACK_HOST }} << 'EOF'
             echo "🚀 Déploiement en cours sur le serveur..."
 
             cd /opt/bitnami/apps/backend  # Assurez-vous que ce chemin est correct
