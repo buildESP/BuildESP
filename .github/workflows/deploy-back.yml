@@ -3,9 +3,9 @@ name: Deploy Backend
 on:
   push:
     branches:
-      - DevOps_ESP-51  # Déclenche le workflow quand on push sur cette branche
+      - DevOps_ESP-51
     paths:
-      - 'backend/**'  # Ne déploie que si le dossier "backend" est modifié
+      - 'backend/**'
 
 jobs:
   deploy:
@@ -13,23 +13,23 @@ jobs:
 
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v4  # Cloner le dépôt
+        uses: actions/checkout@v4
 
       - name: Configure SSH
         run: |
           mkdir -p ~/.ssh
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa  # Charger la clé privée SSH depuis les secrets
-          chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan -H ${{ secrets.EC2_BACK_HOST }} >> ~/.ssh/known_hosts  # Ajouter l'hôte SSH pour éviter des demandes de confirmation
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa  # Ajouter la clé privée SSH
+          chmod 600 ~/.ssh/id_rsa  # Changer les permissions de la clé privée
+          ssh-keyscan -H ${{ secrets.EC2_BACK_HOST }} >> ~/.ssh/known_hosts  # Ajouter l'hôte EC2 dans known_hosts
 
       - name: Deploy Backend to EC2
         run: |
           # Synchronisation du dossier "backend" avec le serveur distant
-          rsync -avz --delete -e "ssh -o StrictHostKeyChecking=no" ./backend/ ${{ secrets.MY_BACK_SERVER }}@${{ secrets.EC2_BACK_HOST }}:/opt/bitnami/apps/backend/
+          rsync -avz --delete -e "ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no" ./backend/ ${{ secrets.MY_BACK_SERVER }}@${{ secrets.EC2_BACK_HOST }}:/opt/bitnami/apps/backend/
 
           # Connexion SSH et exécution des commandes pour mettre à jour le backend
-          ssh -o StrictHostKeyChecking=no ${{ secrets.MY_BACK_SERVER }}@${{ secrets.EC2_BACK_HOST }} << 'EOF'
+          ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no ${{ secrets.MY_BACK_SERVER }}@${{ secrets.EC2_BACK_HOST }} << 'EOF'
             cd /opt/bitnami/apps/backend
-            npm install  # Installer les dépendances du backend
-            pm2 restart backend || pm2 start server.js --name backend  # Redémarre ou démarre le serveur avec PM2
+            npm install
+            pm2 restart backend || pm2 start server.js --name backend
           EOF
