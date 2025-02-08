@@ -17,47 +17,45 @@ jobs:
 
       - name: Configure SSH
         run: |
-          # Crée le répertoire .ssh
           mkdir -p ~/.ssh
-          
-          # Ajoute la clé privée SSH à partir du secret
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-          
-          # Change les permissions de la clé pour qu'elle soit sécurisée
           chmod 600 ~/.ssh/id_rsa
-          
-          # Ajouter l'hôte à known_hosts pour éviter les questions interactives sur l'authentification de l'hôte
           ssh-keyscan -H ${{ secrets.EC2_BACK_HOST }} >> ~/.ssh/known_hosts
-
-          # Vérifiez que la clé est bien présente (utile pour le débogage)
-          cat ~/.ssh/id_rsa
 
       - name: Test SSH Connection
         run: |
-          # Testez la connexion SSH pour voir si ça fonctionne bien
-          ssh -v -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ubuntu@${{ secrets.EC2_BACK_HOST }} "echo 'Connexion SSH réussie!'"
+          ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ubuntu@${{ secrets.EC2_BACK_HOST }} "exit"
+          if [ $? -ne 0 ]; then
+            echo "❌ Connexion SSH échouée."
+            exit 1
+          fi
 
       - name: Deploy Backend to EC2
         run: |
-          # Effectue le déploiement
           ssh -t -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ubuntu@${{ secrets.EC2_BACK_HOST }} << 'EOF'
             echo "🚀 Déploiement en cours sur le serveur..."
 
-            cd /opt/bitnami/apps/backend  # Assurez-vous que ce chemin est correct
+            # Naviguer dans le répertoire approprié
+            cd /opt/bitnami/apps/backend/api  # Vérifiez si c'est bien ce répertoire
+
+            # Récupérer les dernières modifications
             echo "📥 Pulling latest changes..."
-            git pull origin DevOps_ESP-51  # Récupère les nouvelles modifications
+            git pull origin DevOps_ESP-51 || exit 1
 
+            # Installer les dépendances
             echo "📦 Installing dependencies..."
-            npm install  # Installe les dépendances
+            npm install || exit 1
 
+            # Vérification de PM2
             echo "🚀 Vérification de PM2..."
             if ! command -v pm2 &> /dev/null; then
               echo "⚠️  PM2 non trouvé. Installation en cours..."
               npm install -g pm2
             fi
 
+            # Redémarrer ou démarrer l'application
             echo "🔄 Restarting backend app..."
-            pm2 restart backend || pm2 start server.js --name "backend"  # Redémarre ou démarre le serveur
+            pm2 restart backend || pm2 start server.js --name "backend"  # Vérifiez que `server.js` existe
 
-            echo "✅ Déploiement terminé avec succès !"
+            echo "✅ Déploiement terminé avec succès!"
           EOF
