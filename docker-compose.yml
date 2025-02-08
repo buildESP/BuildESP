@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  backend:
+    extends:
+      file: ./backend/docker-compose.yml
+      service: backend
+
+  db:
+    extends:
+      file: ./backend/docker-compose.yml
+      service: db
+
+  frontend:
+    extends:
+      file: ./frontend/docker-compose.yml
+      service: frontend
+
+networks:
+  buildesp_network:
+    name: buildesp_network
+    driver: bridge
+
+volumes:
+  mysql-data:  # 🔹 Ajout du volume ici pour éviter l'erreur
