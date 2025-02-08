@@ -17,15 +17,6 @@ services:
       - db
     image: stephb421/buildesp-backend:latest
 
-  frontend:
-    build:
-      context: ./app
-      dockerfile: Dockerfile
-    ports:
-      - "8080:3000"
-    depends_on:
-      - backend
-    image: stephb421/buildesp-app:latest
   
 
   db:
