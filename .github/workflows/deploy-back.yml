@@ -5,7 +5,7 @@ on:
     branches:
       - DevOps_ESP-51  # Déclenche le workflow quand on push sur cette branche
     paths:
-      - 'backend/**'  # Ne déploie que si le backend est modifié
+      - 'backend/**'  # Ne déploie que si le dossier "backend" est modifié
 
 jobs:
   deploy:
@@ -13,21 +13,23 @@ jobs:
 
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v4  # Cloner le dépôt
 
       - name: Configure SSH
         run: |
           mkdir -p ~/.ssh
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa  # Charger la clé privée SSH depuis les secrets
           chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan -H ${{ secrets.EC2_BACK_HOST }} >> ~/.ssh/known_hosts
+          ssh-keyscan -H ${{ secrets.EC2_BACK_HOST }} >> ~/.ssh/known_hosts  # Ajouter l'hôte SSH pour éviter des demandes de confirmation
 
       - name: Deploy Backend to EC2
         run: |
+          # Synchronisation du dossier "backend" avec le serveur distant
           rsync -avz --delete -e "ssh -o StrictHostKeyChecking=no" ./backend/ ${{ secrets.MY_BACK_SERVER }}@${{ secrets.EC2_BACK_HOST }}:/opt/bitnami/apps/backend/
 
+          # Connexion SSH et exécution des commandes pour mettre à jour le backend
           ssh -o StrictHostKeyChecking=no ${{ secrets.MY_BACK_SERVER }}@${{ secrets.EC2_BACK_HOST }} << 'EOF'
             cd /opt/bitnami/apps/backend
-            npm install
-            pm2 restart backend || pm2 start server.js --name backend
+            npm install  # Installer les dépendances du backend
+            pm2 restart backend || pm2 start server.js --name backend  # Redémarre ou démarre le serveur avec PM2
           EOF
