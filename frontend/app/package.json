@@ -15,8 +15,12 @@
     "router": "^1.3.8",
     "web-vitals": "^2.1.4"
   },
+  "devDependencies": {
+    "nodemon": "^2.0.15"
+  },
   "scripts": {
     "start": "react-scripts start",
+    "start-watch": "WATCHPACK_POLLING=true npm start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
