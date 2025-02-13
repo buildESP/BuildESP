@@ -1,0 +1,136 @@
+version: '3.8'
+
+services:
+  frontend:
+    build:
+      context: ./app
+      dockerfile: Dockerfile
+    ports:
+      - "8080:3000"
+    image: stephb421/buildesp-app:latest
+    networks:
+      - buildesp_network
+
+  prometheus:
+    image: prom/prometheus
+    volumes:
+      - "./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml"
+      - "./monitoring/rules.yml:/etc/prometheus/rules.yml"
+    networks:
+      - buildesp_network
+    ports:
+      - 9090:9090
+    depends_on:
+      - loki
+      - blackbox_exporter
+
+  cadvisor:
+    container_name: cadvisor
+    image: gcr.io/cadvisor/cadvisor:latest
+    networks:
+      - buildesp_network
+    ports:
+      - 8080:8080
+    volumes:
+      - /:/rootfs:ro
+      - /var/run/:/var/run/:rw
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+    depends_on:
+      - redis
+
+  redis:
+    image: redis:latest
+    container_name: redis
+    ports:
+      - 6379:6379
+    networks:
+      - buildesp_network
+
+  redis_exporter:
+    container_name: redis_exporter
+    image: oliver006/redis_exporter:latest
+    environment:
+      - REDIS_ADDR=redis:6379
+    networks:
+      - buildesp_network
+    ports:
+      - 9121:9121
+    depends_on:
+      - redis
+
+  node-exporter:
+    image: prom/node-exporter
+    networks:
+      - buildesp_network
+    ports:
+      - 9100:9100
+
+  alert-manager:
+    image: prom/alertmanager
+    volumes:
+      - "./monitoring/alertmanager.yml:/alertmanager/alertmanager.yml"
+    networks:
+      - buildesp_network
+    ports:
+      - 9093:9093
+
+  grafana:
+    image: grafana/grafana
+    container_name: grafana
+    ports:
+      - 3000:3000
+    restart: unless-stopped
+    volumes:
+      - grafana-data:/var/lib/grafana
+      - grafana-conf:/etc/grafana
+    networks:
+      - buildesp_network
+
+  loki:
+    image: grafana/loki
+    ports:
+      - 3100:3100
+    volumes:
+      - ./monitoring/loki-config.yaml:/etc/loki/local-config.yml
+    networks:
+      - buildesp_network
+
+  promtail:
+    container_name: promtail
+    image: grafana/promtail
+    volumes:
+      - ./monitoring/promtail-config.yml:/etc/promtail/promtail-config.yml
+      - /var/run/docker.sock:/var/run/docker.sock
+    command: -config.file=/etc/promtail/promtail-config.yml -config.expand-env=true
+    networks:
+      - buildesp_network
+
+  uptime-kuma:
+    image: louislam/uptime-kuma:1
+    restart: always
+    ports:
+      - 3001:3001
+    volumes:
+      - ./uptime-kuma-data:/app/data
+    container_name: uptime-kuma
+    networks:
+      - buildesp_network
+
+  blackbox_exporter:
+    image: prom/blackbox-exporter:latest
+    container_name: blackbox_exporter
+    volumes:
+      - ./monitoring/blackbox.yml:/etc/blackbox_exporter/config.yml
+    ports:
+      - 9115:9115
+    networks:
+      - buildesp_network
+
+volumes:
+  grafana-data:
+  grafana-conf:
+
+networks:
+  buildesp_network:
+    external: true
