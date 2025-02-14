@@ -19,13 +19,6 @@ services:
     networks:
       - buildesp_network
 
-# Retirez tous les autres services non nécessaires (prometheus, redis, cadvisor, etc.)
-
-volumes:
-  # Grafana, Redis et autres volumes sont supprimés car ils ne sont plus utilisés
-  # grafana-data:
-  # grafana-conf:
-
 networks:
   buildesp_network:
     external: true
