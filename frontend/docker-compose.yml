@@ -1,23 +1,27 @@
+version: '3'
 services:
   frontend:
     build:
-      context: ./app  # Vérifie que ce chemin correspond bien à ton projet
-      dockerfile: Dockerfile
+      context: ./app  # Chemin vers le répertoire de ton projet frontend
+      dockerfile: Dockerfile  # Assure-toi que ce Dockerfile existe dans ./app
+    image: stephb421/buildesp-app:latest  # Ton image Docker
     ports:
-      - "80:3000"
-    image: stephb421/buildesp-app:latest
+      - "80:3000"  # Mappe le port 3000 du conteneur au port 80 de l'hôte
     volumes:
-      - ./app:/app  # Monte le dossier app correctement
-      - /app/node_modules  # Empêche l'écrasement de node_modules dans le conteneur
-    working_dir: /app  # Définit le répertoire de travail
+      - ./app:/app  # Monte le répertoire local ./app dans /app du conteneur
+      - /app/node_modules  # Empêche l'écrasement des modules node
+    working_dir: /app  # Définit le répertoire de travail pour le conteneur
     environment:
-      - CHOKIDAR_USEPOLLING=true # Assure le live reload de React
-      - REACT_APP_API_URL=http://172.31.33.98:3000
+      - CHOKIDAR_USEPOLLING=true  # Utile pour React pour la surveillance des fichiers
+      # L'URL du backend, modifie en fonction de ton réseau / de ton VPC
+      - REACT_APP_API_URL=http://172.31.33.98:3000  # Utilise l'IP publique ou privée de ton EC2 backend
     stdin_open: true
     tty: true
     networks:
-      - buildesp_network
+      - buildesp_network  # Assure-toi que ce réseau existe dans Docker
 
 networks:
   buildesp_network:
-    external: true
+    external: true  # Utilisation d'un réseau externe, crée-le au besoin
+
+
