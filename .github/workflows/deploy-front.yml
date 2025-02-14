@@ -3,9 +3,9 @@ name: Deploy Frontend
 on:
   push:
     branches:
-      - DevOps_ESP-115
+      - DevOps_ESP-115  # Déclenche l'action sur cette branche
     paths:
-      - 'frontend/**'
+      - 'frontend/**'  # Ne déploie que si des fichiers dans frontend/ changent
 
 jobs:
   deploy:
@@ -20,7 +20,6 @@ jobs:
           mkdir -p ~/.ssh
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
-          # Désactivation de la vérification stricte des clés
           ssh-keyscan -H ${{ secrets.EC2_FRONT_HOST }} >> ~/.ssh/known_hosts
           echo "StrictHostKeyChecking=no" >> ~/.ssh/config
           echo "UserKnownHostsFile=/dev/null" >> ~/.ssh/config
@@ -58,6 +57,7 @@ jobs:
 
             echo "🔄 Mise à jour et redémarrage des conteneurs Docker..."
             cd /var/www/front
+            docker-compose down  # Arrête tous les conteneurs existants
             docker-compose pull  # Met à jour les images
             docker-compose up -d  # Redémarre les conteneurs avec les nouvelles images
 
