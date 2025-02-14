@@ -8,6 +8,13 @@ services:
     ports:
       - "8080:3000"
     image: stephb421/buildesp-app:latest
+    volumes:
+      - ./app:/app # Mount the app directory for live reloading
+      - /app/node_modules # Avoid overwriting node_modules inside the container
+    environment:
+      - CHOKIDAR_USEPOLLING=true # Ensure React watches file changes for live reload
+    stdin_open: true
+    tty: true
     networks:
       - buildesp_network
 
