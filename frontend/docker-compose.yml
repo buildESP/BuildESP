@@ -1,26 +1,142 @@
+version: '3.8'
+
 services:
   frontend:
     build:
-      context: ./app  # Chemin vers le répertoire de ton projet frontend
-      dockerfile: Dockerfile  # Assure-toi que ce Dockerfile existe dans ./app
-    image: stephb421/buildesp-app:latest  # Ton image Docker
+      context: ./app
+      dockerfile: Dockerfile
     ports:
-      - "80:3000"  # Mappe le port 3000 du conteneur au port 80 de l'hôte
+      - "80:3000"
     volumes:
-      - ./app:/app  # Monte le répertoire local ./app dans /app du conteneur
-      - /app/node_modules  # Empêche l'écrasement des modules node
-    working_dir: /app  # Définit le répertoire de travail pour le conteneur
+      - ./app:/app 
+      - /app/node_modules 
     environment:
-      - CHOKIDAR_USEPOLLING=true  # Utile pour React pour la surveillance des fichiers
-      # L'URL du backend, modifie en fonction de ton réseau / de ton VPC
-      - REACT_APP_API_URL=http://172.31.33.98:3000  # Utilise l'IP publique ou privée de ton EC2 backend
+      - CHOKIDAR_USEPOLLING=true 
     stdin_open: true
     tty: true
     networks:
-      - buildesp_network  # Assure-toi que ce réseau existe dans Docker
+      - buildesp_network
+
+  prometheus:
+    image: prom/prometheus
+    volumes:
+      - "./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml"
+      - "./monitoring/rules.yml:/etc/prometheus/rules.yml"
+    networks:
+      - buildesp_network
+    ports:
+      - 9090:9090
+    depends_on:
+      - loki
+      - blackbox_exporter
+
+  cadvisor:
+    container_name: cadvisor
+    image: gcr.io/cadvisor/cadvisor:latest
+    networks:
+      - buildesp_network
+    ports:
+      - 8080:8080
+    volumes:
+      - /:/rootfs:ro
+      - /var/run/:/var/run/:rw
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+    depends_on:
+      - redis
+
+  redis:
+    image: redis:latest
+    container_name: redis
+    ports:
+      - 6379:6379
+    networks:
+      - buildesp_network
+
+  redis_exporter:
+    container_name: redis_exporter
+    image: oliver006/redis_exporter:latest
+    environment:
+      - REDIS_ADDR=redis:6379
+    networks:
+      - buildesp_network
+    ports:
+      - 9121:9121
+    depends_on:
+      - redis
+
+  node-exporter:
+    image: prom/node-exporter
+    networks:
+      - buildesp_network
+    ports:
+      - 9100:9100
+
+  alert-manager:
+    image: prom/alertmanager
+    volumes:
+      - "./monitoring/alertmanager.yml:/alertmanager/alertmanager.yml"
+    networks:
+      - buildesp_network
+    ports:
+      - 9093:9093
+
+  grafana:
+    image: grafana/grafana
+    container_name: grafana
+    ports:
+      - 3000:3000
+    restart: unless-stopped
+    volumes:
+      - grafana-data:/var/lib/grafana
+      - grafana-conf:/etc/grafana
+    networks:
+      - buildesp_network
+
+  loki:
+    image: grafana/loki
+    ports:
+      - 3100:3100
+    volumes:
+      - ./monitoring/loki-config.yaml:/etc/loki/local-config.yml
+    networks:
+      - buildesp_network
+
+  promtail:
+    container_name: promtail
+    image: grafana/promtail
+    volumes:
+      - ./monitoring/promtail-config.yml:/etc/promtail/promtail-config.yml
+      - /var/run/docker.sock:/var/run/docker.sock
+    command: -config.file=/etc/promtail/promtail-config.yml -config.expand-env=true
+    networks:
+      - buildesp_network
+
+  uptime-kuma:
+    image: louislam/uptime-kuma:1
+    restart: always
+    ports:
+      - 3001:3001
+    volumes:
+      - ./uptime-kuma-data:/app/data
+    container_name: uptime-kuma
+    networks:
+      - buildesp_network
+
+  blackbox_exporter:
+    image: prom/blackbox-exporter:latest
+    container_name: blackbox_exporter
+    volumes:
+      - ./monitoring/blackbox.yml:/etc/blackbox_exporter/config.yml
+    ports:
+      - 9115:9115
+    networks:
+      - buildesp_network
+
+volumes:
+  grafana-data:
+  grafana-conf:
 
 networks:
   buildesp_network:
-    external: true  # Utilisation d'un réseau externe, crée-le au besoin
-
-
+    external: true
