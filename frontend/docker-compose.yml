@@ -13,6 +13,7 @@ services:
       - /app/node_modules # Avoid overwriting node_modules inside the container
     environment:
       - CHOKIDAR_USEPOLLING=true # Ensure React watches file changes for live reload
+      - REACT_APP_API_URL=http://${PRIVATE_IP_BACK}:3000 # 🔹 Utilisation de l'IP privée du backend
     stdin_open: true
     tty: true
     networks:
@@ -87,7 +88,6 @@ services:
     container_name: grafana
     ports:
       - 3000:3000
-    restart: unless-stopped
     volumes:
       - grafana-data:/var/lib/grafana
       - grafana-conf:/etc/grafana
