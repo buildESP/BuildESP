@@ -9,6 +9,7 @@ const LoginC = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [name, setName] = useState("");
+  const [lasTname, setLasTname] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
   const [isLogin, setIsLogin] = useState(true); // Toggle entre Connexion et Inscription
   const [errorMessage, setErrorMessage] = useState("");
@@ -51,7 +52,7 @@ const LoginC = () => {
       try {
         const response = await axios.post("http://localhost:3000/api/users", {
           firstname: name,
-          lastname: "Rococo", // Mettre un nom par défaut ou d'après un champ utilisateur
+          lastname: lasTname, // Mettre un nom par défaut ou d'après un champ utilisateur
           email: email,
           password: password,
           is_admin: true,
@@ -76,6 +77,7 @@ const LoginC = () => {
     setPassword("");
     setConfirmPassword("");
     setName("");
+    setLasTname("");
     setErrorMessage("");
     setSuccessMessage("");
   };
@@ -115,6 +117,21 @@ const LoginC = () => {
               placeholder="Nom complet"
               value={name}
               onChange={(e) => setName(e.target.value)}
+              required
+            />
+          </div>
+        )}
+
+
+    {!isLogin && (
+          <div className="input-group">
+            <label htmlFor="lastname">last name</label>
+            <input
+              type="text"
+              id="lastname"
+              placeholder="last name"
+              value={lasTname}
+              onChange={(e) => setLasTname(e.target.value)}
               required
             />
           </div>
