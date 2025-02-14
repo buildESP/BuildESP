@@ -23,7 +23,6 @@ pids/
 # Coverage directory
 coverage/
 
-# dotenv environment variables file
 
 # VS Code directories
 .vscode/
