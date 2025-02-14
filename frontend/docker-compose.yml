@@ -1,17 +1,18 @@
 services:
   frontend:
     build:
-      context: ./frontend/app  # Assurez-vous que vous avez bien le bon chemin
+      context: ./app  # Vérifie que ce chemin correspond bien à ton projet
       dockerfile: Dockerfile
     ports:
       - "80:3000"
     image: stephb421/buildesp-app:latest
     volumes:
-      - ./frontend/app:/app # Mount the app directory for live reloading
-      - /app/node_modules # Avoid overwriting node_modules inside the container
+      - ./app:/app  # Monte le dossier app correctement
+      - /app/node_modules  # Empêche l'écrasement de node_modules dans le conteneur
+    working_dir: /app  # Définit le répertoire de travail
     environment:
-      - CHOKIDAR_USEPOLLING=true # Ensure React watches file changes for live reload
-      - REACT_APP_API_URL=http://${PRIVATE_IP_BACK}:3000 # 🔹 Utilisation de l'IP privée du backend
+      - CHOKIDAR_USEPOLLING=true # Assure le live reload de React
+      - REACT_APP_API_URL=http://${PRIVATE_IP_BACK}:3000
     stdin_open: true
     tty: true
     networks:
