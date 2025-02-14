@@ -25,15 +25,12 @@ jobs:
           echo "StrictHostKeyChecking=no" >> ~/.ssh/config
           echo "UserKnownHostsFile=/dev/null" >> ~/.ssh/config
           echo "LogLevel=DEBUG" >> ~/.ssh/config
-
-      - name: Test SSH connection
-        run: |
-          echo "Testing SSH connection to the server..."
-          ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ${{ secrets.MY_FRONT_SERVER }}@${{ secrets.EC2_FRONT_HOST }} "echo SSH Connection Successful"
+          cat ~/.ssh/config  # Affiche la configuration SSH pour déboguer
+          ssh -vvv -o StrictHostKeyChecking=no ${{ secrets.MY_FRONT_SERVER }}@${{ secrets.EC2_FRONT_HOST }} "echo SSH Connection Successful"  # Débogage avec -vvv
 
       - name: Deploy Frontend to EC2
         run: |
-          echo "🚀 Deploying frontend to EC2..."
+          echo "🚀 Déploiement en cours sur le serveur..."
           ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ${{ secrets.MY_FRONT_SERVER }}@${{ secrets.EC2_FRONT_HOST }} << 'EOF'
             echo "🚀 Déploiement en cours sur le serveur..."
 
