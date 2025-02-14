@@ -52,6 +52,12 @@ const HeaderC = () => {
         navigate('/home'); // Rediriger vers la page d'accueil sans sous-catégorie
     };
 
+       // Fonction pour gérer la déconnexion
+       const handleLogout = () => {
+        localStorage.clear(); // Supprime toutes les données du localStorage
+        window.location.reload(); // Rafraîchir la page
+    };
+
     return (
         <>
             <header className="header">
@@ -73,6 +79,7 @@ const HeaderC = () => {
                         <Link to="/profile" className="nav-button">
                             Profil
                         </Link>
+                        <button onClick={handleLogout} className="nav-button">Déconnexion</button>
                     </div>
                 </div>
             </header>
