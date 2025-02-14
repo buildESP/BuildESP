@@ -6,12 +6,13 @@ services:
       context: ./app
       dockerfile: Dockerfile
     ports:
-      - "80:3000"
+      - "80:3000"  # Mapper le port 80 de l'hôte sur le port 3000 du conteneur
     volumes:
-      - ./app:/app 
-      - /app/node_modules 
+      - ./app:/app
+      - /app/node_modules
+      - ./app/build:/app/build  # Ajout d'un volume pour la construction
     environment:
-      - CHOKIDAR_USEPOLLING=true 
+      - CHOKIDAR_USEPOLLING=true
     stdin_open: true
     tty: true
     networks:
