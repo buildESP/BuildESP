@@ -3,9 +3,9 @@ name: Deploy Frontend
 on:
   push:
     branches:
-      - DevOps_ESP-115  # Déclenche l'action sur cette branche
+      - DevOps_ESP-115
     paths:
-      - 'frontend/**'  # Ne déploie que si des fichiers dans frontend/ changent
+      - 'frontend/**'
 
 jobs:
   deploy:
@@ -20,37 +20,46 @@ jobs:
           mkdir -p ~/.ssh
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
+          # Désactivation de la vérification stricte des clés
           ssh-keyscan -H ${{ secrets.EC2_FRONT_HOST }} >> ~/.ssh/known_hosts
+          echo "StrictHostKeyChecking=no" >> ~/.ssh/config
+          echo "UserKnownHostsFile=/dev/null" >> ~/.ssh/config
+
+      - name: Test SSH connection
+        run: |
+          ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ${{ secrets.MY_FRONT_SERVER }}@${{ secrets.EC2_FRONT_HOST }} "echo SSH Connection Successful"
 
       - name: Deploy Frontend to EC2
         run: |
-          ssh -o StrictHostKeyChecking=no ${{ secrets.MY_FRONT_SERVER }}@${{ secrets.EC2_FRONT_HOST }} << 'EOF'
+          ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ${{ secrets.MY_FRONT_SERVER }}@${{ secrets.EC2_FRONT_HOST }} << 'EOF'
             echo "🚀 Déploiement en cours sur le serveur..."
 
+            # Accéder au dossier du projet
             cd /var/www/front
             echo "📥 Pulling latest changes..."
-            git pull origin DevOps_ESP-115  # Récupère les nouvelles modifications
+            
+            # Configurer Git pour ne pas avoir de rebase lors de pull
+            git config --global pull.rebase false
+            
+            # Mettre à jour la branche DevOps_ESP-115
+            git pull origin DevOps_ESP-115
 
-            cd frontend/app  # Aller dans le bon dossier
+            cd frontend/app
             if [ -f package.json ]; then
               echo "📦 Installing dependencies..."
-              npm install  # Installe les dépendances
+              npm install
 
               echo "⚙️  Building frontend..."
-              npm run build  # Compile le projet si nécessaire
+              npm run build
             else
-              echo "❌ ERREUR: package.json non trouvé dans /var/www/front/frontend/app/"
+              echo "❌ ERREUR: package.json non trouvé."
               exit 1
             fi
 
-            echo "🚀 Vérification de PM2..."
-            if ! command -v pm2 &> /dev/null; then
-              echo "⚠️  PM2 non trouvé. Installation en cours..."
-              npm install -g pm2
-            fi
+            echo "🔄 Mise à jour et redémarrage des conteneurs Docker..."
+            cd /var/www/front
+            docker-compose pull  # Met à jour les images
+            docker-compose up -d  # Redémarre les conteneurs avec les nouvelles images
 
-            echo "🔄 Restarting frontend app..."
-            pm2 restart front || pm2 start npm --name "front" -- run start  # Démarre ou redémarre l'application
-            
             echo "✅ Déploiement terminé avec succès !"
           EOF
