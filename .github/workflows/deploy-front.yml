@@ -3,9 +3,9 @@ name: Deploy Frontend
 on:
   push:
     branches:
-      - DevOps_ESP-115  # Déclenche l'action sur cette branche
+      - DevOps_ESP-115
     paths:
-      - 'frontend/**'  # Ne déploie que si des fichiers dans frontend/ changent
+      - 'frontend/**'
 
 jobs:
   deploy:
@@ -40,10 +40,11 @@ jobs:
             # Configurer Git pour ne pas avoir de rebase lors de pull
             git config --global pull.rebase false
             
-            # Mettre à jour la branche DevOps_ESP-115
-            git pull origin DevOps_ESP-115
+            # Résoudre les conflits git avant de continuer
+            git fetch origin DevOps_ESP-115
+            git merge --no-ff origin/DevOps_ESP-115 || true  # Continuer même en cas de conflit
 
-            # Vérifier si package.json existe dans le dossier app
+            # Vérifier la présence de package.json dans le dossier app
             if [ -f package.json ]; then
               echo "📦 Installing dependencies..."
               npm install
