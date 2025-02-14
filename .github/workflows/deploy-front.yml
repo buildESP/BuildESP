@@ -17,26 +17,16 @@ jobs:
 
       - name: Configure SSH
         run: |
-          echo "Configuring SSH..."
           mkdir -p ~/.ssh
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
           ssh-keyscan -H ${{ secrets.EC2_FRONT_HOST }} >> ~/.ssh/known_hosts
-          echo "StrictHostKeyChecking=no" >> ~/.ssh/config
-          echo "UserKnownHostsFile=/dev/null" >> ~/.ssh/config
-          echo "LogLevel=DEBUG" >> ~/.ssh/config
-          cat ~/.ssh/config  # Affiche la configuration SSH pour déboguer
-          ssh -vvv -o StrictHostKeyChecking=no ${{ secrets.MY_FRONT_SERVER }}@${{ secrets.EC2_FRONT_HOST }} "echo SSH Connection Successful"  # Débogage avec -vvv
 
       - name: Deploy Frontend to EC2
         run: |
-          echo "🚀 Déploiement en cours sur le serveur..."
-          
-          # Se connecter à l'instance EC2 et exécuter les commandes de déploiement
-          ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ${{ secrets.MY_FRONT_SERVER }}@${{ secrets.EC2_FRONT_HOST }} << 'EOF'
+          ssh -o StrictHostKeyChecking=no ${{ secrets.MY_FRONT_SERVER }}@${{ secrets.EC2_FRONT_HOST }} << 'EOF'
             echo "🚀 Déploiement en cours sur le serveur..."
 
-            # Naviguer dans le répertoire du projet
             cd /var/www/front
             echo "📥 Pulling latest changes..."
             git pull origin DevOps_ESP-115  # Récupère les nouvelles modifications
@@ -53,11 +43,10 @@ jobs:
               exit 1
             fi
 
-            # Vérification et installation de PM2 si nécessaire
             echo "🚀 Vérification de PM2..."
             if ! command -v pm2 &> /dev/null; then
               echo "⚠️  PM2 non trouvé. Installation en cours..."
-              npm install -g pm2  # Installer PM2 si nécessaire
+              npm install -g pm2
             fi
 
             echo "🔄 Restarting frontend app..."
@@ -65,4 +54,3 @@ jobs:
             
             echo "✅ Déploiement terminé avec succès !"
           EOF
-
