@@ -5,7 +5,7 @@ on:
     branches:
       - DevOps_ESP-115
     paths:
-      - 'frontend/**'
+      - 'frontend/**'  # Seulement le dossier frontend est pris en compte
 
 jobs:
   deploy:
@@ -33,37 +33,31 @@ jobs:
           ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ${{ secrets.MY_FRONT_SERVER }}@${{ secrets.EC2_FRONT_HOST }} << 'EOF'
             echo "🚀 Déploiement en cours sur le serveur..."
 
-            # Accéder au dossier frontend
+            # Accéder au dossier du projet frontend
             cd /var/www/front/frontend
             echo "📥 Pulling latest changes..."
             
             # Configurer Git pour ne pas avoir de rebase lors de pull
             git config --global pull.rebase false
             
-            # Résoudre les conflits git avant de continuer
-            git fetch origin DevOps_ESP-115
-            git merge --no-ff origin/DevOps_ESP-115 || true  # Continuer même en cas de conflit
+            # Mettre à jour la branche DevOps_ESP-115
+            git pull origin DevOps_ESP-115
 
-            # Vérifier la présence de package.json dans le dossier app
+            cd app
             if [ -f package.json ]; then
               echo "📦 Installing dependencies..."
               npm install
 
-              echo "⚙️ Building frontend..."
+              echo "⚙️  Building frontend..."
               npm run build
             else
-              echo "❌ ERREUR: package.json non trouvé dans /var/www/front/frontend/app/"
+              echo "❌ ERREUR: package.json non trouvé."
               exit 1
             fi
 
             echo "🔄 Mise à jour et redémarrage des conteneurs Docker..."
-            
-            # Assurez-vous que nous sommes dans le bon répertoire
             cd /var/www/front/frontend
-            
-            # Arrêter les conteneurs existants et mettre à jour les images
-            docker-compose down  # Arrête tous les conteneurs existants
-            docker-compose pull  # Met à jour les images des services
+            docker-compose pull  # Met à jour les images
             docker-compose up -d  # Redémarre les conteneurs avec les nouvelles images
 
             echo "✅ Déploiement terminé avec succès !"
