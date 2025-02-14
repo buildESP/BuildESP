@@ -29,7 +29,7 @@ jobs:
 
             cd /var/www/front
             echo "📥 Pulling latest changes..."
-            git pull origin DevOps_ESP-1  # Récupère les nouvelles modifications
+            git pull origin DevOps_ESP-115  # Récupère les nouvelles modifications
 
             cd frontend/app  # Aller dans le bon dossier
             if [ -f package.json ]; then
