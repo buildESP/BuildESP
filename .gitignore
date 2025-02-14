@@ -24,7 +24,6 @@ pids/
 coverage/
 
 # dotenv environment variables file
-.env
 
 # VS Code directories
 .vscode/
