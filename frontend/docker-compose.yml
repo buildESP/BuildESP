@@ -12,7 +12,7 @@ services:
     working_dir: /app  # Définit le répertoire de travail
     environment:
       - CHOKIDAR_USEPOLLING=true # Assure le live reload de React
-      - REACT_APP_API_URL=http://${PRIVATE_IP_BACK}:3000
+      - REACT_APP_API_URL=http://172.31.33.98:3000
     stdin_open: true
     tty: true
     networks:
