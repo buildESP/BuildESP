@@ -62,7 +62,7 @@ const LoginC = () => {
           console.log("Inscription réussie :", response.data);
           setSuccessMessage("Inscription réussie ! Vous pouvez maintenant vous connecter.");
           toggleForm(); // Basculer vers le formulaire de connexion
-          alert("inscription validée ✅, vous pouvez vous connecter");
+          alert("inscription validée ✅. Vous pouvez vous connecter");
         }
       } catch (error) {
         console.error("Erreur d'inscription :", error.response?.data || error.message);
