@@ -48,6 +48,10 @@ jobs:
               exit 1
             fi
 
+            echo "🧹 Nettoyage des fichiers Docker pour libérer de l'espace..."
+            docker system prune -a -f
+            docker volume prune -f
+
             echo "🔄 Mise à jour et redémarrage des conteneurs Docker..."
             docker-compose down
             docker-compose build  # Ajout de cette ligne pour forcer la mise à jour des images
