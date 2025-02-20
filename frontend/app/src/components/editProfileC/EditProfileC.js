@@ -26,7 +26,7 @@ const EditProfileC = () => {
   // Fetch user profile
   useEffect(() => {
     axios
-      .get(`http://${process.env.REACT_APP_BACKEND_IP}:3000/api/users/${userId}`)
+      .get(`http://172.31.33.98:3000/api/users/${userId}`)
       .then((response) => {
         const user = response.data;
         setUserProfile(user);
@@ -82,7 +82,7 @@ const EditProfileC = () => {
     };
 
     axios
-      .put(`http://${process.env.REACT_APP_BACKEND_IP}:3000/api/users/${userId}`, updatedData)
+      .put(`http://172.31.33.98:3000/api/users/${userId}`, updatedData)
       .then((response) => {
         console.log('User profile updated successfully:', response.data);
         navigate('/profile'); // Navigate to profile page after success

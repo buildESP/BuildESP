@@ -1,5 +1,5 @@
 describe('template spec', () => {
   it('passes', () => {
-    cy.visit('http://${process.env.REACT_APP_FRONTEND_IP}:3001/')
+    cy.visit('http://172.31.41.254:3001/')
   })
 })

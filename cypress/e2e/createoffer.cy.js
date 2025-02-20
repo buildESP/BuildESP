@@ -1,7 +1,7 @@
 describe('create offer', () => {
     it('should login successfully with valid credentials', () => {
       // Visit the login page
-      cy.visit('http://${process.env.REACT_APP_FRONTEND_IP}:3001/login'); // Update the URL to match your login page
+      cy.visit('http://172.31.41.254:3001/login'); // Update the URL to match your login page
   
       // Enter email
       cy.get('#email').type('alice.dupont@example.com'); // Update the selector to match your email input field

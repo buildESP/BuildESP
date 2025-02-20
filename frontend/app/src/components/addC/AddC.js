@@ -46,7 +46,7 @@ const AddC = () => {
         };
 
         try {
-            const response = await axios.post('http://${process.env.REACT_APP_BACKEND_IP}:3000/api/items', postData);
+            const response = await axios.post('http://172.31.33.98:3000/api/items', postData);
             console.log('Response from server:', response.data);
             alert('Data successfully submitted!');
         } catch (error) {

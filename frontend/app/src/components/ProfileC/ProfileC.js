@@ -21,7 +21,7 @@ const ProfileC = () => {
     }
 
     // Fetch user profile
-    fetch('http://${process.env.REACT_APP_BACKEND_IP}:3000/api/users')
+    fetch('http://172.31.33.98:3000/api/users')
       .then((response) => response.json())
       .then((data) => {
         const filteredUser = data.filter((user) => user.id === Number(id));
@@ -34,7 +34,7 @@ const ProfileC = () => {
   useEffect(() => {
     if (!id) return;
 
-    fetch('http://${process.env.REACT_APP_BACKEND_IP}:3000/api/items')
+    fetch('http://172.31.33.98:3000/api/items')
       .then((response) => response.json())
       .then((data) => {
         const filteredArticles = data.filter((article) => article.user_id === Number(id));
@@ -62,7 +62,7 @@ const ProfileC = () => {
 
   const deleteArticle = (articleId) => {
     axios
-      .delete(`http://${process.env.REACT_APP_BACKEND_IP}:3000/api/items/${articleId}`)
+      .delete(`http://172.31.33.98:3000/api/items/${articleId}`)
       .then((response) => {
         alert('Article supprimé 🚮');
         // Update the articles list after deletion
