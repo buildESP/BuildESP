@@ -23,7 +23,7 @@ const HeaderC = () => {
     useEffect(() => {
         const fetchCategories = async () => {
             try {
-                const response = await axios.get('http://${process.env.BACKEND_IP}:3000/api/categories');
+                const response = await axios.get('http://${process.env.REACT_APP_BACKEND_IP}:3000/api/categories');
                 const formattedCategories = response.data.map((category) => ({
                     name: category.name,
                     subcategories: category.subcategories.map((sub) => ({

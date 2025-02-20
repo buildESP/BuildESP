@@ -1,6 +1,6 @@
 describe('template spec', () => {
   it('should register successfully', () => {
-    cy.visit('http://${process.env.FRONTEND_IP}:3001/login');
+    cy.visit('http://${process.env.REACT_APP_FRONTEND_IP}:3001/login');
 
     
     cy.get('.title-toggle > :nth-child(3)').click();

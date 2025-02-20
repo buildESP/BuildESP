@@ -1,7 +1,7 @@
 describe('profile Test', () => {
     it('should login successfully with valid credentials', () => {
       // Visit the login page
-      cy.visit('http://${process.env.FRONTEND_IP}:3001/login'); // Update the URL to match your login page
+      cy.visit('http://${process.env.REACT_APP_FRONTEND_IP}:3001/login'); // Update the URL to match your login page
   
       // Enter email
         
@@ -25,7 +25,7 @@ describe('profile Test', () => {
     });
     it('should update profile successfully', () => {
       // Visit the login page
-      cy.visit('http://${process.env.FRONTEND_IP}:3001/login'); // Update the URL to match your login page
+      cy.visit('http://${process.env.REACT_APP_FRONTEND_IP}:3001/login'); // Update the URL to match your login page
   
       // Enter email
           // Enter email

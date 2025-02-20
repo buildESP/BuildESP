@@ -10,7 +10,7 @@ const swaggerOptions = {
       },
       servers: [
         {
-          url: 'http://${process.env.BACKEND_IP}:3000',
+          url: 'http://${process.env.REACT_APP_BACKEND_IP}:3000',
         },
       ],
     },

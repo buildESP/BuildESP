@@ -13,7 +13,7 @@ services:
       - DB_PASSWORD=${DB_PASSWORD}
       - DB_NAME=${DB_NAME}
       - JWT_SECRET=${JWT_SECRET}
-      - ALLOWED_ORIGINS=http://${FRONTEND_IP}:80
+      - ALLOWED_ORIGINS=http://${REACT_APP_FRONTEND_IP}:80
     depends_on:
       db:
         condition: service_healthy

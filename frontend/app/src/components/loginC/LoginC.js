@@ -24,7 +24,7 @@ const LoginC = () => {
     if (isLogin) {
       // Connexion
       try {
-        const response = await axios.post("http://${process.env.BACKEND_IP}:3000/api/access-token", {
+        const response = await axios.post("http://${process.env.REACT_APP_BACKEND_IP}:3000/api/access-token", {
           login: email,
           password: password,
         });
@@ -49,7 +49,7 @@ const LoginC = () => {
         return;
       }
       try {
-        const response = await axios.post("http://${process.env.BACKEND_IP}:3000/api/users", {
+        const response = await axios.post("http://${process.env.REACT_APP_BACKEND_IP}:3000/api/users", {
           firstname: name,
           lastname: "Rococo", // Mettre un nom par défaut ou d'après un champ utilisateur
           email: email,
