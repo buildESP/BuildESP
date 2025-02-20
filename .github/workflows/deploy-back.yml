@@ -27,6 +27,10 @@ jobs:
           ssh -o StrictHostKeyChecking=no ${{ secrets.MY_BACK_SERVER }}@${{ secrets.EC2_BACK_HOST }} << 'EOF'
             echo "🚀 Déploiement du Backend..."
 
+            # Charger les variables d'environnement depuis le fichier .env
+            set -o allexport && source /opt/bitnami/apps/backend/backend/api/.env && set +o allexport
+
+            # Aller dans le dossier du projet
             cd /opt/bitnami/apps/backend/backend/api
 
             echo "📥 Pulling latest changes..."
