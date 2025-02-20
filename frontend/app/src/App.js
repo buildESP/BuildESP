@@ -14,9 +14,9 @@ import ProfileP from './pages/profileP/ProfileP';
 const App = () => {
   const [accessToken, setAccessToken] = useState(localStorage.getItem('Token'));
 
-  // Affichage de la variable d'environnement dans la console
+  // Afficher l'IP du backend dans la console
   useEffect(() => {
-    console.log('Backend IP:', process.env.REACT_APP_BACKEND_IP);  // Ajout du console.log ici
+    console.log('Backend IP:', process.env.REACT_APP_BACKEND_IP);  // Affichage de l'IP
   }, []);
 
   // Mise à jour de accessToken lors des modifications du localStorage
