@@ -24,7 +24,7 @@ const LoginC = () => {
     if (isLogin) {
       // Connexion
       try {
-        const response = await axios.post("http://172.31.33.98:3000/api/access-token", {
+        const response = await axios.post("http://${process.env.BACKEND_IP}:3000/api/access-token", {
           login: email,
           password: password,
         });
