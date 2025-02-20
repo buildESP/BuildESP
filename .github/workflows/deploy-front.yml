@@ -5,7 +5,7 @@ on:
     branches:
       - DevOps_ESP-115
     paths:
-      - 'frontend/**'  # Seulement le dossier frontend est pris en compte
+      - 'frontend/**'
 
 jobs:
   deploy:
@@ -21,26 +21,16 @@ jobs:
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
           ssh-keyscan -H ${{ secrets.EC2_FRONT_HOST }} >> ~/.ssh/known_hosts
-          echo "StrictHostKeyChecking=no" >> ~/.ssh/config
-          echo "UserKnownHostsFile=/dev/null" >> ~/.ssh/config
-
-      - name: Test SSH connection
-        run: |
-          ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ${{ secrets.MY_FRONT_SERVER }}@${{ secrets.EC2_FRONT_HOST }} "echo SSH Connection Successful"
 
       - name: Deploy Frontend to EC2
         run: |
-          ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ${{ secrets.MY_FRONT_SERVER }}@${{ secrets.EC2_FRONT_HOST }} << 'EOF'
-            echo "🚀 Déploiement en cours sur le serveur..."
+          ssh -o StrictHostKeyChecking=no ${{ secrets.MY_FRONT_SERVER }}@${{ secrets.EC2_FRONT_HOST }} << 'EOF'
+            echo "🚀 Déploiement du Frontend & Monitoring..."
 
-            # Accéder au dossier du projet frontend
+            # Aller dans le dossier du projet
             cd /var/www/front/frontend
-            echo "📥 Pulling latest changes..."
 
-            # Configurer Git pour ne pas avoir de rebase lors de pull
-            git config --global pull.rebase false
-            
-            # Vérifier si la branche DevOps_ESP-115 existe
+            echo "📥 Pulling latest changes..."
             git checkout DevOps_ESP-115 || git checkout -b DevOps_ESP-115
             git pull origin DevOps_ESP-115
 
@@ -48,7 +38,6 @@ jobs:
             if [ -f package.json ]; then
               echo "📦 Installing dependencies..."
               npm install
-
               echo "⚙️  Building frontend..."
               npm run build
             else
@@ -57,12 +46,9 @@ jobs:
             fi
 
             echo "🔄 Mise à jour et redémarrage des conteneurs Docker..."
-            # Arrêter les conteneurs existants
             docker-compose down
-
-            # Mettre à jour les images Docker et redémarrer les services
-            docker-compose pull
+            docker-compose build  # Ajout de cette ligne pour forcer la mise à jour des images
             docker-compose up -d
 
-            echo "✅ Déploiement terminé avec succès !"
+            echo "✅ Déploiement Frontend & Monitoring terminé !"
           EOF

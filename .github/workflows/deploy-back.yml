@@ -25,9 +25,10 @@ jobs:
       - name: Deploy Backend to EC2
         run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.MY_BACK_SERVER }}@${{ secrets.EC2_BACK_HOST }} << 'EOF'
-            echo "🚀 Déploiement en cours sur le serveur..."
+            echo "🚀 Déploiement du Backend..."
 
             cd /opt/bitnami/apps/backend/backend/api
+
             echo "📥 Pulling latest changes..."
             git pull origin DevOps_ESP-115
 
@@ -35,8 +36,13 @@ jobs:
             npm install
 
             echo "🔄 Mise à jour et redémarrage des conteneurs Docker..."
-            docker-compose pull  # Met à jour les images
-            docker-compose up -d  # Redémarre les conteneurs avec les nouvelles images
+            docker-compose down
+            docker-compose build  # Ajout de cette ligne pour mettre à jour les images
+            docker-compose up -d
 
-            echo "✅ Déploiement terminé avec succès !"
+            echo "⚙️  Mise à jour de la base de données..."
+            docker exec backend-1 node config/sync.js
+            docker exec backend-1 npm run fixtures
+
+            echo "✅ Déploiement Backend terminé !"
           EOF
