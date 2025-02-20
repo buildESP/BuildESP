@@ -62,12 +62,16 @@ const LoginC = () => {
           console.log("Inscription réussie :", response.data);
           setSuccessMessage("Inscription réussie ! Vous pouvez maintenant vous connecter.");
           toggleForm(); // Basculer vers le formulaire de connexion
+          alert("inscription validée ✅, vous pouvez vous connecter");
         }
       } catch (error) {
         console.error("Erreur d'inscription :", error.response?.data || error.message);
         setErrorMessage("Échec de l'inscription. Veuillez réessayer.");
+        alert("Échec de l'inscription 🚫. Veuillez réessayer");
       }
+    
     }
+   
   };
 
   // Fonction pour basculer entre les modes Connexion et Inscription
