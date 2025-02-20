@@ -1,7 +1,7 @@
 describe('Login Test', () => {
     it('should login successfully with valid credentials', () => {
       // Visit the login page
-      cy.visit('http://localhost:3001/login'); // Update the URL to match your login page
+      cy.visit('http://${process.env.FRONTEND_IP}:3001/login'); // Update the URL to match your login page
   
       // Enter email
       cy.get('#email').type('chetholgrem12@gmail.com'); // Update the selector to match your email input field
@@ -25,7 +25,7 @@ describe('Login Test', () => {
   
     it('should display an error message with invalid credentials', () => {
       // Visit the login page
-      cy.visit('http://localhost:3001/login'); // Update the URL to match your login page
+      cy.visit('http://${process.env.FRONTEND_IP}:3001/login'); // Update the URL to match your login page
   
       // Enter email
       cy.get('#email').type('invalid@example.com'); // Update the selector to match your email input field

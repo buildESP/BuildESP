@@ -1,7 +1,7 @@
 describe('Test navigation', () => {
     it('should login successfully with valid credentials', () => {
       // Visit the login page
-      cy.visit('http://localhost:3001/login'); // Update the URL to match your login page
+      cy.visit('http://${process.env.FRONTEND_IP}:3001/login'); // Update the URL to match your login page
   
       // Enter email
         
@@ -24,7 +24,7 @@ describe('Test navigation', () => {
     });
     it('should update profile successfully', () => {
       // Visit the login page
-      cy.visit('http://localhost:3001/login'); // Update the URL to match your login page
+      cy.visit('http://${process.env.FRONTEND_IP}:3001/login'); // Update the URL to match your login page
   
       // Enter email
           // Enter email

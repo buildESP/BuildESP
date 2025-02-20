@@ -49,7 +49,7 @@ const LoginC = () => {
         return;
       }
       try {
-        const response = await axios.post("http://localhost:3000/api/users", {
+        const response = await axios.post("http://${process.env.BACKEND_IP}:3000/api/users", {
           firstname: name,
           lastname: "Rococo", // Mettre un nom par défaut ou d'après un champ utilisateur
           email: email,
