@@ -41,8 +41,8 @@ jobs:
             docker-compose up -d
 
             echo "⚙️  Mise à jour de la base de données..."
-            docker exec backend-1 node config/sync.js
-            docker exec backend-1 npm run fixtures
+            docker exec backend-backend-1 node config/sync.js
+            docker exec backend-backend-1 npm run fixtures
 
             echo "✅ Déploiement Backend terminé !"
           EOF
