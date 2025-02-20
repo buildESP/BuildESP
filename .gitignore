@@ -9,7 +9,7 @@ logs/
 
 # Dependency directories
 node_modules/
-
+.env
 # Build directories
 build/
 dist/
