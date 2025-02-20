@@ -1,7 +1,7 @@
-version: '3.8'
-
 services:
   backend:
+    volumes:
+      - ./backend:/app
     extends:
       file: ./backend/docker-compose.yml
       service: backend
@@ -22,4 +22,4 @@ networks:
     driver: bridge
 
 volumes:
-  mysql-data:  # 🔹 Ajout du volume ici pour éviter l'erreur
+  mysql-data:

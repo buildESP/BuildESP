@@ -1,4 +1,4 @@
-version: '3.8'
+version: "2.33.0"
 
 services:
   backend:
@@ -15,7 +15,6 @@ services:
       - JWT_SECRET=cD8WjQGtWK1TiUmu0hufQ8KjkOLxCNAsgZa3mbIdlXuPShMYYIq9OTA4U8PfM4SZGNoUFxmFl3VrBoxRxxbrLA==
     depends_on:
       - db
-    image: stephb421/buildesp-backend:latest
     networks:
       - buildesp_network
 
@@ -27,7 +26,7 @@ services:
     ports:
       - "3306:3306"
     volumes:
-      - mysql-data:/var/lib/mysql  # 🔹 Ne plus redéfinir ce volume ici
+      - mysql-data:/var/lib/mysql # 🔹 Ne plus redéfinir ce volume ici
     command: --default-authentication-plugin=caching_sha2_password
     networks:
       - buildesp_network
