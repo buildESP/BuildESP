@@ -18,19 +18,32 @@ const exchangeController = require('../controllers/exchangeController');
  *             properties:
  *               item_id:
  *                 type: integer
+ *                 description: The ID of the item being exchanged
  *               lender_user_id:
  *                 type: integer
+ *                 description: The ID of the lender user
  *               borrow_user_id:
  *                 type: integer
+ *                 description: The ID of the borrower user
  *               start_date:
  *                 type: string
  *                 format: date-time
+ *                 description: The start date of the exchange
  *               end_date:
  *                 type: string
  *                 format: date-time
+ *                 description: The end date of the exchange
  *               status:
  *                 type: string
  *                 enum: [Pending, Approved, Completed, Cancelled]
+ *                 description: The current status of the exchange
+ *           example:
+ *             item_id: 1
+ *             lender_user_id: 2
+ *             borrow_user_id: 3
+ *             start_date: "2025-02-15T10:00:00Z"
+ *             end_date: "2025-02-20T10:00:00Z"
+ *             status: "Pending"
  *     responses:
  *       201:
  *         description: Exchange created successfully
@@ -50,6 +63,58 @@ router.post('/exchanges', exchangeController.createExchange);
  *     responses:
  *       200:
  *         description: A list of exchanges
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: integer
+ *                     description: Exchange's ID
+ *                   item:
+ *                     type: object
+ *                     description: Item details associated with the exchange
+ *                     properties:
+ *                       id:
+ *                         type: integer
+ *                         description: Item's ID
+ *                       name:
+ *                         type: string
+ *                         description: Item's name
+ *                   lender_user:
+ *                     type: object
+ *                     description: Lender user details
+ *                     properties:
+ *                       id:
+ *                         type: integer
+ *                         description: Lender's ID
+ *                       name:
+ *                         type: string
+ *                         description: Lender's name
+ *                   borrow_user:
+ *                     type: object
+ *                     description: Borrower user details
+ *                     properties:
+ *                       id:
+ *                         type: integer
+ *                         description: Borrower's ID
+ *                       name:
+ *                         type: string
+ *                         description: Borrower's name
+ *                   start_date:
+ *                     type: string
+ *                     format: date-time
+ *                     description: The start date of the exchange
+ *                   end_date:
+ *                     type: string
+ *                     format: date-time
+ *                     description: The end date of the exchange
+ *                   status:
+ *                     type: string
+ *                     enum: [Pending, Approved, Completed, Cancelled]
+ *                     description: The current status of the exchange
  */
 router.get('/exchanges', exchangeController.getExchanges);
 
@@ -71,6 +136,8 @@ router.get('/exchanges', exchangeController.getExchanges);
  *         description: Exchange found successfully
  *       404:
  *         description: Exchange not found
+ *       500:
+ *         description: Error during fetching exchange
  */
 router.get('/exchanges/:exchange_id', exchangeController.getExchangeById);
 
@@ -96,24 +163,39 @@ router.get('/exchanges/:exchange_id', exchangeController.getExchangeById);
  *             properties:
  *               item_id:
  *                 type: integer
+ *                 description: The ID of the item being exchanged
  *               lender_user_id:
  *                 type: integer
+ *                 description: The ID of the lender user
  *               borrow_user_id:
  *                 type: integer
+ *                 description: The ID of the borrower user
  *               start_date:
  *                 type: string
  *                 format: date-time
+ *                 description: The start date of the exchange
  *               end_date:
  *                 type: string
  *                 format: date-time
+ *                 description: The end date of the exchange
  *               status:
  *                 type: string
  *                 enum: [Pending, Approved, Completed, Cancelled]
+ *                 description: The current status of the exchange
+ *           example:
+ *             item_id: 1
+ *             lender_user_id: 2
+ *             borrow_user_id: 3
+ *             start_date: "2025-02-15T10:00:00Z"
+ *             end_date: "2025-02-20T10:00:00Z"
+ *             status: "Pending"
  *     responses:
  *       200:
  *         description: Exchange updated successfully
  *       404:
  *         description: Exchange not found
+ *       500:
+ *         description: Error during exchange update
  */
 router.put('/exchanges/:exchange_id', exchangeController.updateExchange);
 
@@ -135,6 +217,8 @@ router.put('/exchanges/:exchange_id', exchangeController.updateExchange);
  *         description: Exchange deleted successfully
  *       404:
  *         description: Exchange not found
+ *       500:
+ *         description: Error during exchange deletion
  */
 router.delete('/exchanges/:exchange_id', exchangeController.deleteExchange);
 

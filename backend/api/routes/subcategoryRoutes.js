@@ -19,12 +19,34 @@ const subcategoryController = require('../controllers/subcategoryController');
  *               category_id:
  *                 type: string
  *                 description: The ID of the category to which the subcategory belongs
+ *                 example: "1"
  *               name:
  *                 type: string
  *                 description: The name of the subcategory
+ *                 example: "Mobile Phones"
  *     responses:
  *       201:
  *         description: Subcategory created successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Subcategory created successfully"
+ *                 subcategory:
+ *                   type: object
+ *                   properties:
+ *                     id:
+ *                       type: integer
+ *                       example: 1
+ *                     name:
+ *                       type: string
+ *                       example: "Mobile Phones"
+ *                     category_id:
+ *                       type: integer
+ *                       example: 1
  *       404:
  *         description: Category not found
  *       500:
@@ -51,9 +73,11 @@ router.post('/subcategories', subcategoryController.createSubcategory);
  *                   id:
  *                     type: string
  *                     description: Subcategory's ID
+ *                     example: "1"
  *                   name:
  *                     type: string
  *                     description: Subcategory's name
+ *                     example: "Mobile Phones"
  *                   category:
  *                     type: object
  *                     description: Category details associated with the subcategory
@@ -61,9 +85,11 @@ router.post('/subcategories', subcategoryController.createSubcategory);
  *                       id:
  *                         type: string
  *                         description: Category's ID
+ *                         example: "1"
  *                       name:
  *                         type: string
  *                         description: Category's name
+ *                         example: "Electronics"
  *                   items:
  *                     type: array
  *                     description: List of items under the subcategory
@@ -73,9 +99,11 @@ router.post('/subcategories', subcategoryController.createSubcategory);
  *                         id:
  *                           type: string
  *                           description: Item's ID
+ *                           example: "1"
  *                         name:
  *                           type: string
  *                           description: Item's name
+ *                           example: "iPhone 12"
  */
 router.get('/subcategories', subcategoryController.getSubcategories);
 
@@ -92,9 +120,30 @@ router.get('/subcategories', subcategoryController.getSubcategories);
  *         schema:
  *           type: string
  *         description: The subcategory's ID
+ *         example: "1"
  *     responses:
  *       200:
  *         description: Subcategory found successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: string
+ *                   example: "1"
+ *                 name:
+ *                   type: string
+ *                   example: "Mobile Phones"
+ *                 category:
+ *                   type: object
+ *                   properties:
+ *                     id:
+ *                       type: string
+ *                       example: "1"
+ *                     name:
+ *                       type: string
+ *                       example: "Electronics"
  *       404:
  *         description: Subcategory not found
  *       500:
@@ -115,6 +164,7 @@ router.get('/subcategories/:subcategory_id', subcategoryController.getSubcategor
  *         schema:
  *           type: string
  *         description: The subcategory's ID
+ *         example: "1"
  *     requestBody:
  *       required: true
  *       content:
@@ -125,9 +175,27 @@ router.get('/subcategories/:subcategory_id', subcategoryController.getSubcategor
  *               name:
  *                 type: string
  *                 description: The new name of the subcategory
+ *                 example: "Smartphones"
  *     responses:
  *       200:
  *         description: Subcategory updated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Subcategory updated successfully"
+ *                 subcategory:
+ *                   type: object
+ *                   properties:
+ *                     id:
+ *                       type: integer
+ *                       example: 1
+ *                     name:
+ *                       type: string
+ *                       example: "Smartphones"
  *       404:
  *         description: Subcategory not found
  *       500:
@@ -148,9 +216,18 @@ router.put('/subcategories/:subcategory_id', subcategoryController.updateSubcate
  *         schema:
  *           type: string
  *         description: The subcategory's ID
+ *         example: "1"
  *     responses:
  *       200:
  *         description: Subcategory deleted successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Subcategory deleted successfully"
  *       404:
  *         description: Subcategory not found
  *       500:
