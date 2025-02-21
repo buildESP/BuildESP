@@ -18,10 +18,17 @@ const groupController = require('../controllers/groupController');
  *             properties:
  *               name:
  *                 type: string
+ *                 description: The name of the group
  *               description:
  *                 type: string
+ *                 description: A brief description of the group
  *               group_admin:
  *                 type: integer
+ *                 description: The ID of the user who is the admin of the group
+ *           example:
+ *             name: "Building"
+ *             description: "Group for the building residents"
+ *             group_admin: 3
  *     responses:
  *       201:
  *         description: Group created successfully
@@ -41,6 +48,43 @@ router.post('/groups', groupController.createGroup);
  *     responses:
  *       200:
  *         description: A list of groups
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: integer
+ *                     description: The ID of the group
+ *                   name:
+ *                     type: string
+ *                     description: The name of the group
+ *                   description:
+ *                     type: string
+ *                     description: A brief description of the group
+ *                   group_admin:
+ *                     type: object
+ *                     description: The admin user of the group
+ *                     properties:
+ *                       id:
+ *                         type: integer
+ *                         description: Admin user's ID
+ *                       name:
+ *                         type: string
+ *                         description: Admin user's name
+ *                   users:
+ *                     type: array
+ *                     items:
+ *                       type: object
+ *                       properties:
+ *                         id:
+ *                           type: integer
+ *                           description: User's ID in the group
+ *                         name:
+ *                           type: string
+ *                           description: User's name
  */
 router.get('/groups', groupController.getGroups);
 
@@ -55,7 +99,7 @@ router.get('/groups', groupController.getGroups);
  *         name: group_id
  *         required: true
  *         schema:
- *           type: string
+ *           type: integer
  *         description: The group's ID
  *     responses:
  *       200:
@@ -76,7 +120,7 @@ router.get('/groups/:group_id', groupController.getGroupById);
  *         name: group_id
  *         required: true
  *         schema:
- *           type: string
+ *           type: integer
  *         description: The group's ID
  *     requestBody:
  *       required: true
@@ -87,10 +131,17 @@ router.get('/groups/:group_id', groupController.getGroupById);
  *             properties:
  *               name:
  *                 type: string
+ *                 description: The new name of the group
  *               description:
  *                 type: string
+ *                 description: A new description for the group
  *               group_admin:
  *                 type: integer
+ *                 description: The ID of the new admin user for the group
+ *           example:
+ *             name: "Building"
+ *             description: "Group for the building residents"
+ *             group_admin: 3
  *     responses:
  *       200:
  *         description: Group updated successfully
@@ -110,7 +161,7 @@ router.put('/groups/:group_id', groupController.updateGroup);
  *         name: group_id
  *         required: true
  *         schema:
- *           type: string
+ *           type: integer
  *         description: The group's ID
  *     responses:
  *       200:

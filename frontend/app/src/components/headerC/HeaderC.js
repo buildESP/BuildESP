@@ -150,11 +150,11 @@ const HeaderC = () => {
                     })),
                 }));
                 setCategories(formattedCategories);
+                // console.log("Catégories récupérées :", formattedCategories[0]);
             } catch (error) {
                 console.error("Erreur lors de la récupération des catégories :", error);
             }
         };
-
         fetchCategories();
     }, []);
 

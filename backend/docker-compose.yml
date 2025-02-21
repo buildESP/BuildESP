@@ -1,4 +1,4 @@
-version: '3.8'
+version: "2.33.0"
 
 services:
   backend:
@@ -26,7 +26,7 @@ services:
     ports:
       - "3306:3306"
     volumes:
-      - mysql-data:/var/lib/mysql  # 🔹 Ne plus redéfinir ce volume ici
+      - mysql-data:/var/lib/mysql # 🔹 Ne plus redéfinir ce volume ici
     command: --default-authentication-plugin=caching_sha2_password
     networks:
       - buildesp_network

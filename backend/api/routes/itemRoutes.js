@@ -34,6 +34,13 @@ const ItemController = require('../controllers/itemController');
  *               status:
  *                 type: string
  *                 description: The status of the item (e.g., available, sold)
+ *           example:
+ *             user_id: 4
+ *             subcategory_id: 1
+ *             name: "Vélo de ville"
+ *             description: "Vélo tout terrain avec suspension et freins à disque. Idéal pour les randonnées."
+ *             picture: "https://www.cyclable.com/img/c/1468.jpg"
+ *             status: "Available"
  *     responses:
  *       201:
  *         description: Item created successfully
@@ -159,6 +166,13 @@ router.get('/items/:item_id', ItemController.getItemById);
  *               status:
  *                 type: string
  *                 description: The new status of the item (e.g., available, sold)
+ *           example:
+ *             user_id: 4
+ *             subcategory_id: 1
+ *             name: "Vélo de ville"
+ *             description: "Vélo tout terrain avec suspension et freins à disque. Idéal pour les randonnées."
+ *             picture: "https://www.cyclable.com/img/c/1468.jpg"
+ *             status: "Available"
  *     responses:
  *       200:
  *         description: Item updated successfully
