@@ -20,33 +20,49 @@ const authenticateToken = require('../middlewares/authMiddleware');
  *               firstname:
  *                 type: string
  *                 description: User's first name
+ *                 example: "Alice"
  *               lastname:
  *                 type: string
  *                 description: User's last name
+ *                 example: "Dupont"
  *               email:
  *                 type: string
  *                 description: User's email address
+ *                 example: "alice.dupont@example.com"
  *               password:
  *                 type: string
  *                 description: User's password
+ *                 example: "password"
  *               address:
  *                 type: string
  *                 description: User's physical address
+ *                 example: "1 rue de Paris, 75001 Paris, France"
  *               postcode:
  *                 type: string
  *                 description: User's postal code
+ *                 example: "75001"
  *               phone:
  *                 type: string
  *                 description: User's phone number
+ *                 example: "0102030405"
  *               rating:
  *                 type: number
  *                 description: User's rating score
+ *                 example: 4.5
  *               picture:
  *                 type: string
  *                 description: URL of the user's profile picture
+ *                 example: "https://randomuser.me/api/portraits/women/50.jpg"
  *               is_admin:
  *                 type: boolean
  *                 description: Indicates if the user is an administrator
+ *                 example: true
+ *               groups:
+ *                 type: array
+ *                 description: List of groups the user belongs to
+ *                 items:
+ *                   type: integer
+ *                   example: 2
  *     responses:
  *       201:
  *         description: User created successfully
@@ -175,6 +191,18 @@ router.get('/users/:user_id', userController.getUserById);
  *               is_admin:
  *                 type: boolean
  *                 description: Indicates if the user is an administrator
+ *           example:
+ *             firstname: "Alice"
+ *             lastname: "Dupont"
+ *             email: "alice.dupont40@example.com"
+ *             password: "password"
+ *             address: "1 rue de Paris, 75001 Paris, France"
+ *             postcode: "75001"
+ *             phone: "0102030405"
+ *             rating: 4.5
+ *             picture: "https://randomuser.me/api/portraits/women/50.jpg"
+ *             is_admin: true
+ *             groups: [2]
  *     responses:
  *       200:
  *         description: User updated successfully
