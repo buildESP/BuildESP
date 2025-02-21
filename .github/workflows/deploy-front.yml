@@ -29,14 +29,16 @@ jobs:
 
             cd /var/www/front/frontend
 
-            echo "📥 Annulation des modifications locales..."
-            git reset --hard HEAD  # Supprime toutes les modifications locales pour éviter le conflit .env
+            echo "📥 Sauvegarde temporaire du .env..."
+            git stash push -m "Sauvegarde temporaire du .env" .env
 
             echo "📥 Pulling latest changes..."
             git checkout DevOps_ESP-115 || git checkout -b DevOps_ESP-115
-            git pull origin DevOps_ESP-115 --rebase  # Utilisation de rebase pour éviter les conflits
-            
-            # Suppression des dossiers inutiles (optionnel)
+            git pull origin DevOps_ESP-115 --rebase
+
+            echo "📥 Restauration du .env..."
+            git stash pop || echo "⚠️ Aucun stash à restaurer"
+
             echo "🧹 Nettoyage des fichiers inutiles..."
             rm -rf /var/www/front/backend /var/www/front/cypress
 
@@ -53,11 +55,11 @@ jobs:
 
             echo "🔄 Mise à jour et redémarrage des conteneurs Docker..."
             docker-compose down
-            docker-compose build  # Rebuild pour forcer la mise à jour des images
+            docker-compose build
             docker-compose up -d
 
             echo "🧹 Nettoyage des anciens conteneurs et images inutiles..."
-            sudo docker system prune -af  # Libère de l'espace disque
+            sudo docker system prune -af
 
             echo "✅ Déploiement Frontend & Monitoring terminé !"
           EOF
