@@ -27,17 +27,18 @@ jobs:
           ssh -o StrictHostKeyChecking=no ${{ secrets.MY_FRONT_SERVER }}@${{ secrets.EC2_FRONT_HOST }} << 'EOF'
             echo "🚀 Déploiement du Frontend & Monitoring..."
 
-            # Charger les variables d'environnement depuis le fichier .env
-            # set -o allexport && source /var/www/front/frontend/.env && set +o allexport
-
-            # Aller dans le dossier du projet
             cd /var/www/front/frontend
+
+            echo "📥 Annulation des modifications locales..."
+            git reset --hard HEAD  # Supprime toutes les modifications locales pour éviter le conflit .env
 
             echo "📥 Pulling latest changes..."
             git checkout DevOps_ESP-115 || git checkout -b DevOps_ESP-115
-            git pull origin DevOps_ESP-115
+            git pull origin DevOps_ESP-115 --rebase  # Utilisation de rebase pour éviter les conflits
+            
+            # Suppression des dossiers inutiles (optionnel)
+            echo "🧹 Nettoyage des fichiers inutiles..."
             rm -rf /var/www/front/backend /var/www/front/cypress
-
 
             cd app
             if [ -f package.json ]; then
@@ -52,8 +53,11 @@ jobs:
 
             echo "🔄 Mise à jour et redémarrage des conteneurs Docker..."
             docker-compose down
-            docker-compose build  # Ajout de cette ligne pour forcer la mise à jour des images
+            docker-compose build  # Rebuild pour forcer la mise à jour des images
             docker-compose up -d
+
+            echo "🧹 Nettoyage des anciens conteneurs et images inutiles..."
+            sudo docker system prune -af  # Libère de l'espace disque
 
             echo "✅ Déploiement Frontend & Monitoring terminé !"
           EOF
