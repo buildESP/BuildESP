@@ -1,6 +1,7 @@
 // controllers/categoryController.js
 
 const { Category, Subcategory } = require('../models/associations');
+const { updateEntityImage } = require('../utils/imageUtils');
 
 // create a category
 exports.createCategory = async (req, res) => {
@@ -11,7 +12,7 @@ exports.createCategory = async (req, res) => {
       name,
       image_url
     });
-
+  
     res.status(201).json({ message: 'Category created successfully', category: newCategory });
   } catch (error) {
     console.error(error);

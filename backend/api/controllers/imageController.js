@@ -1,7 +1,7 @@
 const { uploadImageForEntity, deleteImage } = require('../services/s3Service');
 
 /**
- * Upload une image et retourne son URL.
+ * Upload an image and return URL.
  */
 const uploadImageController = async (req, res) => {
     try {
@@ -21,7 +21,7 @@ const uploadImageController = async (req, res) => {
 };
 
 /**
- * Supprime une image sur S3.
+ * Delete image in S3.
  */
 const deleteImageController = async (req, res) => {
     try {
