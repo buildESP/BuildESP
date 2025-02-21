@@ -58,11 +58,9 @@ jobs:
 
             echo "🔄 Mise à jour et redémarrage des conteneurs Docker..."
             docker-compose down
+            sudo docker system prune -af
             docker-compose build
             docker-compose up -d
-
-            echo "🧹 Nettoyage des anciens conteneurs et images inutiles..."
-            sudo docker system prune -af
 
             echo "✅ Déploiement Frontend & Monitoring terminé !"
           EOF
