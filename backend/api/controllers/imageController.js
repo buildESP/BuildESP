@@ -1,32 +1,42 @@
-const { uploadImage, getImageUrl } = require('../services/s3Service');
+const { uploadImageForEntity, deleteImage } = require('../services/s3Service');
 
+/**
+ * Upload une image et retourne son URL.
+ */
 const uploadImageController = async (req, res) => {
     try {
         if (!req.file) {
             return res.status(400).json({ message: 'Aucun fichier envoyé' });
         }
 
-        const result = await uploadImage(req.file);
-        res.status(201).json({ message: 'Image uploadée avec succès', imageUrl: result.Location });
+        const entityType = req.body.entityType || 'generic';
+        const entityId = req.body.entityId || Date.now(); // ID temporaire si non fourni
+
+        const imageUrl = uploadImageForEntity(req.file, entityType, entityId);
+
+        res.status(201).json({ message: 'Image uploadée avec succès', imageUrl });
     } catch (error) {
-        console.error(error);
+        console.error('Erreur lors de l’upload de l’image:', error);
         res.status(500).json({ message: 'Erreur lors de l’upload de l’image' });
     }
 };
 
-const getImageController = async (req, res) => {
+/**
+ * Supprime une image sur S3.
+ */
+const deleteImageController = async (req, res) => {
     try {
-        const { fileKey } = req.params;
-        if (!fileKey) {
-            return res.status(400).json({ message: 'Clé de fichier requise' });
+        const { imageUrl } = req.body;
+        if (!imageUrl) {
+            return res.status(400).json({ message: 'URL de l’image requise' });
         }
 
-        const signedUrl = await getImageUrl(fileKey);
-        res.json({ url: signedUrl });
+        await deleteImage(imageUrl);
+        res.json({ message: 'Image supprimée avec succès' });
     } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: 'Erreur lors de la récupération de l’image' });
+        console.error('Erreur lors de la suppression de l’image:', error);
+        res.status(500).json({ message: 'Erreur lors de la suppression de l’image' });
     }
 };
 
-module.exports = { uploadImageController, getImageController };
+module.exports = { uploadImageController, deleteImageController };
