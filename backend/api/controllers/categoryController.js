@@ -46,6 +46,7 @@ exports.getCategoryById = async (req, res) => {
     const category = await Category.findByPk(categoryId, {
       include: [
         {
+
           model: Subcategory,
           as: 'subcategories',
         },
@@ -75,6 +76,7 @@ exports.updateCategory = async (req, res) => {
     if (!category) {
       return res.status(404).json({ message: 'Category not found' });
     }
+    
     await updateEntityImage(category, req.body.image_url);
 
 
