@@ -21,10 +21,12 @@ const LoginC = () => {
     setErrorMessage(""); // Réinitialiser le message d'erreur à chaque soumission
     setSuccessMessage(""); // Réinitialiser le message de succès
 
+    const backendUrl = "http://35.180.39.100:3000"; // Utilisation de l'IP publique du Backend
+
     if (isLogin) {
       // Connexion
       try {
-        const response = await axios.post("http://172.31.33.98:3000/api/access-token", {
+        const response = await axios.post(`${backendUrl}/api/access-token`, {
           login: email,
           password: password,
         });
@@ -49,7 +51,7 @@ const LoginC = () => {
         return;
       }
       try {
-        const response = await axios.post("http://172.31.33.98:3000/api/users", {
+        const response = await axios.post(`${backendUrl}/api/users`, {
           firstname: name,
           lastname: "Rococo", // Mettre un nom par défaut ou d'après un champ utilisateur
           email: email,
