@@ -32,8 +32,8 @@ jobs:
             echo "📥 Sauvegarde temporaire du .env..."
             git stash push -m "Sauvegarde temporaire du .env" .env || echo "Aucun fichier .env à stasher"
 
-            # Stasher toutes les autres modifications locales (mieux que seulement .env)
-            git stash push -m "Sauvegarde des modifications locales" || echo "Aucune modification locale à stasher"
+            # Stasher toutes les autres modifications locales
+            git stash push -m "Sauvegarde des modifications locales" --keep-index || echo "Aucune modification locale à stasher"
 
             echo "📥 Pulling latest changes..."
             git checkout DevOps_ESP-115 || git checkout -b DevOps_ESP-115
