@@ -32,18 +32,19 @@ const HeaderC = () => {
                     })),
                 }));
                 setCategories(formattedCategories);
+                // console.log("Catégories récupérées :", formattedCategories[0]);
             } catch (error) {
                 console.error("Erreur lors de la récupération des catégories :", error);
             }
         };
-
         fetchCategories();
     }, []);
 
     // Fonction pour gérer le clic sur une sous-catégorie
     const handleSubcategoryClick = (category, subcategory) => {
         localStorage.setItem('subcategory_id', subcategory.id); // Stocker l'ID dans le localStorage
-        navigate(`/home/${category.name}/${subcategory.name}`, { state: { selectedSubcategory: subcategory.name } });
+        navigate(`/home/${category.name}/${subcategory.name}`, { state: { selectedSubcategory: subcategory.name }, } );
+       
     };
 
     // Fonction pour gérer le clic sur le bouton "Tout"

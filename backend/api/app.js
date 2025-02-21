@@ -31,18 +31,7 @@ const swaggerSpec = swaggerJsdoc(swaggerOptions);
 app.use('/doc', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // Routes use
-const allowedOrigins = ['http://localhost:3000', 'http://localhost:5173', '172.31.41.254'];
-
-app.use(cors({
-  origin: (origin, callback) => {
-    if (allowedOrigins.includes(origin) || !origin) {
-      callback(null, true); // Autorise les origines dans la liste
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
-  credentials: true
-}));
+app.use(cors({ origin: true }));
 app.use('/api', userRoutes);
 app.use('/api', authRoutes);
 app.use('/api', categoryRoutes);
