@@ -13,7 +13,9 @@ node_modules/
 # Build directories
 build/
 dist/
-
+.github/
+backend/
+cypress/
 # Runtime data
 pids/
 *.pid
