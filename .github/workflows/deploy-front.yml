@@ -5,7 +5,7 @@ on:
     branches:
       - DevOps_ESP-115
     paths:
-      - 'frontend/**'  # Seulement le dossier frontend est pris en compte
+      - 'frontend/**'
 
 jobs:
   deploy:
@@ -21,14 +21,8 @@ jobs:
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
           ssh-keyscan -H ${{ secrets.EC2_FRONT_HOST }} >> ~/.ssh/known_hosts
-          echo "StrictHostKeyChecking=no" >> ~/.ssh/config
-          echo "UserKnownHostsFile=/dev/null" >> ~/.ssh/config
 
-      - name: Test SSH connection
-        run: |
-          ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ${{ secrets.MY_FRONT_SERVER }}@${{ secrets.EC2_FRONT_HOST }} "echo SSH Connection Successful"
-
-      - name: Deploy Frontend to EC2
+    - name: Deploy Frontend to EC2
         run: |
           ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ${{ secrets.MY_FRONT_SERVER }}@${{ secrets.EC2_FRONT_HOST }} << 'EOF'
             echo "🚀 Déploiement en cours sur le serveur..."
