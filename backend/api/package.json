@@ -1,0 +1,27 @@
+{
+  "name": "api_neighborrow",
+  "version": "1.0.0",
+  "description": "api for neighborrow app - esp project",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "sync": "node config/sync.js",
+    "fixtures": "node fixtures/fixtures.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "make-entity": "node config/makeEntity.js"
+  },
+  "author": "neighborrow team",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "chalk": "^4.1.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.1",
+    "jsonwebtoken": "^9.0.2",
+    "mysql2": "^3.11.3",
+    "sequelize": "^6.37.4",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.1"
+  }
+}
