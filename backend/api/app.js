@@ -1,11 +1,13 @@
 require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
+const axios = require('axios'); // Ajouter axios pour effectuer des requêtes HTTP
 const swaggerJsdoc = require('swagger-jsdoc');
 const swaggerUi = require('swagger-ui-express');
 const cors = require('cors');
 const chalk = require('chalk');
 
+// Création de l'application express
 const app = express();
 const port = process.env.PORT || 3000;
 
@@ -17,7 +19,7 @@ const swaggerOptions = require('./swaggerOptions');
 const swaggerSpec = swaggerJsdoc(swaggerOptions);
 app.use('/doc', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
-// CORS Configuration
+// Configuration CORS
 const allowedOrigins = [
   'http://localhost:3000',          // Pour développement local
   'http://localhost:5173',          // Si tu utilises un autre port pour le frontend (ex: vite.js)
@@ -47,14 +49,28 @@ const itemRoutes = require('./routes/itemRoutes');
 const exchangeRoutes = require('./routes/exchangeRoutes');
 const groupRoutes = require('./routes/groupRoutes');
 
-// Définition des routes
-app.use('/api', authRoutes);
-app.use('/api', userRoutes);
-app.use('/api', categoryRoutes);
-app.use('/api', subcategoryRoutes);
-app.use('/api', itemRoutes);
-app.use('/api', exchangeRoutes);
-app.use('/api', groupRoutes);
+// Rediriger les requêtes d'authentification vers l'API privée
+app.post('/api/access-token', async (req, res) => {
+  try {
+    // Effectuer la requête vers l'API privée sur l'IP interne (172.31.33.98)
+    const response = await axios.post('http://172.31.33.98/api/access-token', req.body);
+
+    // Renvoi de la réponse à l'utilisateur final (via frontend)
+    res.status(response.status).json(response.data);
+  } catch (error) {
+    // Si une erreur survient, renvoi du message d'erreur
+    res.status(error.response?.status || 500).json({ message: error.message });
+  }
+});
+
+// Routes pour les autres fonctionnalités
+app.use('/api', authRoutes);       // Authentification
+app.use('/api', userRoutes);       // Utilisateur
+app.use('/api', categoryRoutes);   // Catégories
+app.use('/api', subcategoryRoutes); // Sous-catégories
+app.use('/api', itemRoutes);       // Items
+app.use('/api', exchangeRoutes);   // Échanges
+app.use('/api', groupRoutes);      // Groupes
 
 // Lancement du serveur
 app.listen(port, '0.0.0.0', () => {
