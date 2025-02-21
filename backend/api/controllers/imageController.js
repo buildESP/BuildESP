@@ -10,10 +10,9 @@ const uploadImageController = async (req, res) => {
         }
 
         const entityType = req.body.entityType || 'generic';
-        const entityId = req.body.entityId || Date.now(); // ID temporaire si non fourni
+        const entityId = req.body.entityId || Date.now();
 
-        const imageUrl = uploadImageForEntity(req.file, entityType, entityId);
-
+        const imageUrl =  await uploadImageForEntity(req.file, entityType, entityId);
         res.status(201).json({ message: 'Image uploadée avec succès', imageUrl });
     } catch (error) {
         console.error('Erreur lors de l’upload de l’image:', error);

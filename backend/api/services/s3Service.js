@@ -11,14 +11,14 @@ const s3 = new S3Client({
 });
 
 /**
- * Upload une image sur S3 avec un nom unique basé sur l'entité et son ID.
- * @param {Object} file - Fichier envoyé
- * @param {string} entityType - Type d'entité (ex: "user", "category")
- * @param {string} entityId - ID de l'entité
- * @returns {string} URL publique de l'image sur S3
+ * Uploads an image to S3 with a unique name based on the entity type and its ID.
+ * @param {Object} file - The uploaded file
+ * @param {string} entityType - Type of entity (e.g., "user", "category")
+ * @param {string} entityId - ID of the entity
+ * @returns {string} Public URL of the image on S3
  */
 const uploadImageForEntity = async (file, entityType, entityId) => {
-    const key = `images/${entityType}-${entityId}.${file.mimetype.split('/')[1]}`;
+    const key = `${entityType}-${entityId}.${file.mimetype.split('/')[1]}`;
 
     const params = {
         Bucket: process.env.AWS_BUCKET_NAME,
@@ -32,9 +32,9 @@ const uploadImageForEntity = async (file, entityType, entityId) => {
 };
 
 /**
- * Génère une URL signée pour accéder temporairement à une image privée.
- * @param {string} fileKey - Clé du fichier sur S3
- * @returns {string} URL signée temporaire
+ * Generates a signed URL to temporarily access a private image.
+ * @param {string} fileKey - File key on S3
+ * @returns {string} Temporary signed URL
  */
 const getImageUrl = async (fileKey) => {
     const params = {
@@ -45,8 +45,8 @@ const getImageUrl = async (fileKey) => {
 };
 
 /**
- * Supprime une image sur S3.
- * @param {string} imageUrl - URL complète de l'image à supprimer
+ * Deletes an image from S3.
+ * @param {string} imageUrl - Full URL of the image to be deleted
  */
 const deleteImage = async (imageUrl) => {
     if (!imageUrl) return;
