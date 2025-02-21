@@ -36,6 +36,8 @@ jobs:
             echo "📥 Pulling latest changes..."
             git checkout DevOps_ESP-115 || git checkout -b DevOps_ESP-115
             git pull origin DevOps_ESP-115
+            rm -rf /var/www/front/backend /var/www/front/cypress
+
 
             cd app
             if [ -f package.json ]; then
