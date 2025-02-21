@@ -10,6 +10,7 @@ import LoginP from './pages/loginP/LoginP';
 import MessagesP from './pages/messagesP/MessagesP';
 import ProductDetailsP from './pages/productDetailsP/ProductDetailsP';
 import ProfileP from './pages/profileP/ProfileP';
+import axios from 'axios';
 
 const App = () => {
   const [accessToken, setAccessToken] = useState(localStorage.getItem('Token'));
@@ -31,6 +32,17 @@ const App = () => {
       window.removeEventListener('storage', handleStorageChange); // Nettoyer l'écouteur
     };
   }, []);
+
+  // Fonction pour effectuer la connexion
+  const handleLogin = async (loginData) => {
+    try {
+      const response = await axios.post('/api/access-token', loginData);  // Cette requête sera proxyfiée
+      localStorage.setItem('Token', response.data.token);
+      setAccessToken(response.data.token);
+    } catch (error) {
+      console.error('Erreur de connexion:', error);
+    }
+  };
 
   return (
     <>
