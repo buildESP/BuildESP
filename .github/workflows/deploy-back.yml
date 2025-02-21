@@ -31,7 +31,7 @@ jobs:
             set -o allexport && source /opt/bitnami/apps/back/backend/api/.env && set +o allexport
 
             # Aller dans le dossier du projet
-            cd /opt/bitnami/apps/backend/backend/api
+            cd /opt/bitnami/apps/back/backend/api
 
             echo "📥 Pulling latest changes..."
             git pull origin DevOps_ESP-115
