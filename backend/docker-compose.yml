@@ -44,4 +44,5 @@ volumes:
 
 networks:
   buildesp_network:
-    external: true
+    driver: bridge  # Utiliser le driver "bridge" pour un réseau interne
+
