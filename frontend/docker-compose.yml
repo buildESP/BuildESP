@@ -16,7 +16,6 @@ services:
     networks:
       - buildesp_network
 
-  services:
   nginx:
     image: nginx:latest
     ports:
