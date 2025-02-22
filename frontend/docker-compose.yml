@@ -4,7 +4,7 @@ services:
       context: ./app
       dockerfile: Dockerfile
     ports:
-      - "3000:3000"  # Mapper le port 3000 du conteneur
+      - "3000:3000"
     volumes:
       - ./app:/app
       - /app/node_modules
@@ -29,4 +29,4 @@ services:
 
 networks:
   buildesp_network:
-    external: true  # Utiliser le réseau existant défini par le backend
+    external: true
