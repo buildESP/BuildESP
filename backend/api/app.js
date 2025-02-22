@@ -42,6 +42,9 @@ app.use(cors({
   allowedHeaders: "Content-Type,Authorization"  // Autoriser explicitement les en-têtes
 }));
 
+// Gérer les requêtes OPTIONS
+app.options('*', cors()); // Permet les requêtes OPTIONS sur toutes les routes
+
 // Importation des routes
 const authRoutes = require('./routes/authRoutes');
 const userRoutes = require('./routes/userRoutes');
