@@ -226,9 +226,21 @@ const HomeC = () => {
         : article.filter(article => article.subcategory.name === selectedSubcategory);
 
     const mapArticle = filteredArticlesBySubcategory.map((article, index) => (
-        <div key={index}>
-            {article.name} / {article.subcategory.name} / {article.subcategory.id} / {article.subcategory_id}
-        </div>
+        // <div key={index}>
+        //     {article.name} / {article.subcategory.name} / {article.subcategory.id} / {article.subcategory_id}
+        // </div>
+
+        // <div key={index}>
+        // {article.name} / {article.subcategory.name} / {article.subcategory.id} / {article.subcategory_id}
+        // </div>
+         <div key={article.id} onClick={() => handleCardClick(article)}>
+         <CardsOffersC
+             key={article.id}
+             title={article.name}
+             author={article.user.firstname}
+             image={article.picture}
+         />
+     </div>
     ));
 
     return (
@@ -277,6 +289,9 @@ const HomeC = () => {
                 </div> */}
 
                 {/* Modal for Selected Demand */}
+                <div className="articles-section">
+                {mapArticle.length > 0 ? mapArticle : <p>Aucun article trouvé pour cette sous-catégorie.</p>}
+                </div> 
                 {selectedDemand && (
                     <div className="modal-demands">
                         <div className="modal-content-demands">
@@ -293,7 +308,7 @@ const HomeC = () => {
                 )}
             </div>
             <div>
-                {mapArticle.length > 0 ? mapArticle : <p>Aucun article trouvé pour cette sous-catégorie.</p>}
+                {/* {mapArticle.length > 0 ? mapArticle : <p>Aucun article trouvé pour cette sous-catégorie.</p>} */}
             </div>
         </div>
     );
