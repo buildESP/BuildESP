@@ -41,8 +41,7 @@ jobs:
 
             echo "🔄 Mise à jour et redémarrage des conteneurs Docker..."
             docker-compose down
-            sudo docker system prune -af
-            docker-compose build  # Ajout de cette ligne pour mettre à jour les images
+            sudo docker system prune -af  
             docker-compose up -d
 
             echo "⚙️  Mise à jour de la base de données..."

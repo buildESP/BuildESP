@@ -53,14 +53,22 @@ const groupRoutes = require('./routes/groupRoutes');
 // Route pour rediriger la requête d'authentification vers l'API privée
 app.post('/api/access-token', async (req, res) => {
   try {
+    console.log("Requête reçue avec les données :", req.body);
+
     // Effectuer la requête vers l'API privée située à l'IP interne
     const response = await axios.post('http://172.31.33.98/api/access-token', req.body);
+    
+    // Log de la réponse de l'API privée
+    console.log("Réponse de l'API privée :", response.data);
 
     // Renvoi de la réponse de l'API privée à l'utilisateur final
     res.status(response.status).json(response.data);
   } catch (error) {
     // Si une erreur survient, renvoi du message d'erreur
     console.error('Erreur lors de la requête vers l\'API privée:', error.message);
+    console.error('Détails de l\'erreur :', error.response ? error.response.data : error);
+
+    // Si une erreur survient, renvoi du message d'erreur
     res.status(error.response?.status || 500).json({ message: error.message });
   }
 });
