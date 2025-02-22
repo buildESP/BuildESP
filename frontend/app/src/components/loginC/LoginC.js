@@ -1,8 +1,9 @@
+// src/components/loginC/LoginC.js
 import React, { useState } from "react";
-import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { fetchToken, registerUser } from "../api/api"; // Import des fonctions API
 import FooterwavesC from "../footerWavesC/FooterwavesC";
 import "./login.css";
-import { useNavigate } from "react-router-dom";
 
 const LoginC = () => {
   const [email, setEmail] = useState("");
@@ -21,28 +22,19 @@ const LoginC = () => {
     setErrorMessage(""); // Réinitialiser le message d'erreur à chaque soumission
     setSuccessMessage(""); // Réinitialiser le message de succès
 
-    // Remplacer l'IP publique par l'IP privée du backend
-    const backendUrl = "http://35.180.39.100"; // Utilisation de l'IP publique du Frontend (EC2 Front)
-
     if (isLogin) {
       // Connexion
       try {
-        const response = await axios.post(`${backendUrl}/api/access-token`, {
-          login: email,
-          password: password,
-        });
+        const response = await fetchToken(email, password);  // Utilisation de la fonction de fetchToken
+        console.log("Connexion réussie :", response);
+        localStorage.setItem("Token", response.token);
+        localStorage.setItem("userId", response.userId);
 
-        if (response.status === 200) {
-          console.log("Connexion réussie :", response.data);
-          localStorage.setItem("Token", response.data.token);
-          localStorage.setItem("userId", response.data.userId);
-
-          // Rediriger vers la page d'accueil et recharger la page
-          navigate('/home'); // Rediriger après la connexion réussie
-          window.location.reload();  // Recharger la page après la redirection
-        }
+        // Rediriger vers la page d'accueil
+        navigate('/home');
+        window.location.reload();  // Recharger la page après la redirection
       } catch (error) {
-        console.error("Erreur de connexion :", error.response?.data || error.message);
+        console.error("Erreur de connexion :", error);
         setErrorMessage("Échec de la connexion. Veuillez vérifier vos identifiants.");
       }
     } else {
@@ -52,21 +44,20 @@ const LoginC = () => {
         return;
       }
       try {
-        const response = await axios.post(`${backendUrl}/api/users`, {
+        const userData = {
           firstname: name,
-          lastname: "Rococo", // Mettre un nom par défaut ou d'après un champ utilisateur
+          lastname: "Rococo", // Par défaut ou selon un champ utilisateur
           email: email,
           password: password,
           is_admin: true,
-        });
+        };
 
-        if (response.status === 201) {
-          console.log("Inscription réussie :", response.data);
-          setSuccessMessage("Inscription réussie ! Vous pouvez maintenant vous connecter.");
-          toggleForm(); // Basculer vers le formulaire de connexion
-        }
+        const response = await registerUser(userData); // Utilisation de la fonction d'inscription
+        console.log("Inscription réussie :", response);
+        setSuccessMessage("Inscription réussie ! Vous pouvez maintenant vous connecter.");
+        toggleForm(); // Basculer vers le formulaire de connexion
       } catch (error) {
-        console.error("Erreur d'inscription :", error.response?.data || error.message);
+        console.error("Erreur d'inscription :", error);
         setErrorMessage("Échec de l'inscription. Veuillez réessayer.");
       }
     }
@@ -89,7 +80,6 @@ const LoginC = () => {
       <div className="background-shape shape2"></div>
 
       <form className="login-form" onSubmit={handleSubmit}>
-        {/* Titre Connexion / S'enregistrer */}
         <div className="title-toggle">
           <button
             type="button"
@@ -108,7 +98,6 @@ const LoginC = () => {
           </button>
         </div>
 
-        {/* Formulaire d'inscription */}
         {!isLogin && (
           <div className="input-group">
             <label htmlFor="name">Nom</label>
@@ -123,7 +112,6 @@ const LoginC = () => {
           </div>
         )}
 
-        {/* Formulaire de connexion / email */}
         <div className="input-group">
           <label htmlFor="email">Adresse email</label>
           <input
@@ -136,7 +124,6 @@ const LoginC = () => {
           />
         </div>
 
-        {/* Formulaire de mot de passe */}
         <div className="input-group">
           <label htmlFor="password">Mot de passe</label>
           <input
@@ -149,7 +136,6 @@ const LoginC = () => {
           />
         </div>
 
-        {/* Formulaire d'inscription (confirmation mot de passe) */}
         {!isLogin && (
           <>
             <div className="input-group">
@@ -170,7 +156,6 @@ const LoginC = () => {
           </>
         )}
 
-        {/* Case "Se rappeler de mon mot de passe" (uniquement pour la connexion) */}
         {isLogin && (
           <div className="checkbox-group">
             <input
@@ -183,16 +168,13 @@ const LoginC = () => {
           </div>
         )}
 
-        {/* Bouton de soumission */}
         <button type="submit" className="login-button">
           {isLogin ? "Se connecter" : "S'enregistrer"}
         </button>
 
-        {/* Messages d'erreur et de succès */}
         {errorMessage && <p className="error-message">{errorMessage}</p>}
         {successMessage && <p className="success-message">{successMessage}</p>}
 
-        {/* Séparateur et boutons sociaux */}
         {isLogin && <div className="divider"><span>OU</span></div>}
         {isLogin && (
           <div className="social-buttons">

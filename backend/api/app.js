@@ -21,12 +21,12 @@ app.use('/doc', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // Configuration CORS pour autoriser certaines origines (frontends)
 const allowedOrigins = [
+  'http://172.31.41.254',          // IP privée de ton Frontend (si tests dans le même réseau)
+  'http://35.180.39.100',          // IP publique de ton Frontend
+  'https://35.180.39.100',         // Si ton frontend utilise HTTPS
   'http://localhost:3000',          // Pour développement local
   'http://localhost:5173',          // Autre port frontend (ex: Vite.js)
-  'http://35.180.39.100',           // IP publique de ton Frontend
-  'http://172.31.41.254',           // IP privée de ton Frontend (si tests dans le même réseau)
-  'https://35.180.39.100',          // Si tu utilises HTTPS pour le frontend
-  'https://172.31.41.254'           // Si tu utilises HTTPS dans ton réseau privé
+  'https://172.31.41.254',         // Si tu utilises HTTPS dans ton réseau privé
 ];
 
 app.use(cors({
@@ -56,7 +56,7 @@ app.post('/api/access-token', async (req, res) => {
     console.log("Requête reçue avec les données :", req.body);
 
     // Effectuer la requête vers l'API privée située à l'IP interne
-    const response = await axios.post('http://172.31.33.98/api/access-token', req.body);
+    const response = await axios.post('http://172.31.33.98:3000/api/access-token', req.body);
     
     // Log de la réponse de l'API privée
     console.log("Réponse de l'API privée :", response.data);
