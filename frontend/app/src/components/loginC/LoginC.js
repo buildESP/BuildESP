@@ -22,7 +22,7 @@ const LoginC = () => {
     setSuccessMessage(""); // Réinitialiser le message de succès
 
     // Remplacer l'IP publique par l'IP privée du backend
-    const backendUrl = "http://172.31.33.98:3000"; // Utilisation de l'IP privée du Backend
+    const backendUrl = "http://35.180.39.100"; // Utilisation de l'IP publique du Frontend (EC2 Front)
 
     if (isLogin) {
       // Connexion

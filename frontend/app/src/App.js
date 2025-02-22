@@ -36,7 +36,8 @@ const App = () => {
   // Fonction pour effectuer la connexion
   const handleLogin = async (loginData) => {
     try {
-      const response = await axios.post('/api/access-token', loginData);  // Cette requête sera proxyfiée
+      // L'URL publique du frontend, elle sera proxyfiée vers le backend
+      const response = await axios.post('/api/access-token', loginData);  
       localStorage.setItem('Token', response.data.token);
       setAccessToken(response.data.token);
     } catch (error) {
