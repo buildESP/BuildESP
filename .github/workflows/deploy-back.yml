@@ -34,7 +34,7 @@ jobs:
             cd /opt/bitnami/apps/back/backend/api
 
             echo "📥 Pulling latest changes..."
-            git pull origin DevOps_ESP-115
+            git pull origin DevOps_ESP-130
 
             echo "📦 Installing dependencies..."
             npm install
