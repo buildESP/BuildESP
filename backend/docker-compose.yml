@@ -11,7 +11,7 @@ services:
       - DB_PASSWORD=${DB_PASSWORD}
       - DB_NAME=${DB_NAME}
       - JWT_SECRET=${JWT_SECRET}
-      - ALLOWED_ORIGINS=http://${REACT_APP_FRONTEND_IP}:80
+      - ALLOWED_ORIGINS=http://${FRONTEND_IP}:80
     depends_on:
       db:
         condition: service_healthy
@@ -28,7 +28,7 @@ services:
     ports:
       - "3306:3306"
     volumes:
-      - mysql-data:/var/lib/mysql
+      - mysql-data:/var/lib/mysql  # Assurez-vous que cette ligne est présente
     command: --default-authentication-plugin=mysql_native_password
     restart: always
     networks:
@@ -40,7 +40,7 @@ services:
       start_period: 30s
 
 volumes:
-  mysql-data:
+  mysql-data:  # Assurez-vous que cette ligne est présente
 
 networks:
   buildesp_network:

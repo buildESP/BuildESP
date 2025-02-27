@@ -5,21 +5,36 @@ services:
     extends:
       file: ./backend/docker-compose.yml
       service: backend
+    environment:
+      - DB_HOST=${DB_HOST}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_NAME=${DB_NAME}
+      - JWT_SECRET=${JWT_SECRET}
+      - FRONTEND_IP=${FRONTEND_IP}
+    networks:
+      - buildesp_network
 
   db:
     extends:
       file: ./backend/docker-compose.yml
       service: db
+    networks:
+      - buildesp_network
 
   frontend:
     extends:
       file: ./frontend/docker-compose.yml
       service: frontend
+    environment:
+      - REACT_APP_BACKEND_URL=http://${BACKEND_IP}:3000
+      - REACT_APP_FRONT_PUBLIC_URL=http://${FRONTEND_IP}
+    networks:
+      - buildesp_network
 
 networks:
   buildesp_network:
-    name: buildesp_network
     driver: bridge
 
 volumes:
-  mysql-data:  # 🔹 Ajout du volume ici pour éviter l'erreur
+  mysql-data:  # Assurez-vous que cette ligne est présente

@@ -3,7 +3,7 @@ name: Deploy Frontend
 on:
   push:
     branches:
-      - DevOps_ESP-115
+      - DevOps_ESP-130
     paths:
       - 'frontend/**'
 

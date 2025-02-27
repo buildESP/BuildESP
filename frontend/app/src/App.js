@@ -17,7 +17,7 @@ const App = () => {
 
   // Afficher l'IP du backend dans la console
   useEffect(() => {
-    console.log('Backend IP:', process.env.REACT_APP_BACKEND_IP);  // Affichage de l'IP
+    console.log('Backend IP:', process.env.REACT_APP_BACKEND_IP);
   }, []);
 
   // Mise à jour de accessToken lors des modifications du localStorage
@@ -29,15 +29,15 @@ const App = () => {
     window.addEventListener('storage', handleStorageChange);
 
     return () => {
-      window.removeEventListener('storage', handleStorageChange); // Nettoyer l'écouteur
+      window.removeEventListener('storage', handleStorageChange);
     };
   }, []);
 
   // Fonction pour effectuer la connexion
+  // eslint-disable-next-line no-unused-vars
   const handleLogin = async (loginData) => {
     try {
-      // L'URL publique du frontend, elle sera proxyfiée vers le backend
-      const response = await axios.post('/api/access-token', loginData);  
+      const response = await axios.post('/api/access-token', loginData);
       localStorage.setItem('Token', response.data.token);
       setAccessToken(response.data.token);
     } catch (error) {
@@ -49,7 +49,6 @@ const App = () => {
     <>
       {accessToken && <HeaderC />}
       <Routes>
-        {/* Si le token n'existe pas ou est null, afficher uniquement la route de login */}
         {!accessToken ? (
           <>
             <Route path="*" element={<LoginP />} />
@@ -57,7 +56,6 @@ const App = () => {
           </>
         ) : (
           <>
-            {/* Routes pour les utilisateurs connectés */}
             <Route path="/" element={<HomeP />} />
             <Route path="/home/:category/:subcategory" element={<HomeP />} />
             <Route path="/home" element={<HomeP />} />
@@ -68,8 +66,6 @@ const App = () => {
             <Route path="/messages" element={<MessagesP />} />
             <Route path="/addAnAnnounce" element={<AddP />} />
             <Route path="/category/*" element={<HomeP />} />
-            
-            {/* Route par défaut pour les chemins incorrects */}
             <Route path="*" element={<HomeP />} />
           </>
         )}

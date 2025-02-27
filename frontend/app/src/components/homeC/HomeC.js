@@ -31,8 +31,8 @@ const HomeC = () => {
 
             // Si la sous-catégorie est présente dans le localStorage et non vide, on utilise son ID
             const url = subcategoryId && subcategoryId.trim() !== ''
-                ? `http://172.31.33.98:3000/api/items/sub/${subcategoryId}`
-                : 'http://172.31.33.98:3000/api/items'; // Si pas de sous-catégorie, on récupère tous les articles
+                ? `${process.env.REACT_APP_BACKEND_URL}/api/items/sub/${subcategoryId}`
+                : '${process.env.REACT_APP_BACKEND_URL}/api/items'; // Si pas de sous-catégorie, on récupère tous les articles
 
             const response = await axios.get(url);
             setArticles(response.data);
