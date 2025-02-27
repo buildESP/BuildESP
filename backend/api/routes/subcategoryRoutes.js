@@ -2,6 +2,7 @@
 const express = require('express');
 const router = express.Router();
 const subcategoryController = require('../controllers/subcategoryController');
+const authenticateToken = require('../middlewares/authMiddleware');
 
 /**
  * @swagger
@@ -52,7 +53,7 @@ const subcategoryController = require('../controllers/subcategoryController');
  *       500:
  *         description: Error during subcategory creation
  */
-router.post('/subcategories', subcategoryController.createSubcategory);
+router.post('/subcategories', authenticateToken, subcategoryController.createSubcategory);
 
 /**
  * @swagger
@@ -105,7 +106,7 @@ router.post('/subcategories', subcategoryController.createSubcategory);
  *                           description: Item's name
  *                           example: "iPhone 12"
  */
-router.get('/subcategories', subcategoryController.getSubcategories);
+router.get('/subcategories', authenticateToken, subcategoryController.getSubcategories);
 
 /**
  * @swagger
@@ -149,7 +150,7 @@ router.get('/subcategories', subcategoryController.getSubcategories);
  *       500:
  *         description: Error during fetching subcategory
  */
-router.get('/subcategories/:subcategory_id', subcategoryController.getSubcategoryById);
+router.get('/subcategories/:subcategory_id', authenticateToken, subcategoryController.getSubcategoryById);
 
 /**
  * @swagger
@@ -201,7 +202,7 @@ router.get('/subcategories/:subcategory_id', subcategoryController.getSubcategor
  *       500:
  *         description: Error during subcategory update
  */
-router.put('/subcategories/:subcategory_id', subcategoryController.updateSubcategory);
+router.put('/subcategories/:subcategory_id', authenticateToken, subcategoryController.updateSubcategory);
 
 /**
  * @swagger
@@ -233,6 +234,6 @@ router.put('/subcategories/:subcategory_id', subcategoryController.updateSubcate
  *       500:
  *         description: Error during subcategory deletion
  */
-router.delete('/subcategories/:subcategory_id', subcategoryController.deleteSubcategory);
+router.delete('/subcategories/:subcategory_id', authenticateToken, subcategoryController.deleteSubcategory);
 
 module.exports = router;

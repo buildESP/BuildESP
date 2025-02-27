@@ -2,6 +2,7 @@
 const express = require('express');
 const router = express.Router();
 const groupController = require('../controllers/groupController');
+const authenticateToken = require('../middlewares/authMiddleware');
 
 /**
  * @swagger
@@ -37,7 +38,7 @@ const groupController = require('../controllers/groupController');
  *       500:
  *         description: Error during group creation
  */
-router.post('/groups', groupController.createGroup);
+router.post('/groups', authenticateToken, groupController.createGroup);
 
 /**
  * @swagger
@@ -86,7 +87,7 @@ router.post('/groups', groupController.createGroup);
  *                           type: string
  *                           description: User's name
  */
-router.get('/groups', groupController.getGroups);
+router.get('/groups', authenticateToken, groupController.getGroups);
 
 /**
  * @swagger
@@ -107,7 +108,7 @@ router.get('/groups', groupController.getGroups);
  *       404:
  *         description: Group not found
  */
-router.get('/groups/:group_id', groupController.getGroupById);
+router.get('/groups/:group_id', authenticateToken, groupController.getGroupById);
 
 /**
  * @swagger
@@ -148,7 +149,7 @@ router.get('/groups/:group_id', groupController.getGroupById);
  *       404:
  *         description: Group not found
  */
-router.put('/groups/:group_id', groupController.updateGroup);
+router.put('/groups/:group_id', authenticateToken, groupController.updateGroup);
 
 /**
  * @swagger
@@ -169,6 +170,6 @@ router.put('/groups/:group_id', groupController.updateGroup);
  *       404:
  *         description: Group not found
  */
-router.delete('/groups/:group_id', groupController.deleteGroup);
+router.delete('/groups/:group_id', authenticateToken, groupController.deleteGroup);
 
 module.exports = router;

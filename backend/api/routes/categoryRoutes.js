@@ -2,6 +2,7 @@
 const express = require('express');
 const router = express.Router();
 const categoryController = require('../controllers/categoryController');
+const authenticateToken = require('../middlewares/authMiddleware');
 
 /**
  * @swagger
@@ -43,7 +44,7 @@ const categoryController = require('../controllers/categoryController');
  *       500:
  *         description: Error during category creation
  */
-router.post('/categories', categoryController.createCategory);
+router.post('/categories', authenticateToken, categoryController.createCategory);
 
 /**
  * @swagger
@@ -84,7 +85,7 @@ router.post('/categories', categoryController.createCategory);
  *                           description: Subcategory's name
  *                           example: "Mobile Phones"
  */
-router.get('/categories', categoryController.getCategories);
+router.get('/categories', authenticateToken, categoryController.getCategories);
 
 /**
  * @swagger
@@ -132,7 +133,7 @@ router.get('/categories', categoryController.getCategories);
  *       500:
  *         description: Error during fetching category
  */
-router.get('/categories/:category_id', categoryController.getCategoryById);
+router.get('/categories/:category_id', authenticateToken, categoryController.getCategoryById);
 
 /**
  * @swagger
@@ -184,7 +185,7 @@ router.get('/categories/:category_id', categoryController.getCategoryById);
  *       500:
  *         description: Error during category update
  */
-router.put('/categories/:category_id', categoryController.updateCategory);
+router.put('/categories/:category_id', authenticateToken, categoryController.updateCategory);
 
 /**
  * @swagger
@@ -216,6 +217,6 @@ router.put('/categories/:category_id', categoryController.updateCategory);
  *       500:
  *         description: Error during category deletion
  */
-router.delete('/categories/:category_id', categoryController.deleteCategory);
+router.delete('/categories/:category_id', authenticateToken, categoryController.deleteCategory);
 
 module.exports = router;
