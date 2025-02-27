@@ -1,5 +1,0 @@
-# node environment
-node_modules/
-package-lock.json
-
-.env
