@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from 'axios';
 import FooterwavesC from "../footerWavesC/FooterwavesC";
 import "./login.css";
@@ -16,14 +16,16 @@ const LoginC = () => {
   const navigate = useNavigate();
   const backendUrl = process.env.REACT_APP_BACKEND_URL;
 
+  // Vérification de la variable d'environnement
+  useEffect(() => {
+    console.log('Backend URL:', backendUrl);
+  }, [backendUrl]);
+
   // Fonction de soumission du formulaire
   const handleSubmit = async (e) => {
     e.preventDefault();
     setErrorMessage(""); // Réinitialiser le message d'erreur à chaque soumission
     setSuccessMessage(""); // Réinitialiser le message de succès
-
-    // Remplacer l'IP publique par l'IP privée du backend
-    const backendUrl = process.env.REACT_APP_FRONT_PUBLIC_URL; // Utilisation de l'IP publique du Frontend (EC2 Front)
 
     if (isLogin) {
       // Connexion
