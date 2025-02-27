@@ -118,7 +118,7 @@ router.post('/users', userController.createUser);
  *                     type: boolean
  *                     description: Indicates if the user is an administrator
  */
-router.get('/users', userController.getUsers);
+router.get('/users', authenticateToken, userController.getUsers);
 
 /**
  * @swagger
@@ -139,7 +139,7 @@ router.get('/users', userController.getUsers);
  *       404:
  *         description: User not found
  */
-router.get('/users/:user_id', userController.getUserById);
+router.get('/users/:user_id', authenticateToken, userController.getUserById);
 
 /**
  * @swagger
@@ -211,7 +211,7 @@ router.get('/users/:user_id', userController.getUserById);
  *       500:
  *         description: Server error during user update
  */
-router.put('/users/:user_id', userController.updateUser);
+router.put('/users/:user_id', authenticateToken, userController.updateUser);
 
 /**
  * @swagger
@@ -234,6 +234,6 @@ router.put('/users/:user_id', userController.updateUser);
  *       500:
  *         description: Server error during user deletion
  */
-router.delete('/users/:user_id', userController.deleteUser);
+router.delete('/users/:user_id', authenticateToken, userController.deleteUser);
 
 module.exports = router;

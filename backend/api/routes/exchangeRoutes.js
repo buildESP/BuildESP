@@ -2,6 +2,7 @@
 const express = require('express');
 const router = express.Router();
 const exchangeController = require('../controllers/exchangeController');
+const authenticateToken = require('../middlewares/authMiddleware');
 
 /**
  * @swagger
@@ -52,7 +53,7 @@ const exchangeController = require('../controllers/exchangeController');
  *       500:
  *         description: Error during exchange creation
  */
-router.post('/exchanges', exchangeController.createExchange);
+router.post('/exchanges', authenticateToken, exchangeController.createExchange);
 
 /**
  * @swagger
@@ -116,7 +117,7 @@ router.post('/exchanges', exchangeController.createExchange);
  *                     enum: [Pending, Approved, Completed, Cancelled]
  *                     description: The current status of the exchange
  */
-router.get('/exchanges', exchangeController.getExchanges);
+router.get('/exchanges', authenticateToken, exchangeController.getExchanges);
 
 /**
  * @swagger
@@ -139,7 +140,7 @@ router.get('/exchanges', exchangeController.getExchanges);
  *       500:
  *         description: Error during fetching exchange
  */
-router.get('/exchanges/:exchange_id', exchangeController.getExchangeById);
+router.get('/exchanges/:exchange_id', authenticateToken, exchangeController.getExchangeById);
 
 /**
  * @swagger
@@ -197,7 +198,7 @@ router.get('/exchanges/:exchange_id', exchangeController.getExchangeById);
  *       500:
  *         description: Error during exchange update
  */
-router.put('/exchanges/:exchange_id', exchangeController.updateExchange);
+router.put('/exchanges/:exchange_id', authenticateToken, exchangeController.updateExchange);
 
 /**
  * @swagger
@@ -220,6 +221,6 @@ router.put('/exchanges/:exchange_id', exchangeController.updateExchange);
  *       500:
  *         description: Error during exchange deletion
  */
-router.delete('/exchanges/:exchange_id', exchangeController.deleteExchange);
+router.delete('/exchanges/:exchange_id', authenticateToken, exchangeController.deleteExchange);
 
 module.exports = router;
