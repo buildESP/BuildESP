@@ -1,17 +1,23 @@
-# Use an official Node.js image as the base image
-FROM node:21.7.1
+# Use a lighter Alpine-based Node.js image
+FROM node:18-alpine
 
 # Set the working directory inside the container
 WORKDIR /usr/src/app
 
-# Copy package.json and package-lock.json to the working directory
-COPY package.json ./
+# Copy package.json and package-lock.json for dependency installation
+COPY package.json  ./
 
-# Install the dependencies
-RUN npm install
+# Install only production dependencies
+RUN npm i
 
-# Copy the rest of the application code to the working directory
+# Copy the rest of the application code
 COPY . .
+
+# Change ownership of the application files to the node user
+RUN chown -R node:node /usr/src/app
+
+# Set the container to run as the non-root node user
+USER node
 
 # Expose the port the app runs on
 EXPOSE 3000
