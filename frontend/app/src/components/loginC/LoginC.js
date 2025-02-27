@@ -14,12 +14,12 @@ const LoginC = () => {
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const navigate = useNavigate();
-  const backendUrl = process.env.REACT_APP_BACKEND_URL;
+  const frontendUrl = process.env.REACT_APP_FRONTEND_URL;
 
   // Vérification de la variable d'environnement
   useEffect(() => {
-    console.log('Backend URL:', backendUrl);
-  }, [backendUrl]);
+    console.log('frontend Url:', frontendUrl);
+  }, [frontendUrl]);
 
   // Fonction de soumission du formulaire
   const handleSubmit = async (e) => {
@@ -30,7 +30,7 @@ const LoginC = () => {
     if (isLogin) {
       // Connexion
       try {
-        const response = await axios.post(`${backendUrl}/api/access-token`, {
+        const response = await axios.post(`${frontendUrl}/api/access-token`, {
           login: email,
           password: password,
         });
@@ -55,7 +55,7 @@ const LoginC = () => {
         return;
       }
       try {
-        const response = await axios.post(`${backendUrl}/api/users`, {
+        const response = await axios.post(`${frontendUrl}/api/users`, {
           firstname: name,
           lastname: "Rococo", // Mettre un nom par défaut ou d'après un champ utilisateur
           email: email,
