@@ -22,12 +22,14 @@ const LoginC = () => {
     setSuccessMessage(""); // Réinitialiser le message de succès
 
     // Remplacer l'IP publique par l'IP privée du backend
-    const backendUrl = "http://52.47.190.27"; // Utilisation de l'IP publique du Frontend (EC2 Front)
+   // Utilisation de l'IP publique du Frontend (EC2 Front)
+    const frontendUrl = process.env.REACT_APP_FRONTEND_URL;
+    console.log(frontendUrl);
 
     if (isLogin) {
       // Connexion
       try {
-        const response = await axios.post(`${backendUrl}/api/access-token`, {
+        const response = await axios.post(`${frontendUrl}/api/access-token`, {
           login: email,
           password: password,
         });
@@ -52,7 +54,7 @@ const LoginC = () => {
         return;
       }
       try {
-        const response = await axios.post(`${backendUrl}/api/users`, {
+        const response = await axios.post(`${frontendUrl}/api/users`, {
           firstname: name,
           lastname: "Rococo", // Mettre un nom par défaut ou d'après un champ utilisateur
           email: email,
