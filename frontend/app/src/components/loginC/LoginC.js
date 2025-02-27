@@ -14,6 +14,7 @@ const LoginC = () => {
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const navigate = useNavigate();
+  const backendUrl = process.env.REACT_APP_BACKEND_URL;
 
   // Fonction de soumission du formulaire
   const handleSubmit = async (e) => {
