@@ -13,6 +13,7 @@
   "author": "neighborrow team",
   "license": "ISC",
   "dependencies": {
+    "axios": "^1.7.9",
     "bcrypt": "^5.1.1",
     "chalk": "^4.1.2",
     "cors": "^2.8.5",
