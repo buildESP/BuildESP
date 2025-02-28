@@ -1,4 +1,4 @@
-version: '3.8'
+version: "2.33.0"
 
 services:
   backend:
@@ -8,26 +8,25 @@ services:
     ports:
       - "3000:3000"
     environment:
-      - DB_HOST=db
-      - DB_USER=root
-      - DB_PASSWORD=root
-      - DB_NAME=neighborrow_dev_db
-      - JWT_SECRET=cD8WjQGtWK1TiUmu0hufQ8KjkOLxCNAsgZa3mbIdlXuPShMYYIq9OTA4U8PfM4SZGNoUFxmFl3VrBoxRxxbrLA==
+      - DB_HOST=${DB_HOST}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_NAME=${DB_NAME}
+      - JWT_SECRET=${JWT_SECRET}    
     depends_on:
       - db
-    image: stephb421/buildesp-backend:latest
     networks:
       - buildesp_network
 
   db:
     image: mysql:8.0
     environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: neighborrow_dev_db
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_DATABASE: ${DB_NAME}
     ports:
       - "3306:3306"
     volumes:
-      - mysql-data:/var/lib/mysql  # 🔹 Ne plus redéfinir ce volume ici
+      - mysql-data:/var/lib/mysql # 🔹 Ne plus redéfinir ce volume ici
     command: --default-authentication-plugin=caching_sha2_password
     networks:
       - buildesp_network
