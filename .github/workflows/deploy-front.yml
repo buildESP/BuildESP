@@ -27,7 +27,8 @@ jobs:
           ssh -o StrictHostKeyChecking=no ${{ secrets.MY_FRONT_SERVER }}@${{ secrets.EC2_FRONT_HOST }} << 'EOF'
             echo "🚀 Déploiement du Frontend & Monitoring..."
 
-            cd /var/www/front/frontend
+            # Assurez-vous que nous sommes dans le bon répertoire
+            cd /var/www/front/frontend || { echo "Répertoire /var/www/front/frontend non trouvé"; exit 1; }
 
             echo "📥 Sauvegarde temporaire du .env..."
             git stash push -m "Sauvegarde temporaire du .env" .env || echo "Aucun fichier .env à stasher"
@@ -45,14 +46,15 @@ jobs:
             echo "🧹 Nettoyage des fichiers inutiles..."
             rm -rf /var/www/front/backend /var/www/front/cypress
 
-            cd app
+            # Se rendre dans le répertoire où se trouve le fichier package.json
+            cd /var/www/front/frontend/app || { echo "Répertoire /var/www/front/frontend/app non trouvé"; exit 1; }
+
+            # Vérifier si package.json existe avant de lancer le build
             if [ -f package.json ]; then
-              echo "📦 Installing dependencies..."
-              npm install
-              echo "⚙️  Building frontend..."
+              echo "⚙️ Building frontend..."
               npm run build
             else
-              echo "❌ ERREUR: package.json non trouvé."
+              echo "❌ ERREUR: package.json non trouvé dans /var/www/front/frontend/app."
               exit 1
             fi
 
