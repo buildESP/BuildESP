@@ -1,4 +1,3 @@
-// routes/categoryRoutes.js
 const express = require('express');
 const router = express.Router();
 const categoryController = require('../controllers/categoryController');
@@ -20,7 +19,11 @@ const authenticateToken = require('../middlewares/authMiddleware');
  *               name:
  *                 type: string
  *                 description: Name of the category
- *                 example: "Electronics"
+ *               image_url:
+ *                 type: string
+ *                 format: uri
+ *                 description: URL of the category image
+ *                 example: "https://s3.amazonaws.com/my-bucket/images/category-123.jpg"
  *     responses:
  *       201:
  *         description: Category created successfully
@@ -29,18 +32,16 @@ const authenticateToken = require('../middlewares/authMiddleware');
  *             schema:
  *               type: object
  *               properties:
- *                 message:
+ *                 id:
  *                   type: string
- *                   example: "Category created successfully"
- *                 category:
- *                   type: object
- *                   properties:
- *                     id:
- *                       type: integer
- *                       example: 1
- *                     name:
- *                       type: string
- *                       example: "Electronics"
+ *                   description: Category ID
+ *                 name:
+ *                   type: string
+ *                   description: Category name
+ *                 image_url:
+ *                   type: string
+ *                   format: uri
+ *                   description: URL of the category image
  *       500:
  *         description: Error during category creation
  */
@@ -69,7 +70,10 @@ router.post('/categories', authenticateToken, categoryController.createCategory)
  *                   name:
  *                     type: string
  *                     description: Category's name
- *                     example: "Electronics"
+ *                   image_url:
+ *                     type: string
+ *                     format: uri
+ *                     description: URL of the category image
  *                   subcategories:
  *                     type: array
  *                     description: List of subcategories under the category
@@ -111,23 +115,14 @@ router.get('/categories', authenticateToken, categoryController.getCategories);
  *               properties:
  *                 id:
  *                   type: string
- *                   example: "1"
+ *                   description: Category ID
  *                 name:
  *                   type: string
- *                   example: "Electronics"
- *                 subcategories:
- *                   type: array
- *                   items:
- *                     type: object
- *                     properties:
- *                       id:
- *                         type: string
- *                         description: Subcategory's ID
- *                         example: "2"
- *                       name:
- *                         type: string
- *                         description: Subcategory's name
- *                         example: "Mobile Phones"
+ *                   description: Category name
+ *                 image_url:
+ *                   type: string
+ *                   format: uri
+ *                   description: URL of the category image
  *       404:
  *         description: Category not found
  *       500:
@@ -159,7 +154,11 @@ router.get('/categories/:category_id', authenticateToken, categoryController.get
  *               name:
  *                 type: string
  *                 description: The new name of the category
- *                 example: "Consumer Electronics"
+ *               image_url:
+ *                 type: string
+ *                 format: uri
+ *                 description: New URL of the category image
+ *                 example: "https://s3.amazonaws.com/my-bucket/images/category-123-new.jpg"
  *     responses:
  *       200:
  *         description: Category updated successfully
@@ -168,18 +167,16 @@ router.get('/categories/:category_id', authenticateToken, categoryController.get
  *             schema:
  *               type: object
  *               properties:
- *                 message:
+ *                 id:
  *                   type: string
- *                   example: "Category updated successfully"
- *                 category:
- *                   type: object
- *                   properties:
- *                     id:
- *                       type: integer
- *                       example: 1
- *                     name:
- *                       type: string
- *                       example: "Consumer Electronics"
+ *                   description: Category ID
+ *                 name:
+ *                   type: string
+ *                   description: Category name
+ *                 image_url:
+ *                   type: string
+ *                   format: uri
+ *                   description: Updated URL of the category image
  *       404:
  *         description: Category not found
  *       500:
