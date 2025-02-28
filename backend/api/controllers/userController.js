@@ -104,6 +104,9 @@ exports.updateUser = async (req, res) => {
       return res.status(404).json({ message: 'User not found' });
     }
 
+    await updateEntityImage(user, req.body.picture);
+
+
     // Update user fields
     await user.update({
       firstname: firstname || user.firstname,
