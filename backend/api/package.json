@@ -7,7 +7,7 @@
     "start": "node app.js",
     "sync": "node config/sync.js",
     "fixtures": "node fixtures/fixtures.js",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest",
     "make-entity": "node config/makeEntity.js"
   },
   "author": "neighborrow team",
@@ -25,5 +25,9 @@
     "sequelize": "^6.37.4",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.1"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "supertest": "^7.0.0"
   }
 }
