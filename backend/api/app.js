@@ -22,8 +22,8 @@ app.use('/doc', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 // Configuration CORS pour autoriser certaines origines (frontends)
 const allowedOrigins = [
   'http://172.31.41.254',          // IP privée de votre Frontend
-  'http://52.47.190.27',          // IP publique de votre Frontend
-  'https://52.47.190.27',         // Si votre frontend utilise HTTPS
+  'http://15.188.11.254',          // IP publique de votre Frontend
+  'https://15.188.11.254',         // Si votre frontend utilise HTTPS
   'http://localhost:3000',        // Pour développement local
   'http://localhost:5173',        // Autre port frontend (ex: Vite.js)
   'https://172.31.41.254',        // Si vous utilisez HTTPS dans votre réseau privé
