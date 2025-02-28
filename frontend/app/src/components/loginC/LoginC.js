@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import FooterwavesC from "../footerWavesC/FooterwavesC";
 import "./login.css";
@@ -9,93 +9,111 @@ const LoginC = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [name, setName] = useState("");
-  const [lasTname, setLasTname] = useState("");
+  const [lastName, setLastName] = useState(""); // Fixed typo
   const [rememberMe, setRememberMe] = useState(false);
-  const [isLogin, setIsLogin] = useState(true); // Toggle between Login and Signup
+  const [isLogin, setIsLogin] = useState(true);
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
-  // Form submission handler
+  // Clear messages after 5 seconds
+  useEffect(() => {
+    if (errorMessage || successMessage) {
+      const timer = setTimeout(() => {
+        setErrorMessage("");
+        setSuccessMessage("");
+      }, 5000);
+      return () => clearTimeout(timer);
+    }
+  }, [errorMessage, successMessage]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setErrorMessage(""); // Reset error message
-    setSuccessMessage(""); // Reset success message
+    setErrorMessage("");
+    setSuccessMessage("");
+    setIsLoading(true);
 
-    if (isLogin) {
-      // Login
-      try {
-        const response = await axios.post("http://localhost:3000/api/access-token", {
-          login: email,
-          password: password,
-        }
-      
-      );
-        
-        if (response.status === 200) {
-          console.log("Connexion réussie :", response.data);
-          // Store token and userId in localStorage
-          localStorage.setItem("token", response.data.token); // Adjusted key to match other components
-          localStorage.setItem("userId", response.data.userId);
+    // Basic form validation
+    if (!email || !password) {
+      setErrorMessage("Veuillez remplir tous les champs requis");
+      setIsLoading(false);
+      return;
+    }
 
-          // Redirect to home and reload
-          navigate('/home');
-          window.location.reload(); // Reloads after navigation
-        }
-      } catch (error) {
-        console.error("Erreur de connexion :", error.response?.data || error.message);
-        setErrorMessage(
-          error.response?.data?.message || 
-          "Échec de la connexion. Veuillez vérifier vos identifiants."
+    if (!isLogin && password !== confirmPassword) {
+      setErrorMessage("Les mots de passe ne correspondent pas");
+      setIsLoading(false);
+      return;
+    }
+
+    try {
+      if (isLogin) {
+        // Login
+        const response = await axios.post(
+          "http://localhost:3000/api/access-token",
+          {
+            login: email,
+            password: password,
+          }
         );
-      }
-    } else {
-      // Signup
-      if (password !== confirmPassword) {
-        setErrorMessage("Les mots de passe ne correspondent pas.");
-        return;
-      }
 
-      try {
-        const response = await axios.post("http://localhost:3000/api/users", {
-          firstname: name,
-          lastname: lasTname,
-          email: email,
-          password: password,
-          is_admin: false, // Default to false unless specified otherwise
-        });
+        if (response.status === 200) {
+          const { token, userId } = response.data;
+          // Store token securely
+          if (rememberMe) {
+            localStorage.setItem("token", token);
+            localStorage.setItem("userId", userId);
+          } else {
+            sessionStorage.setItem("token", token);
+            sessionStorage.setItem("userId", userId);
+          }
+          
+          setSuccessMessage("Connexion réussie !");
+          navigate('/home');
+          window.location.reload();
+        }
+      } else {
+        // Signup
+        const response = await axios.post(
+          "http://localhost:3000/api/users",
+          {
+            firstname: name,
+            lastname: lastName,
+            email: email,
+            password: password,
+            is_admin: false,
+          }
+        );
 
         if (response.status === 201) {
-          console.log("Inscription réussie :", response.data);
-          setSuccessMessage("Inscription réussie ! Vous pouvez maintenant vous connecter.");
-          toggleForm(); // Switch to login form
-          alert("Inscription validée ✅. Vous pouvez vous connecter");
+          setSuccessMessage("Inscription réussie ! Vous pouvez maintenant vous connecter");
+          toggleForm();
         }
-      } catch (error) {
-        console.error("Erreur d'inscription :", error.response?.data || error.message);
-        setErrorMessage(
-          error.response?.data?.message || 
-          "Échec de l'inscription. Veuillez réessayer."
-        );
-        alert("Échec de l'inscription 🚫. Veuillez réessayer");
       }
+    } catch (error) {
+      const errorMsg = error.response?.data?.message || error.message;
+      setErrorMessage(
+        isLogin
+          ? `Échec de la connexion: ${errorMsg}`
+          : `Échec de l'inscription: ${errorMsg}`
+      );
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  // Toggle between Login and Signup forms
   const toggleForm = () => {
-    setIsLogin(!isLogin);
+    setIsLogin((prev) => !prev);
     setEmail("");
     setPassword("");
     setConfirmPassword("");
     setName("");
-    setLasTname("");
+    setLastName("");
     setErrorMessage("");
     setSuccessMessage("");
+    setRememberMe(false);
   };
-
-  console.log("isLogin:", isLogin);
-  console.log( localStorage.getItem("token"));
 
   return (
     <div className="login-container">
@@ -103,12 +121,12 @@ const LoginC = () => {
       <div className="background-shape shape2"></div>
 
       <form className="login-form" onSubmit={handleSubmit}>
-        {/* Toggle between Login and Signup */}
         <div className="title-toggle">
           <button
             type="button"
             className={`toggle-button ${isLogin ? "active" : ""}`}
             onClick={() => setIsLogin(true)}
+            disabled={isLoading}
           >
             Connexion
           </button>
@@ -117,12 +135,12 @@ const LoginC = () => {
             type="button"
             className={`toggle-button ${!isLogin ? "active" : ""}`}
             onClick={() => setIsLogin(false)}
+            disabled={isLoading}
           >
             S'enregistrer
           </button>
         </div>
 
-        {/* Signup fields */}
         {!isLogin && (
           <>
             <div className="input-group">
@@ -134,6 +152,7 @@ const LoginC = () => {
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 required
+                disabled={isLoading}
               />
             </div>
             <div className="input-group">
@@ -142,15 +161,15 @@ const LoginC = () => {
                 type="text"
                 id="lastname"
                 placeholder="Prénom"
-                value={lasTname}
-                onChange={(e) => setLasTname(e.target.value)}
+                value={lastName}
+                onChange={(e) => setLastName(e.target.value)}
                 required
+                disabled={isLoading}
               />
             </div>
           </>
         )}
 
-        {/* Email field */}
         <div className="input-group">
           <label htmlFor="email">Adresse email</label>
           <input
@@ -160,10 +179,10 @@ const LoginC = () => {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
+            disabled={isLoading}
           />
         </div>
 
-        {/* Password field */}
         <div className="input-group">
           <label htmlFor="password">Mot de passe</label>
           <input
@@ -173,10 +192,10 @@ const LoginC = () => {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
+            disabled={isLoading}
           />
         </div>
 
-        {/* Confirm password field for signup */}
         {!isLogin && (
           <>
             <div className="input-group">
@@ -188,6 +207,7 @@ const LoginC = () => {
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 required
+                disabled={isLoading}
               />
             </div>
             <h4 id="conditions">
@@ -197,7 +217,6 @@ const LoginC = () => {
           </>
         )}
 
-        {/* Remember me checkbox for login */}
         {isLogin && (
           <div className="checkbox-group">
             <input
@@ -205,21 +224,27 @@ const LoginC = () => {
               id="rememberMe"
               checked={rememberMe}
               onChange={() => setRememberMe(!rememberMe)}
+              disabled={isLoading}
             />
-            <label htmlFor="rememberMe">Se rappeler de mon mot de passe</label>
+            <label htmlFor="rememberMe">Se rappeler de moi</label>
           </div>
         )}
 
-        {/* Submit button */}
-        <button type="submit" className="login-button">
-          {isLogin ? "Se connecter" : "S'enregistrer"}
+        <button 
+          type="submit" 
+          className="login-button"
+          disabled={isLoading}
+        >
+          {isLoading 
+            ? "Chargement..." 
+            : isLogin 
+              ? "Se connecter" 
+              : "S'enregistrer"}
         </button>
 
-        {/* Error and success messages */}
         {errorMessage && <p className="error-message">{errorMessage}</p>}
         {successMessage && <p className="success-message">{successMessage}</p>}
 
-        {/* Social login options */}
         {isLogin && <div className="divider"><span>OU</span></div>}
         {isLogin && (
           <div className="social-buttons">

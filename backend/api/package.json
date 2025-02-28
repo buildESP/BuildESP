@@ -7,7 +7,7 @@
     "start": "node app.js",
     "sync": "node config/sync.js",
     "fixtures": "node fixtures/fixtures.js",
-    "test": "jest",
+    "test": "jest --coverage",
     "make-entity": "node config/makeEntity.js"
   },
   "author": "neighborrow team",

@@ -1,0 +1,28 @@
+const path = require('path');
+
+module.exports = {
+  entry: './src/index.js', // Or your entry point
+  output: {
+    path: path.resolve(__dirname, 'dist'),
+    filename: 'bundle.js',
+  },
+  module: {
+    rules: [
+      {
+        test: /\.jsx?$/,
+        exclude: /node_modules/,
+        use: {
+          loader: 'babel-loader',
+        },
+      },
+      {
+        test: /\.css$/,
+        use: ['style-loader', 'css-loader'],
+      },
+      // Add other loaders as needed
+    ],
+  },
+  resolve: {
+    extensions: ['.js', '.jsx'],
+  },
+};
