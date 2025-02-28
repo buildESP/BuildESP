@@ -1,6 +1,7 @@
 const express = require('express');
 const { uploadImageController, deleteImageController } = require('../controllers/imageController');
 const upload = require('../middlewares/uploadMiddleware');
+const authenticateToken = require('../middlewares/authMiddleware');
 
 const router = express.Router();
 
@@ -49,7 +50,7 @@ const router = express.Router();
  *       500:
  *         description: Erreur interne du serveur lors de l'upload
  */
-router.post('/images/upload', upload.single('image'), uploadImageController);
+router.post('/images/upload', authenticateToken, upload.single('image'), uploadImageController);
 
 /**
  * @swagger
@@ -77,6 +78,6 @@ router.post('/images/upload', upload.single('image'), uploadImageController);
  *       500:
  *         description: Erreur interne du serveur lors de la suppression
  */
-router.delete('/images/delete', deleteImageController);
+router.delete('/images/delete', authenticateToken, deleteImageController);
 
 module.exports = router;
