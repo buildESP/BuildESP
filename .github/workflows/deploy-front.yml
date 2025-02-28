@@ -3,7 +3,7 @@ name: Deploy Frontend
 on:
   push:
     branches:
-      - DevOps_ESP-115
+      - main
     paths:
       - 'frontend/**'
 
@@ -36,8 +36,8 @@ jobs:
             git stash push -m "Sauvegarde des modifications locales" --keep-index || echo "Aucune modification locale à stasher"
 
             echo "📥 Pulling latest changes..."
-            git checkout DevOps_ESP-115 || git checkout -b DevOps_ESP-115
-            git pull origin DevOps_ESP-115 --rebase
+            git checkout main || git checkout -b main
+            git pull origin main --rebase
 
             echo "📥 Restauration du .env..."
             git stash pop || echo "⚠️ Aucun stash à restaurer"
