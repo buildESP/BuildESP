@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom'; // Added useNavigate
+import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './home.css';
 import CardsOffersC from '../cardsC/CardsOffersC';
@@ -10,13 +10,12 @@ const HomeC = () => {
     const [error, setError] = useState(null);
     const [searchQuery, setSearchQuery] = useState('');
     const location = useLocation();
-    const navigate = useNavigate(); // Added for navigation
+    const navigate = useNavigate();
     const [selectedDemand, setSelectedDemand] = useState(null);
-    const [article, setArticle] = useState([]);
 
     const subcategoryId = localStorage.getItem('subcategory_id');
     const selectedSubcategory = location.state?.selectedSubcategory || 'Toutes les annonces';
-    const token = localStorage.getItem('token'); // Get token from localStorage
+    const token = localStorage.getItem('token');
 
     const handleCardClick = (article) => {
         setSelectedDemand(article);
@@ -26,32 +25,47 @@ const HomeC = () => {
         setSelectedDemand(null);
     };
 
-    // Axios request with token and improved error handling
     const fetchArticles = async () => {
-        if (!token) {
-            alert('Please log in first.');
-            navigate('/login');
-            return;
-        }
-
         try {
             setLoading(true);
+
             const url = subcategoryId && subcategoryId.trim() !== ''
-                ? `http://localhost:3000/api/items/sub/${subcategoryId}`
+                ? `http://localhost:3000/api/subcategories/${subcategoryId}`
                 : 'http://localhost:3000/api/items';
-            
+
+            console.log("Making request to:", url);
+
             const response = await axios.get(url, {
                 headers: {
                     'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json'
                 }
             });
-            setArticles(response.data);
+
+
+            // Vérification si des articles sont retournés
+            if (!response.data.items || response.data.items.length === 0) {
+                console.log("No articles found.");
+                setArticles([]);
+                setError("Aucun article trouvé pour cette sous-catégorie.");
+                return;
+            } else {
+                setArticles(response.data.items);
+                setError(null);
+            }
+
+            if (!Array.isArray(response.data.items)) {
+                throw new Error("Invalid response format: 'items' not found.");
+            }
+
             if (!subcategoryId || subcategoryId.trim() === '') {
                 localStorage.removeItem('subcategory_id');
             }
         } catch (err) {
             console.error('Erreur lors de la requête Axios:', err);
+            if (err.response) {
+                console.error('Réponse d\'erreur:', err.response.data);
+            }
             if (err.response?.status === 401 || err.response?.status === 403) {
                 alert('Unauthorized: Please log in again.');
                 navigate('/login');
@@ -63,47 +77,24 @@ const HomeC = () => {
         }
     };
 
-    // Fetch request with token and improved error handling
-    useEffect(() => {
-        fetchArticles();
-    }, [subcategoryId, token, navigate]); // Added token and navigate as dependencies
-
     useEffect(() => {
         if (!token) {
-            console.warn("No token found, skipping fetch.");
+            alert('Veuillez vous connecter pour accéder à cette page.');
+            navigate('/login');
             return;
         }
+        fetchArticles();
+    }, [subcategoryId, token, navigate]);
 
-        fetch("http://localhost:3000/api/items", {
-            method: 'GET',
-            headers: {
-                'Authorization': `Bearer ${token}`,
-                'Content-Type': 'application/json'
-            }
-        })
-            .then(res => {
-                if (res.status === 401 || res.status === 403) {
-                    throw new Error('Unauthorized');
-                }
-                return res.json();
-            })
-            .then(data => setArticle(data))
-            .catch(err => {
-                console.error('Erreur lors de la requête Fetch:', err);
-                if (err.message === 'Unauthorized') {
-                    alert('Unauthorized: Please log in again.');
-                    navigate('/login');
-                }
-            });
-    }, [token, navigate]); // Added token and navigate as dependencies
+    // const filteredArticles = articles.filter((article) => {
+    //     const matchesSubcategory = selectedSubcategory === 'Toutes les annonces'
+    //         || article?.subcategory?.name === selectedSubcategory;
 
-    const filteredArticlesBySubcategory = selectedSubcategory === 'Toutes les annonces'
-        ? article
-        : article.filter(article => article.subcategory?.name === selectedSubcategory);
+    //     const matchesSearchQuery = article.name.toLowerCase().includes(searchQuery.toLowerCase());
 
-    const filteredArticlesByName = filteredArticlesBySubcategory.filter(article =>
-        article.name.toLowerCase().includes(searchQuery.toLowerCase())
-    );
+    //     // Retourne vrai si l'article correspond à la sous-catégorie ET à la recherche par nom
+    //     return matchesSubcategory && matchesSearchQuery;
+    // });
 
     return (
         <div>
@@ -133,21 +124,24 @@ const HomeC = () => {
                         <p>Chargement des articles...</p>
                     ) : error ? (
                         <p>{error}</p>
-                    ) : filteredArticlesByName.length > 0 ? (
-                        filteredArticlesByName.map((article) => (
-                            <div key={article.id} onClick={() => handleCardClick(article)}>
-                                <CardsOffersC
-                                    title={article.name}
-                                    author={article.user?.firstname || 'Inconnu'}
-                                    image={article.picture}
-                                />
-                            </div>
-                        ))
                     ) : (
-                        <p>Aucun article trouvé pour cette sous-catégorie.</p>
+                        articles.length > 0 ? (
+                            articles.map((article) => (
+                                <div key={article.id} onClick={() => handleCardClick(article)}>
+                                    <CardsOffersC
+                                        title={article.name}
+                                        author={article.user?.firstname || 'Inconnu'}
+                                        image={article.picture}
+                                    />
+                                </div>
+                            ))
+                        ) : (
+                            <p>Aucun article à afficher.</p>
+                        )
                     )}
                 </div>
-                
+
+
                 {selectedDemand && (
                     <div className="modal-demands">
                         <div className="modal-content-demands">

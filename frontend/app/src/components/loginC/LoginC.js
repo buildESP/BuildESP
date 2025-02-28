@@ -23,33 +23,60 @@ const LoginC = () => {
     setSuccessMessage(""); // Reset success message
 
     if (isLogin) {
-      // Login
       try {
         const response = await axios.post("http://localhost:3000/api/access-token", {
           login: email,
           password: password,
-        }
-      
-      );
-        
+        }, {
+          headers: {
+            "Content-Type": "application/json"
+          }
+        });
+
         if (response.status === 200) {
-          console.log("Connexion réussie :", response.data);
-          // Store token and userId in localStorage
-          localStorage.setItem("token", response.data.token); // Adjusted key to match other components
+          console.log("✅ Connexion réussie :", response.data);
+
+          // Vérifier que le token est bien présent dans la réponse
+          if (!response.data.token) {
+            setErrorMessage("Aucun token reçu. Veuillez réessayer.");
+            return;
+          }
+
+          // Stocker le token et l'userId
+          localStorage.setItem("token", response.data.token);
           localStorage.setItem("userId", response.data.userId);
 
-          // Redirect to home and reload
+          // Vérifier que le token est bien dans le localStorage
+          console.log("Token stocké :", localStorage.getItem("token"));
+
+          // Redirection vers la page d'accueil
+          console.log("🚀 Redirection vers la page d'accueil...");
           navigate('/home');
-          window.location.reload(); // Reloads after navigation
         }
       } catch (error) {
-        console.error("Erreur de connexion :", error.response?.data || error.message);
-        setErrorMessage(
-          error.response?.data?.message || 
-          "Échec de la connexion. Veuillez vérifier vos identifiants."
-        );
+        console.error("❌ Erreur de connexion :", error.response?.data || error.message);
+
+        if (error.response) {
+          const status = error.response.status;
+          const message = error.response.data?.message || "Erreur inconnue.";
+
+          if (status === 400) {
+            setErrorMessage("⚠️ Login et mot de passe requis.");
+          } else if (status === 401) {
+            setErrorMessage("⛔ Identifiants incorrects. Veuillez réessayer.");
+          } else if (status === 500) {
+            setErrorMessage("❌ Erreur serveur. Veuillez réessayer plus tard.");
+          } else {
+            setErrorMessage(message);
+          }
+        } else if (error.request) {
+          setErrorMessage("🚫 Impossible de contacter le serveur. Vérifiez votre connexion.");
+        } else {
+          setErrorMessage("❌ Une erreur inattendue est survenue.");
+        }
       }
-    } else {
+    }
+    else {
       // Signup
       if (password !== confirmPassword) {
         setErrorMessage("Les mots de passe ne correspondent pas.");
@@ -74,7 +101,7 @@ const LoginC = () => {
       } catch (error) {
         console.error("Erreur d'inscription :", error.response?.data || error.message);
         setErrorMessage(
-          error.response?.data?.message || 
+          error.response?.data?.message ||
           "Échec de l'inscription. Veuillez réessayer."
         );
         alert("Échec de l'inscription 🚫. Veuillez réessayer");
@@ -93,9 +120,6 @@ const LoginC = () => {
     setErrorMessage("");
     setSuccessMessage("");
   };
-
-  console.log("isLogin:", isLogin);
-  console.log( localStorage.getItem("token"));
 
   return (
     <div className="login-container">
