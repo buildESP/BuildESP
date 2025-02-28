@@ -3,9 +3,8 @@ import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
 import './addc.css';
 
-
 const AddC = () => {
-    const [isOffer, setIsOffer] = useState(true); // Détermine si l'on est dans l'onglet Offre ou Demande
+    const [isOffer, setIsOffer] = useState(true);
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const [photo, setPhoto] = useState(null);
@@ -13,28 +12,29 @@ const AddC = () => {
     const [userID, setUserID] = useState(null);
     const [status, setStatus] = useState('');
     const [categories, setCategories] = useState(null);
-    
 
     const navigate = useNavigate();
 
-    // Initialize userID from localStorage
+    // Initialize userID and token from localStorage
     useEffect(() => {
-        const storedUserID = localStorage.getItem('userId'); // Assuming 'id' is the key in localStorage
+        const storedUserID = localStorage.getItem('userId');
         if (storedUserID) {
-            setUserID(Number(storedUserID)); // Convert to number if necessary
+            setUserID(Number(storedUserID));
         }
     }, []);
 
     const handleOptionChange = (event) => {
         setCategories(event.target.value);
-      };
+    };
 
-      const handleOptionChangeStatus = (event) => {
+    const handleOptionChangeStatus = (event) => {
         setStatus(event.target.value);
-      };
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        const token = localStorage.getItem('token'); // Retrieve the token from localStorage
 
         const postData = {
             user_id: userID,
@@ -46,14 +46,24 @@ const AddC = () => {
         };
 
         try {
-            const response = await axios.post('http://localhost:3000/api/items', postData);
+            const response = await axios.post('http://localhost:3000/api/items', postData, {
+                headers: {
+                    'Authorization': `Bearer ${token}`, // Add Bearer token to headers
+                    'Content-Type': 'application/json'
+                }
+            });
             console.log('Response from server:', response.data);
             alert('Data successfully submitted!');
+            navigate('/profile');
         } catch (error) {
             console.error('Error posting data:', error);
-            alert('Failed to submit data. Please try again.');
+            if (error.response?.status === 401 || error.response?.status === 403) {
+                alert('Unauthorized: Please log in again.');
+                navigate('/login'); // Redirect to login if token is invalid/expired
+            } else {
+                alert('Failed to submit data. Please try again.');
+            }
         }
-        navigate('/profile') 
     };
 
     const handleFileChange = (e) => {
@@ -121,7 +131,7 @@ const AddC = () => {
                                 />
                             </div>
 
-                            <div className="input-group" style={{ display: 'none' }} >
+                            <div className="input-group" style={{ display: 'none' }}>
                                 <label htmlFor="userid">User ID</label>
                                 <input
                                     type="number"
@@ -130,71 +140,36 @@ const AddC = () => {
                                     value={userID}
                                     onChange={(e) => setUserID(Number(e.target.value))}
                                     required
-                                    readOnly // Make the input read-only as it's set from localStorage
+                                    readOnly
                                 />
                             </div>
 
-                            {/* <div className="input-group">
-                                <label htmlFor="status">Status</label>
-                                <input
-                                    type="text"
-                                    id="status"
-                                    placeholder="Entrez le statut"
-                                    value={status}
-                                    onChange={(e) => setStatus(e.target.value)}
-                                    required
-                                />
+                            <div>
+                                <p>Disponibilité</p>
+                                <select value={status} onChange={handleOptionChangeStatus}>
+                                    <option value="" disabled>
+                                        -- Please Choose an Option --
+                                    </option>
+                                    <option value=""></option>
+                                    <option value="Available">Disponible</option>
+                                    <option value="Unavailable">Pas disponible</option>
+                                </select>
+                            </div>
 
-                                
-                            </div> */}
-
-<div>
-                                        <p>Disponibilité</p>
-                                        <select value={status} onChange={handleOptionChangeStatus}>
-                                            <option value="" disabled>
-                                            -- Please Choose an Option --
-                                            </option>
-                                            <option value=""></option>
-                                            <option value="Available">Disponible</option>
-                                            <option value="Unavailable">Pas disponible</option>
-                                        </select>
-
-                                        {/* <div>
-                                            <p>catégorie: {categories || "None"}</p>
-                                        </div> */}
-                                        </div>
-
-
-                            {/* <div className="input-group">
-                                <label htmlFor="categories">Catégories</label>
-                                <input
-                                    type="number"
-                                    id="categories"
-                                    placeholder="Entrez la catégorie"
-                                    value={categories}
-                                    onChange={(e) => setCategories(Number(e.target.value))}
-                                    required
-                                />
-                            </div> */}
-
-                                    <div>
-                                        <p>choissisez une catégorie</p>
-                                        <select value={categories} onChange={handleOptionChange}>
-                                            <option value="" disabled>
-                                            -- Please Choose an Option --
-                                            </option>
-                                            <option value=""></option>
-                                            <option value="1">Outils</option>
-                                            <option value="2">Cuisine</option>
-                                            <option value="3">Jardinage</option>
-                                            <option value="4">Films</option>
-                                            <option value="5">Audio</option>
-                                        </select>
-
-                                        {/* <div>
-                                            <p>catégorie: {categories || "None"}</p>
-                                        </div> */}
-                                        </div>
+                            <div>
+                                <p>Choisissez une catégorie</p>
+                                <select value={categories} onChange={handleOptionChange}>
+                                    <option value="" disabled>
+                                        -- Please Choose an Option --
+                                    </option>
+                                    <option value=""></option>
+                                    <option value="1">Outils</option>
+                                    <option value="2">Cuisine</option>
+                                    <option value="3">Jardinage</option>
+                                    <option value="4">Films</option>
+                                    <option value="5">Audio</option>
+                                </select>
+                            </div>
 
                             <div className="input-group photo-upload">
                                 <label htmlFor="photo">Photo</label>

@@ -22,11 +22,23 @@ const EditProfileC = () => {
 
   const [profilePicture, setProfilePicture] = useState(null);
   const userId = localStorage.getItem('userId'); // Get the user ID from localStorage
+  const token = localStorage.getItem('token'); // Get the token from localStorage
 
-  // Fetch user profile
+  // Fetch user profile with token
   useEffect(() => {
+    if (!token) {
+      alert('Please log in first.');
+      navigate('/login');
+      return;
+    }
+
     axios
-      .get(`http://localhost:3000/api/users/${userId}`)
+      .get(`http://localhost:3000/api/users/${userId}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      })
       .then((response) => {
         const user = response.data;
         setUserProfile(user);
@@ -37,7 +49,7 @@ const EditProfileC = () => {
           nom: user.lastname || '',
           prenom: user.firstname || '',
           email: user.email || '',
-          motDePasse: 'password',
+          motDePasse: 'password', // Consider not pre-filling password for security
           adresse: user.address || '',
           codePostal: user.postcode || '',
           numeroDeTelephone: user.phone || '',
@@ -46,8 +58,14 @@ const EditProfileC = () => {
           isAdmin: user.isAdmin || '',
         });
       })
-      .catch((error) => console.error('Erreur de chargement de l\'utilisateur:', error));
-  }, [userId]);
+      .catch((error) => {
+        console.error('Erreur de chargement de l\'utilisateur:', error);
+        if (error.response?.status === 401 || error.response?.status === 403) {
+          alert('Unauthorized: Please log in again.');
+          navigate('/login');
+        }
+      });
+  }, [userId, token, navigate]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -68,6 +86,12 @@ const EditProfileC = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
+    if (!token) {
+      alert('Please log in first.');
+      navigate('/login');
+      return;
+    }
+
     const updatedData = {
       firstname: formData.prenom,
       lastname: formData.nom,
@@ -82,14 +106,24 @@ const EditProfileC = () => {
     };
 
     axios
-      .put(`http://localhost:3000/api/users/${userId}`, updatedData)
+      .put(`http://localhost:3000/api/users/${userId}`, updatedData, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      })
       .then((response) => {
         console.log('User profile updated successfully:', response.data);
         navigate('/profile'); // Navigate to profile page after success
       })
       .catch((error) => {
         console.error('Erreur lors de la mise à jour:', error);
-        alert('Une erreur est survenue lors de la mise à jour du profil.');
+        if (error.response?.status === 401 || error.response?.status === 403) {
+          alert('Unauthorized: Please log in again.');
+          navigate('/login');
+        } else {
+          alert('Une erreur est survenue lors de la mise à jour du profil.');
+        }
       });
   };
 
@@ -179,7 +213,7 @@ const EditProfileC = () => {
             onChange={handleChange}
           />
         </div>
-        <div className="form-group" >
+        <div className="form-group">
           <label htmlFor="motDePasse">Mot de passe:</label>
           <input
             type="password"
@@ -226,9 +260,6 @@ const EditProfileC = () => {
         <button type="submit" className="nav-button">
           Valider
         </button>
-        {/* <Link to="/profil" className="nav-button">
-          Sauvegarder
-        </Link> */}
         <button onClick={() => navigate(-1)} className="nav-button">
           Retour
         </button>
