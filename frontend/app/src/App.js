@@ -31,8 +31,8 @@ const App = () => {
     <>
       <Routes>
             <Route path="*" element={<LoginP />} />
+            <Route path="/" element={<LoginP />} />
             <Route path="/login" element={<LoginP />} />
-            <Route path="/" element={<HomeP />} />
             <Route path="/home/:category/:subcategory" element={<HomeP />} />
             <Route path="/home" element={<HomeP />} />
             <Route path="/profile" element={<ProfileP />} />
