@@ -10,14 +10,11 @@ COPY package.json package-lock.json ./
 # Install dependencies consistently with npm ci
 RUN npm i
 
+RUN mkdir node_modules/.cache && chmod -R 777 node_modules/.cache
+
 # Copy the rest of your application code
 COPY . .
 
-# Change ownership to the non-root 'node' user for security
-RUN chown -R node:node /app
-
-# Switch to the non-root 'node' user
-USER node
 
 # Expose the port your app runs on (assuming 8080)
 EXPOSE 8080

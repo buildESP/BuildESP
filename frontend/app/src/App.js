@@ -29,17 +29,9 @@ const App = () => {
 
   return (
     <>
-      {accessToken && <HeaderC />}
       <Routes>
-        {/* Si le token n'existe pas ou est null, afficher uniquement la route de login */}
-        {!accessToken ? (
-          <>
             <Route path="*" element={<LoginP />} />
             <Route path="/login" element={<LoginP />} />
-          </>
-        ) : (
-          <>
-            {/* Routes pour les utilisateurs connectés */}
             <Route path="/" element={<HomeP />} />
             <Route path="/home/:category/:subcategory" element={<HomeP />} />
             <Route path="/home" element={<HomeP />} />
@@ -50,15 +42,7 @@ const App = () => {
             <Route path="/messages" element={<MessagesP />} />
             <Route path="/addAnAnnounce" element={<AddP />} />
             <Route path="/category/*" element={<HomeP />} />
-            
-            {/* Route par défaut pour les chemins incorrects */}
-            <Route path="*" element={<HomeP />} />
-          </>
-        )}
-         
-
       </Routes>
-      {accessToken && <FooterC />}
     </>
   );
 };
