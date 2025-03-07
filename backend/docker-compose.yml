@@ -29,6 +29,7 @@ services:
     volumes:
       - mysql-data:/var/lib/mysql # 🔹 Ne plus redéfinir ce volume ici
     command: --default-authentication-plugin=caching_sha2_password
+    restart: always
     networks:
       - buildesp_network
     healthcheck:
