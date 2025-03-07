@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './home.css';
 import CardsOffersC from '../cardsC/CardsOffersC';
@@ -10,11 +10,12 @@ const HomeC = () => {
     const [error, setError] = useState(null);
     const [searchQuery, setSearchQuery] = useState('');
     const location = useLocation();
+    const navigate = useNavigate();
     const [selectedDemand, setSelectedDemand] = useState(null);
 
-    // Récupérer la sous-catégorie à partir du localStorage
     const subcategoryId = localStorage.getItem('subcategory_id');
     const selectedSubcategory = location.state?.selectedSubcategory || 'Toutes les annonces';
+    const token = localStorage.getItem('token');
 
     const handleCardClick = (article) => {
         setSelectedDemand(article);
@@ -24,50 +25,76 @@ const HomeC = () => {
         setSelectedDemand(null);
     };
 
-    // Fonction pour récupérer tous les articles
     const fetchArticles = async () => {
         try {
             setLoading(true);
 
-            // Si la sous-catégorie est présente dans le localStorage et non vide, on utilise son ID
             const url = subcategoryId && subcategoryId.trim() !== ''
-                ? `http://172.31.33.98:3000/api/items/sub/${subcategoryId}`
-                : 'http://172.31.33.98:3000/api/items'; // Si pas de sous-catégorie, on récupère tous les articles
+                ? `http://172.31.33.98:3000/api/subcategories/${subcategoryId}`
+                : 'http://172.31.33.98:3000/api/items';
 
-            const response = await axios.get(url);
-            setArticles(response.data);
+            console.log("Making request to:", url);
 
-            // Si on récupère tous les articles, on enlève le subcategory_id du localStorage
+            const response = await axios.get(url, {
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                }
+            });
+
+
+            // Vérification si des articles sont retournés
+            if (!response.data.items || response.data.items.length === 0) {
+                console.log("No articles found.");
+                setArticles([]);
+                setError("Aucun article trouvé pour cette sous-catégorie.");
+                return;
+            } else {
+                setArticles(response.data.items);
+                setError(null);
+            }
+
+            if (!Array.isArray(response.data.items)) {
+                throw new Error("Invalid response format: 'items' not found.");
+            }
+
             if (!subcategoryId || subcategoryId.trim() === '') {
                 localStorage.removeItem('subcategory_id');
             }
         } catch (err) {
             console.error('Erreur lors de la requête Axios:', err);
-            setError("Erreur lors du chargement des articles.");
+            if (err.response) {
+                console.error('Réponse d\'erreur:', err.response.data);
+            }
+            if (err.response?.status === 401 || err.response?.status === 403) {
+                alert('Unauthorized: Please log in again.');
+                navigate('/login');
+            } else {
+                setError("Erreur lors du chargement des articles.");
+            }
         } finally {
             setLoading(false);
         }
     };
 
-    // Charger les articles à chaque fois que le composant est monté ou que le subcategoryId change
     useEffect(() => {
+        if (!token) {
+            alert('Veuillez vous connecter pour accéder à cette page.');
+            navigate('/login');
+            return;
+        }
         fetchArticles();
-    }, [subcategoryId]);
+    }, [subcategoryId, token, navigate]);
 
-    // Fonction de filtrage des articles en fonction du texte de recherche
-    const filteredArticles = articles.filter((article) =>
-        article.name.toLowerCase().includes(searchQuery.toLowerCase())
-    );
+    // const filteredArticles = articles.filter((article) => {
+    //     const matchesSubcategory = selectedSubcategory === 'Toutes les annonces'
+    //         || article?.subcategory?.name === selectedSubcategory;
 
-    if (loading) {
-        return <p>Chargement des articles...</p>;
-    }
+    //     const matchesSearchQuery = article.name.toLowerCase().includes(searchQuery.toLowerCase());
 
-    if (error) {
-        return <p>{error}</p>;
-    }
-
-    console.log(selectedSubcategory);
+    //     // Retourne vrai si l'article correspond à la sous-catégorie ET à la recherche par nom
+    //     return matchesSubcategory && matchesSearchQuery;
+    // });
 
     return (
         <div>
@@ -81,7 +108,7 @@ const HomeC = () => {
                                 placeholder="Rechercher..."
                                 className="search-input"
                                 value={searchQuery}
-                                onChange={(e) => setSearchQuery(e.target.value)} // Mise à jour du searchQuery
+                                onChange={(e) => setSearchQuery(e.target.value)}
                             />
                         </div>
                     </div>
@@ -89,41 +116,41 @@ const HomeC = () => {
 
                 <div className='offersList'>
                     <h2>Liste des offres</h2>
-                    {selectedSubcategory ? (
-                        <h2>Catégorie sélectionnée : {selectedSubcategory}</h2>
+                    <h2>Catégorie sélectionnée : {selectedSubcategory}</h2>
+                </div>
+
+                <div className="articles-section">
+                    {loading ? (
+                        <p>Chargement des articles...</p>
+                    ) : error ? (
+                        <p>{error}</p>
                     ) : (
-                        <h2>Toutes les annonces</h2>
+                        articles.length > 0 ? (
+                            articles.map((article) => (
+                                <div key={article.id} onClick={() => handleCardClick(article)}>
+                                    <CardsOffersC
+                                        title={article.name}
+                                        author={article.user?.firstname || 'Inconnu'}
+                                        image={article.picture}
+                                    />
+                                </div>
+                            ))
+                        ) : (
+                            <p>Aucun article à afficher.</p>
+                        )
                     )}
                 </div>
 
-                {/* Section des articles */}
-                <div className="articles-section">
-                    {filteredArticles.length > 0 ? (
-                        filteredArticles.map((article) => (
-                            <div key={article.id} onClick={() => handleCardClick(article)}>
-                                <CardsOffersC
-                                    key={article.id}
-                                    title={article.name}
-                                    author={article.user.firstname}
-                                    image={article.picture}
-                                />
-                            </div>
-                        ))
-                    ) : (
-                        <p>Aucun article trouvé.</p>
-                    )}
-                </div>
 
                 {selectedDemand && (
                     <div className="modal-demands">
                         <div className="modal-content-demands">
                             <img id="articleHome" src={selectedDemand.picture} alt="Article" />
                             <h2>{selectedDemand.name}</h2><br />
-                            <p><strong>Nom :</strong> {selectedDemand.user.lastname}</p>
-                            <p><strong>Prenom :</strong> {selectedDemand.user.firstname}</p>
-                            <p><strong>Adresse email :</strong> {selectedDemand.user.email}</p>
-                            <p><strong>Numéro de téléphone :</strong> {selectedDemand.user.phone}</p>
-
+                            <p><strong>Nom :</strong> {selectedDemand.user?.lastname || 'N/A'}</p>
+                            <p><strong>Prénom :</strong> {selectedDemand.user?.firstname || 'N/A'}</p>
+                            <p><strong>Adresse email :</strong> {selectedDemand.user?.email || 'N/A'}</p>
+                            <p><strong>Numéro de téléphone :</strong> {selectedDemand.user?.phone || 'N/A'}</p>
                             <button className="close-button-demands" onClick={closeModal}>Fermer</button>
                         </div>
                     </div>

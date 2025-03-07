@@ -2,6 +2,7 @@
 const express = require('express');
 const router = express.Router();
 const ItemController = require('../controllers/itemController');
+const authenticateToken = require('../middlewares/authMiddleware');
 
 /**
  * @swagger
@@ -34,6 +35,13 @@ const ItemController = require('../controllers/itemController');
  *               status:
  *                 type: string
  *                 description: The status of the item (e.g., available, sold)
+ *           example:
+ *             user_id: 4
+ *             subcategory_id: 1
+ *             name: "Vélo de ville"
+ *             description: "Vélo tout terrain avec suspension et freins à disque. Idéal pour les randonnées."
+ *             picture: "https://www.cyclable.com/img/c/1468.jpg"
+ *             status: "Available"
  *     responses:
  *       201:
  *         description: Item created successfully
@@ -42,7 +50,7 @@ const ItemController = require('../controllers/itemController');
  *       500:
  *         description: Error during item creation
  */
-router.post('/items', ItemController.createItem);
+router.post('/items', authenticateToken, ItemController.createItem);
 
 /**
  * @swagger
@@ -96,7 +104,7 @@ router.post('/items', ItemController.createItem);
  *                         type: string
  *                         description: Subcategory's name
  */
-router.get('/items', ItemController.getItems);
+router.get('/items', authenticateToken, ItemController.getItems);
 
 /**
  * @swagger
@@ -119,7 +127,7 @@ router.get('/items', ItemController.getItems);
  *       500:
  *         description: Error during fetching item
  */
-router.get('/items/:item_id', ItemController.getItemById);
+router.get('/items/:item_id', authenticateToken, ItemController.getItemById);
 
 /**
  * @swagger
@@ -159,6 +167,13 @@ router.get('/items/:item_id', ItemController.getItemById);
  *               status:
  *                 type: string
  *                 description: The new status of the item (e.g., available, sold)
+ *           example:
+ *             user_id: 4
+ *             subcategory_id: 1
+ *             name: "Vélo de ville"
+ *             description: "Vélo tout terrain avec suspension et freins à disque. Idéal pour les randonnées."
+ *             picture: "https://www.cyclable.com/img/c/1468.jpg"
+ *             status: "Available"
  *     responses:
  *       200:
  *         description: Item updated successfully
@@ -167,7 +182,7 @@ router.get('/items/:item_id', ItemController.getItemById);
  *       500:
  *         description: Error during item update
  */
-router.put('/items/:item_id', ItemController.updateItem);
+router.put('/items/:item_id', authenticateToken, ItemController.updateItem);
 
 /**
  * @swagger
@@ -190,6 +205,6 @@ router.put('/items/:item_id', ItemController.updateItem);
  *       500:
  *         description: Error during item deletion
  */
-router.delete('/items/:item_id', ItemController.deleteItem);
+router.delete('/items/:item_id', authenticateToken, ItemController.deleteItem);
 
 module.exports = router;

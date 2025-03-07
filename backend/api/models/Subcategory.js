@@ -18,6 +18,10 @@ const Subcategory = sequelize.define(
       type: DataTypes.STRING(100),
       allowNull: false,
     },
+    image_url: {
+      type: DataTypes.STRING(255),
+      allowNull: true,
+    },
   },
   {
     tableName: 'Subcategories',

@@ -6,7 +6,7 @@ const { Category, Subcategory, Item } = require('../models/associations');
 // create a subcategory
 exports.createSubcategory = async (req, res) => {
   try {
-    const { category_id, name } = req.body;
+    const { category_id, name, image_url } = req.body;
 
     const category = await Category.findByPk(category_id);
     if (!category) {
@@ -16,6 +16,8 @@ exports.createSubcategory = async (req, res) => {
     const newSubcategory = await Subcategory.create({
       category_id,
       name,
+      image_url
+
     });
 
     res.status(201).json({ message: 'Subcategory created successfully', subcategory: newSubcategory });
@@ -76,7 +78,9 @@ exports.updateSubcategory = async (req, res) => {
       return res.status(404).json({ message: 'Subcategory not found' });
     }
 
-    await subcategory.update({ name });
+    await updateEntityImage(subcategory, req.body.image_url);
+
+    await subcategory.update({ name, image_url: subcategory.image_url });
 
     res.status(200).json({ message: 'Subcategory updated successfully', subcategory });
   } catch (error) {

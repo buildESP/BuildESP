@@ -9,17 +9,18 @@ const LoginC = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [name, setName] = useState("");
+  const [lasTname, setLasTname] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
-  const [isLogin, setIsLogin] = useState(true); // Toggle entre Connexion et Inscription
+  const [isLogin, setIsLogin] = useState(true); // Toggle between Login and Signup
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const navigate = useNavigate();
 
-  // Fonction de soumission du formulaire
+  // Form submission handler
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setErrorMessage(""); // Réinitialiser le message d'erreur à chaque soumission
-    setSuccessMessage(""); // Réinitialiser le message de succès
+    setErrorMessage(""); // Reset error message
+    setSuccessMessage(""); // Reset success message
 
     // Remplacer l'IP publique par l'IP privée du backend
    // Utilisation de l'IP publique du Frontend (EC2 Front)
@@ -27,60 +28,100 @@ const LoginC = () => {
     console.log(frontendUrl);
 
     if (isLogin) {
-      // Connexion
       try {
         const response = await axios.post(`${frontendUrl}/api/access-token`, {
           login: email,
           password: password,
+        }, {
+          headers: {
+            "Content-Type": "application/json"
+          }
         });
 
         if (response.status === 200) {
-          console.log("Connexion réussie :", response.data);
-          localStorage.setItem("Token", response.data.token);
+          console.log("✅ Connexion réussie :", response.data);
+
+          // Vérifier que le token est bien présent dans la réponse
+          if (!response.data.token) {
+            setErrorMessage("Aucun token reçu. Veuillez réessayer.");
+            return;
+          }
+
+          // Stocker le token et l'userId
+          localStorage.setItem("token", response.data.token);
           localStorage.setItem("userId", response.data.userId);
 
-          // Rediriger vers la page d'accueil et recharger la page
-          navigate('/home'); // Rediriger après la connexion réussie
-          window.location.reload();  // Recharger la page après la redirection
+          // Vérifier que le token est bien dans le localStorage
+          console.log("Token stocké :", localStorage.getItem("token"));
+
+          // Redirection vers la page d'accueil
+          console.log("🚀 Redirection vers la page d'accueil...");
+          navigate('/home');
         }
       } catch (error) {
-        console.error("Erreur de connexion :", error.response?.data || error.message);
-        setErrorMessage("Échec de la connexion. Veuillez vérifier vos identifiants.");
+        console.error("❌ Erreur de connexion :", error.response?.data || error.message);
+
+        if (error.response) {
+          const status = error.response.status;
+          const message = error.response.data?.message || "Erreur inconnue.";
+
+          if (status === 400) {
+            setErrorMessage("⚠️ Login et mot de passe requis.");
+          } else if (status === 401) {
+            setErrorMessage("⛔ Identifiants incorrects. Veuillez réessayer.");
+          } else if (status === 500) {
+            setErrorMessage("❌ Erreur serveur. Veuillez réessayer plus tard.");
+          } else {
+            setErrorMessage(message);
+          }
+        } else if (error.request) {
+          setErrorMessage("🚫 Impossible de contacter le serveur. Vérifiez votre connexion.");
+        } else {
+          setErrorMessage("❌ Une erreur inattendue est survenue.");
+        }
       }
-    } else {
-      // Inscription
+    }
+    else {
+      // Signup
       if (password !== confirmPassword) {
         setErrorMessage("Les mots de passe ne correspondent pas.");
         return;
       }
+
       try {
         const response = await axios.post(`${frontendUrl}/api/users`, {
           firstname: name,
-          lastname: "Rococo", // Mettre un nom par défaut ou d'après un champ utilisateur
+          lastname: lasTname,
           email: email,
           password: password,
-          is_admin: true,
+          is_admin: false, // Default to false unless specified otherwise
         });
 
         if (response.status === 201) {
           console.log("Inscription réussie :", response.data);
           setSuccessMessage("Inscription réussie ! Vous pouvez maintenant vous connecter.");
-          toggleForm(); // Basculer vers le formulaire de connexion
+          toggleForm(); // Switch to login form
+          alert("Inscription validée ✅. Vous pouvez vous connecter");
         }
       } catch (error) {
         console.error("Erreur d'inscription :", error.response?.data || error.message);
-        setErrorMessage("Échec de l'inscription. Veuillez réessayer.");
+        setErrorMessage(
+          error.response?.data?.message ||
+          "Échec de l'inscription. Veuillez réessayer."
+        );
+        alert("Échec de l'inscription 🚫. Veuillez réessayer");
       }
     }
   };
 
-  // Fonction pour basculer entre les modes Connexion et Inscription
+  // Toggle between Login and Signup forms
   const toggleForm = () => {
     setIsLogin(!isLogin);
     setEmail("");
     setPassword("");
     setConfirmPassword("");
     setName("");
+    setLasTname("");
     setErrorMessage("");
     setSuccessMessage("");
   };
@@ -91,7 +132,7 @@ const LoginC = () => {
       <div className="background-shape shape2"></div>
 
       <form className="login-form" onSubmit={handleSubmit}>
-        {/* Titre Connexion / S'enregistrer */}
+        {/* Toggle between Login and Signup */}
         <div className="title-toggle">
           <button
             type="button"
@@ -110,22 +151,35 @@ const LoginC = () => {
           </button>
         </div>
 
-        {/* Formulaire d'inscription */}
+        {/* Signup fields */}
         {!isLogin && (
-          <div className="input-group">
-            <label htmlFor="name">Nom</label>
-            <input
-              type="text"
-              id="name"
-              placeholder="Nom complet"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              required
-            />
-          </div>
+          <>
+            <div className="input-group">
+              <label htmlFor="name">Nom</label>
+              <input
+                type="text"
+                id="name"
+                placeholder="Nom complet"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                required
+              />
+            </div>
+            <div className="input-group">
+              <label htmlFor="lastname">Prénom</label>
+              <input
+                type="text"
+                id="lastname"
+                placeholder="Prénom"
+                value={lasTname}
+                onChange={(e) => setLasTname(e.target.value)}
+                required
+              />
+            </div>
+          </>
         )}
 
-        {/* Formulaire de connexion / email */}
+        {/* Email field */}
         <div className="input-group">
           <label htmlFor="email">Adresse email</label>
           <input
@@ -138,7 +192,7 @@ const LoginC = () => {
           />
         </div>
 
-        {/* Formulaire de mot de passe */}
+        {/* Password field */}
         <div className="input-group">
           <label htmlFor="password">Mot de passe</label>
           <input
@@ -151,7 +205,7 @@ const LoginC = () => {
           />
         </div>
 
-        {/* Formulaire d'inscription (confirmation mot de passe) */}
+        {/* Confirm password field for signup */}
         {!isLogin && (
           <>
             <div className="input-group">
@@ -172,7 +226,7 @@ const LoginC = () => {
           </>
         )}
 
-        {/* Case "Se rappeler de mon mot de passe" (uniquement pour la connexion) */}
+        {/* Remember me checkbox for login */}
         {isLogin && (
           <div className="checkbox-group">
             <input
@@ -185,16 +239,16 @@ const LoginC = () => {
           </div>
         )}
 
-        {/* Bouton de soumission */}
+        {/* Submit button */}
         <button type="submit" className="login-button">
           {isLogin ? "Se connecter" : "S'enregistrer"}
         </button>
 
-        {/* Messages d'erreur et de succès */}
+        {/* Error and success messages */}
         {errorMessage && <p className="error-message">{errorMessage}</p>}
         {successMessage && <p className="success-message">{successMessage}</p>}
 
-        {/* Séparateur et boutons sociaux */}
+        {/* Social login options */}
         {isLogin && <div className="divider"><span>OU</span></div>}
         {isLogin && (
           <div className="social-buttons">
