@@ -9,7 +9,7 @@ const Footer = () => (
         <Link color={"whiteAlpha.700"} href="#">FAQ</Link>
       </VStack>
       <VStack align="start">
-        <Heading size="md" mb={2}>Titre 2</Heading>
+        <Heading size="md" mb={2}>Informations Légales</Heading>
         <Link color={"whiteAlpha.700"} href="#">Mentions légales</Link>
         <Link color={"whiteAlpha.700"} href="#">Conditions générales</Link>
       </VStack>
