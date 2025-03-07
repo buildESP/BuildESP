@@ -15,7 +15,6 @@ services:
     depends_on:
       db:
         condition: service_healthy
-    #image: stephb421/buildesp-backend:latest
     restart: always
     networks:
       - buildesp_network
@@ -28,7 +27,7 @@ services:
     ports:
       - "3306:3306"
     volumes:
-      - mysql-data:/var/lib/mysql # 🔹 Ne plus redéfinir ce volume ici
+      - mysql-data:/var/lib/mysql
     command: --default-authentication-plugin=caching_sha2_password
     restart: always
     networks:
