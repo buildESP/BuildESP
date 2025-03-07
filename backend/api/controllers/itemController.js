@@ -87,12 +87,14 @@ exports.updateItem = async (req, res) => {
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
-
+    
+    
     const subcategory = await Subcategory.findByPk(subcategory_id);
     if (!subcategory) {
       return res.status(404).json({ message: 'Subcategory not found' });
     }
-
+    await updateEntityImage(item, req.body.picture);
+    
     await item.update({
       user_id,
       subcategory_id,
