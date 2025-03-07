@@ -38,6 +38,7 @@ jobs:
 
             echo "📦 Installing dependencies..."
             npm install
+            npm install axios
 
             echo "🔄 Mise à jour et redémarrage des conteneurs Docker..."
             docker-compose down
