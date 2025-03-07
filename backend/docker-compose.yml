@@ -9,17 +9,19 @@ services:
       - "3000:3000"
     environment:
       - DB_HOST=db
+      - DB_PORT=3306
       - DB_USER=${DB_USER}
       - DB_PASSWORD=${DB_PASSWORD}
       - DB_NAME=${DB_NAME}
       - JWT_SECRET=${JWT_SECRET}
       - ALLOWED_ORIGINS=http://${REACT_APP_FRONTEND_IP}:80
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     restart: always
     networks:
-      - buildesp_network
-    entrypoint: ["/bin/sh", "-c", "until mysql -h db -u root -proot -e 'show databases;'; do echo 'waiting for database...'; sleep 2; done; npm start"]
+      - backend_network
+    entrypoint: ["/bin/sh", "-c", "until mysqladmin ping -h db --silent; do echo 'waiting for database...'; sleep 2; done; npm start"]
 
   db:
     image: mysql:8.0
@@ -33,16 +35,16 @@ services:
     command: --default-authentication-plugin=mysql_native_password
     restart: always
     networks:
-      - buildesp_network
+      - backend_network
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
-      interval: 10s
+      interval: 5s
       retries: 5
-      start_period: 30s
+      start_period: 20s
 
 volumes:
   mysql-data:
 
 networks:
-  buildesp_network:
+  backend_network:
     driver: bridge
