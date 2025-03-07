@@ -1,14 +1,17 @@
 # Use a lighter Alpine-based Node.js image
 FROM node:18-alpine
 
+# Install MySQL client and other dependencies
+RUN apk update && apk add --no-cache mysql-client
+
 # Set the working directory inside the container
 WORKDIR /usr/src/app
 
 # Copy package.json and package-lock.json for dependency installation
-COPY package.json  ./
+COPY package.json ./
 
 # Install only production dependencies
-RUN npm i
+RUN npm install
 
 # Copy the rest of the application code
 COPY . .
