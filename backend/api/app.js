@@ -6,6 +6,7 @@ const swaggerJsdoc = require('swagger-jsdoc');
 const swaggerUi = require('swagger-ui-express');
 const cors = require('cors');
 const chalk = require('chalk');
+const { Sequelize } = require('sequelize');  // Importation de Sequelize
 
 // Création de l'application express
 const app = express();
@@ -55,6 +56,26 @@ const exchangeRoutes = require('./routes/exchangeRoutes');
 const imageRoutes = require('./routes/imageRoutes');
 const groupRoutes = require('./routes/groupRoutes');
 
+// Connexion à la base de données via Sequelize
+const sequelize = new Sequelize('neighborrow_db', 'user', 'userpassword', {
+  host: 'db', // Nom du service MySQL dans le docker-compose
+  dialect: 'mysql',
+  dialectOptions: {
+    ssl: {
+      rejectUnauthorized: false, // Pour ne pas vérifier les certificats SSL
+    },
+  },
+});
+
+// Test de la connexion à la base de données
+sequelize.authenticate()
+  .then(() => {
+    console.log(chalk.green('✅ Connexion à la base de données réussie !'));
+  })
+  .catch((error) => {
+    console.error(chalk.red('❌ Impossible de se connecter à la base de données :', error.message));
+  });
+
 // Route pour rediriger la requête d'authentification vers l'API privée
 app.post('/api/access-token', async (req, res) => {
   try {
@@ -94,4 +115,3 @@ app.listen(port, '0.0.0.0', () => {
   console.log(chalk.green.bold(`🚀 API is running on http://0.0.0.0:${port}`));
   console.log(chalk.blue(`📚 Swagger docs: http://0.0.0.0:${port}/doc`));
 });
- 
