@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   backend:
     build:
@@ -8,31 +6,30 @@ services:
     ports:
       - "3000:3000"
     environment:
-      - DB_HOST=db
+      - DB_HOST=${DB_HOST}
       - DB_USER=${DB_USER}
       - DB_PASSWORD=${DB_PASSWORD}
       - DB_NAME=${DB_NAME}
       - JWT_SECRET=${JWT_SECRET}
       - ALLOWED_ORIGINS=http://${REACT_APP_FRONTEND_IP}:80
     depends_on:
-      - db
+      db:
+        condition: service_healthy
+    image: stephb421/buildesp-backend:latest
     restart: always
     networks:
       - buildesp_network
-    entrypoint: ["/bin/sh", "-c", "until mysql -h db -u root -p${DB_PASSWORD} -e 'show databases;'; do echo 'waiting for database...'; sleep 2; done; npm start"]
 
   db:
     image: mysql:8.0
     environment:
       MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
       MYSQL_DATABASE: ${DB_NAME}
-      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
     ports:
       - "3306:3306"
     volumes:
-      - mysql-data:/var/lib/mysql
-    command: --default-authentication-plugin=mysql_native_password --skip-ssl
-    restart: always
+      - mysql-data:/var/lib/mysql # 🔹 Ne plus redéfinir ce volume ici
+    command: --default-authentication-plugin=mysql_native_password
     networks:
       - buildesp_network
     healthcheck:
