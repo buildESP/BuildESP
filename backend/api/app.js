@@ -57,13 +57,18 @@ const imageRoutes = require('./routes/imageRoutes');
 const groupRoutes = require('./routes/groupRoutes');
 
 // Connexion à la base de données via Sequelize
-const sequelize = new Sequelize('neighborrow_db', 'user', 'userpassword', {
-  host: 'db', // Nom du service MySQL dans le docker-compose
-  dialect: 'mysql',
-  dialectOptions: {
-    ssl: false, // Désactiver SSL pour éviter les erreurs TLS/SSL
-  },
-});
+const sequelize = new Sequelize(
+  process.env.DB_NAME,
+  process.env.DB_USER,
+  process.env.DB_PASSWORD,
+  {
+    host: process.env.DB_HOST,
+    dialect: 'mysql',
+    dialectOptions: {
+      ssl: false,  // Désactive SSL
+    },
+  }
+);
 
 // Test de la connexion à la base de données
 sequelize.authenticate()

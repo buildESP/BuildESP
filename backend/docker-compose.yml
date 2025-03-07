@@ -19,13 +19,14 @@ services:
     restart: always
     networks:
       - buildesp_network
-    entrypoint: ["/bin/sh", "-c", "until mysql -h db -u root -proot -e 'show databases;'; do echo 'waiting for database...'; sleep 2; done; npm start"]
+    entrypoint: ["/bin/sh", "-c", "until mysql -h db -u root -p${DB_PASSWORD} -e 'show databases;'; do echo 'waiting for database...'; sleep 2; done; npm start"]
 
   db:
     image: mysql:8.0
     environment:
       MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
       MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"  # Ajoutez cette ligne
     ports:
       - "3306:3306"
     volumes:
@@ -45,4 +46,4 @@ volumes:
 
 networks:
   buildesp_network:
-    driver: bridge  # Ajout du driver de réseau pour que les services puissent communiquer
+    driver: bridge
