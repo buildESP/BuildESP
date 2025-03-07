@@ -61,9 +61,7 @@ const sequelize = new Sequelize('neighborrow_db', 'user', 'userpassword', {
   host: 'db', // Nom du service MySQL dans le docker-compose
   dialect: 'mysql',
   dialectOptions: {
-    ssl: {
-      rejectUnauthorized: false, // Pour ne pas vérifier les certificats SSL
-    },
+    ssl: false, // Désactiver SSL pour éviter les erreurs TLS/SSL
   },
 });
 

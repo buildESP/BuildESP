@@ -26,8 +26,6 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
       MYSQL_DATABASE: ${DB_NAME}
-      MYSQL_USER: ${DB_USER}      # Ajout d'un utilisateur non root pour la base de données
-      MYSQL_PASSWORD: ${DB_PASSWORD} # Ajout d'un mot de passe pour l'utilisateur
     ports:
       - "3306:3306"
     volumes:
@@ -47,4 +45,4 @@ volumes:
 
 networks:
   buildesp_network:
-    driver: bridge
+    driver: bridge  # Ajout du driver de réseau pour que les services puissent communiquer
