@@ -21,14 +21,15 @@ app.use('/doc', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // Configuration CORS pour autoriser certaines origines (frontends)
 const allowedOrigins = [
-  'http://172.31.41.254',          // IP privée de votre Frontend
-  'http://15.188.11.254',          // IP publique de votre Frontend
-  'https://15.188.11.254',         // Si votre frontend utilise HTTPS
-  'http://localhost:3000',        // Pour développement local
-  'http://localhost:5173',        // Autre port frontend (ex: Vite.js)
-  'https://172.31.41.254',        // Si vous utilisez HTTPS dans votre réseau privé
+  'http://172.31.41.254',           // IP privée de votre Frontend
+  'http://15.188.11.254',           // IP publique de votre Frontend
+  'https://15.188.11.254',          // Si votre frontend utilise HTTPS
+  'http://localhost:3000',          // Pour développement local
+  'http://localhost:5173',          // Autre port frontend (ex: Vite.js)
+  'https://172.31.41.254',          // Si vous utilisez HTTPS dans votre réseau privé
 ];
 
+// Middleware CORS avec gestion des erreurs améliorée
 app.use(cors({
   origin: (origin, callback) => {
     if (!origin || allowedOrigins.includes(origin)) {
@@ -74,12 +75,14 @@ app.post('/api/access-token', async (req, res) => {
     console.error('Détails de l\'erreur :', error.response ? error.response.data : error);
 
     // Si une erreur survient, renvoyer le message d'erreur
-    res.status(error.response?.status || 500).json({ message: error.message });
+    res.status(error.response?.status || 500).json({
+      message: 'Erreur de traitement',
+      details: error.message,
+    });
   }
 });
 
 // Définition des autres routes API
-app.use(cors({ origin: true }));
 app.use('/api', userRoutes);
 app.use('/api', authRoutes);
 app.use('/api', categoryRoutes);
@@ -94,4 +97,3 @@ app.listen(port, '0.0.0.0', () => {
   console.log(chalk.green.bold(`🚀 API is running on http://0.0.0.0:${port}`));
   console.log(chalk.blue(`📚 Swagger docs: http://0.0.0.0:${port}/doc`));
 });
- 

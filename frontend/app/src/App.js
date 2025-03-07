@@ -17,7 +17,7 @@ const App = () => {
 
   // Afficher l'IP du backend dans la console
   useEffect(() => {
-    console.log('Backend IP:', process.env.REACT_APP_BACKEND_IP);  // Affichage de l'IP
+    console.log('Backend URL:', process.env.REACT_APP_BACKEND_URL);  // Affichage de l'URL
   }, []);
 
   // Mise à jour de accessToken lors des modifications du localStorage
