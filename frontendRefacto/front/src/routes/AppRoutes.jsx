@@ -6,12 +6,12 @@ import ProfilePage from "../pages/profilePage";
 const AppRoutes = () => {
   return (
     <Router>
-      <MainLayout>
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/profile" element={<ProfilePage />} />
-        </Routes>
-      </MainLayout>
+      <Routes>
+        <Route path="/" element={<MainLayout />}>
+          <Route index element={<HomePage />} />
+          <Route path="profile" element={<ProfilePage />} />
+        </Route>
+      </Routes>
     </Router>
   );
 };
