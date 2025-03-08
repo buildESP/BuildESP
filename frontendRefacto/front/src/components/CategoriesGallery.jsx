@@ -1,4 +1,4 @@
-import useFetchData from "../../hooks/useFetchData";
+import useFetchData from "../hooks/useFetchData";
 import { Grid, GridItem, Box, Image, Text, Spinner, SimpleGrid } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 

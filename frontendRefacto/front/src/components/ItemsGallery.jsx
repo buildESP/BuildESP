@@ -1,4 +1,5 @@
 import { Box, Text, Grid, GridItem, Image, Badge } from "@chakra-ui/react";
+import { Link } from "react-router";
 
 const ItemsGallery = ({ items, title = "Items" }) => {
   if (!items || items.length === 0) {
@@ -12,7 +13,7 @@ const ItemsGallery = ({ items, title = "Items" }) => {
       </Text>
       <Grid templateColumns={{ base: "1fr", sm: "1fr 1fr", md: "1fr 1fr 1fr" }} gap={4}>
         {items.map((item) => (
-          <GridItem key={item.id} p={4} bg="gray.200" borderRadius="md">
+          <GridItem key={item.id} p={4} bg="gray.200" borderRadius="md" as={Link} to={`/items/${item.id}`} >
             <Image
               src={item.picture || "https://via.placeholder.com/150"}
               alt={item.name}

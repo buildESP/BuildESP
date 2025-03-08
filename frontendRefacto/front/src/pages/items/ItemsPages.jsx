@@ -8,14 +8,8 @@ const ItemsPage = () => {
   if (error) return <Text color="red.500">{error}</Text>;
 
   return (
-    <VStack spacing={4}>
-      {items.map((item) => (
-        <Box key={item.id} p={4} bg="gray.100" borderRadius="md">
-          <Text fontWeight="bold">{item.name}</Text>
-          <Text>{item.description}</Text>
-        </Box>
-      ))}
-    </VStack>
+    <ItemsGallery items={items} title="Items in this Subcategory" />
+
   );
 };
 

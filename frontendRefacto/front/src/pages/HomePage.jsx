@@ -1,5 +1,5 @@
 import HeroSection from "../components/HeroSection";
-import CategoriesGallery from "./categories/CategoriesGallery";
+import CategoriesGallery from "../components/CategoriesGallery";
 import { Box } from "@chakra-ui/react";
 
 const HomePage = () => {
