@@ -1,6 +1,8 @@
 // controllers/userController.js
 
 const { User, Group } = require('../models/associations');
+const { updateEntityImage } = require('../utils/imageUtils');
+
 
 // Create user
 exports.createUser = async (req, res) => {
@@ -16,7 +18,7 @@ exports.createUser = async (req, res) => {
       rating,
       picture,
       is_admin,
-      groups, // Groups to associate with user
+      groups,
     } = req.body;
 
     // Create user
