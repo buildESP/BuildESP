@@ -13,6 +13,9 @@ const ItemDetails = ({ item, isOwner, onEdit }) => {
           Éditer
         </Button>
       )}
+      <Button colorScheme="blue">
+        Emprunter
+      </Button>
     </VStack>
   );
 };
