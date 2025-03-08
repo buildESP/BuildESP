@@ -45,6 +45,9 @@ const Navbar = () => {
             </Button>
             {user ? (
               <>
+                <Button as={RouterLink} to="/my-items" variant="ghost" color="gray.800">
+                  Mes Objets
+                </Button>
                 <Button as={RouterLink} to="/profile" variant="ghost" color="gray.800">
                   Profil
                 </Button>

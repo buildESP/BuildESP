@@ -5,7 +5,7 @@ import { Avatar } from "../components/ui/avatar";
 
 const ProfilePage = () => {
   const { user } = useAuth(); // ✅ Get logged-in user
-  const { data: userData, loading, error } = useFetchData(`/users/${user?.id}`); // ✅ Fetch user data
+  const { data: userData, loading, error } = useFetchData(`/users/${user?.id}`, {requiresAuth: true}); // ✅ Fetch user data
 
   if (loading) return <Spinner />;
   if (error) return <Text color="red.500">{error}</Text>;
