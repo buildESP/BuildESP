@@ -6,7 +6,8 @@ import LoginPage from "../pages/LoginPage";
 import PrivateRoute from "./PrivateRoutes"; 
 import PublicRoutes from "./PublicRoutes";
 import CategoriesPage from "../pages/categories/CategoriesPage";
-import CategoryDetailsPage from "../pages/categories/CategoriesPage";
+import CategoryDetailsPage from "../pages/categories/CategoryDetailsPage";
+import SubcategoryDetailsPage from "../pages/categories/SubCategoryDetailsPage";
 import MyItemsPage from "../pages/items/MyItemsPage";
 import RegisterPage from "../pages/RegisterPage";
 import AddItemPage from "../pages/items/AddItemsPages";
@@ -19,6 +20,7 @@ const AppRoutes = () => {
           <Route index element={<HomePage />} />
             <Route path="categories" element={<CategoriesPage />} />
             <Route path="categories/:id" element={<CategoryDetailsPage />} /> {/* ✅ New Route */}
+            <Route path="subcategories/:id" element={<SubcategoryDetailsPage />} /> {/* ✅ New Route */}
           <Route element={<PublicRoutes />}> {/* ✅ Empêche l'accès à login si connecté */}
             <Route path="login" element={<LoginPage />} />
             <Route path="register" element={<RegisterPage />} />
