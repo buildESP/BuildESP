@@ -106,7 +106,7 @@ router.post('/subcategories', authenticateToken, subcategoryController.createSub
  *                           description: Item's name
  *                           example: "iPhone 12"
  */
-router.get('/subcategories', authenticateToken, subcategoryController.getSubcategories);
+router.get('/subcategories', subcategoryController.getSubcategories);
 
 /**
  * @swagger
@@ -150,7 +150,7 @@ router.get('/subcategories', authenticateToken, subcategoryController.getSubcate
  *       500:
  *         description: Error during fetching subcategory
  */
-router.get('/subcategories/:subcategory_id', authenticateToken, subcategoryController.getSubcategoryById);
+router.get('/subcategories/:subcategory_id', subcategoryController.getSubcategoryById);
 
 /**
  * @swagger

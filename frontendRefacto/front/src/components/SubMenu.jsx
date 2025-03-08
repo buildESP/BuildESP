@@ -11,7 +11,7 @@ import { Link } from "react-router-dom";
 const SubMenu = () => {
   const { data: categories, loading, error } = useFetchData("/categories");
 
-  if (loading) return <Spinner />;
+    if (loading) return <Spinner />;
   if (error) return <Text color="red.500">{error}</Text>;
 
   return (

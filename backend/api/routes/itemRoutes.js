@@ -104,7 +104,7 @@ router.post('/items', authenticateToken, ItemController.createItem);
  *                         type: string
  *                         description: Subcategory's name
  */
-router.get('/items', authenticateToken, ItemController.getItems);
+router.get('/items', ItemController.getItems);
 
 /**
  * @swagger
@@ -127,7 +127,7 @@ router.get('/items', authenticateToken, ItemController.getItems);
  *       500:
  *         description: Error during fetching item
  */
-router.get('/items/:item_id', authenticateToken, ItemController.getItemById);
+router.get('/items/:item_id', ItemController.getItemById);
 
 /**
  * @swagger
