@@ -24,14 +24,13 @@ import {
 import useAuth from "../hooks/useAuth"; // 🔹 Import du hook d'authentification
 
 const Navbar = () => {
-  const { user, logout } = useAuth(); // ✅ Remplace isAuthenticated par user
+  const { user, logout } = useAuth(); 
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [open, setOpen] = useState(false);
 
   const isDesktop = useBreakpointValue({ base: false, md: true });
 
-  console.log("🔹 Navbar : Utilisateur =", user); // 🔥 Vérifie si user est bien mis à jour
-
+  console.log("🔹 Navbar : Utilisateur =", user); 
   return (
     <Box bg="gray.100" px={4} boxShadow="md">
       <Flex h={16} alignItems="center" justifyContent="space-between">
@@ -54,9 +53,14 @@ const Navbar = () => {
                 </Button>
               </>
             ) : (
+              <>
               <Button as={RouterLink} to="/login" variant="ghost" color="gray.800">
                 Se connecter
               </Button>
+              <Button as={RouterLink} to="/register" variant="ghost" color="gray.800">
+                S'enregistrer
+              </Button>
+              </>
             )}
           </HStack>
         ) : (

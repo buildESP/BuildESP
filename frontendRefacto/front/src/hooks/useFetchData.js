@@ -1,51 +1,53 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import useAuth from "./useAuth";
 
 const API_BASE_URL = "http://localhost:3000/api"; // 🔹 Base URL de l'API
 
-const useFetchData = (endpoint) => {
-  const { token } = useAuth(); // 🔹 Récupère le token de l'utilisateur
+const useFetchData = (endpoint, { manual = false } = {}) => { // ✅ Add `manual` option
+  const { token } = useAuth();
   const [data, setData] = useState(null);
   const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(!manual); // ✅ Only load if manual mode is false
 
-  useEffect(() => {
+  const fetchData = useCallback(async () => {
     if (!token) {
       setError("Aucun token trouvé. Authentification requise.");
       setLoading(false);
       return;
     }
 
-    const fetchData = async () => {
-      try {
-        setLoading(true);
-        setError(null);
+    try {
+      setLoading(true);
+      setError(null);
 
-        const response = await fetch(`${API_BASE_URL}${endpoint}`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`, // 🔹 Ajoute le token dans la requête
-          },
-        });
+      const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
-        if (!response.ok) {
-          throw new Error(`Erreur ${response.status}: ${response.statusText}`);
-        }
-
-        const jsonData = await response.json();
-        setData(jsonData);
-      } catch (err) {
-        setError(err.message);
-      } finally {
-        setLoading(false);
+      if (!response.ok) {
+        throw new Error(`Erreur ${response.status}: ${response.statusText}`);
       }
-    };
 
-    fetchData();
-  }, [endpoint, token]); // 🔹 Dépendances: Se met à jour si `endpoint` ou `token` change
+      const jsonData = await response.json();
+      setData(jsonData);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  }, [endpoint, token]);
 
-  return { data, loading, error };
+  useEffect(() => {
+    if (!manual) {
+      fetchData(); // ✅ Only fetch if manual is false
+    }
+  }, [fetchData, manual]);
+
+  return { data, loading, error, refetch: fetchData };
 };
 
 export default useFetchData;

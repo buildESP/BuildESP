@@ -25,7 +25,7 @@ const HeroSection = () => {
         from your neighborhood. Save money, reduce waste, and connect with your community!
       </Text>
       {user ? (
-        <Button as={RouterLink} to="/my-items" colorScheme="blue" size="lg">
+        <Button as={RouterLink} to="/add-item" colorScheme="blue" size="lg">
           Add an Item
         </Button>
       ) : (
