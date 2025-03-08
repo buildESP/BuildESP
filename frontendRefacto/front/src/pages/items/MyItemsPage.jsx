@@ -1,9 +1,11 @@
 import useItems from "../../hooks/useItems";
 import useAuth from "../../hooks/useAuth";
-import { Box, Spinner, Text, VStack , Button, HStack} from "@chakra-ui/react";
+import { Box, Spinner, Text, VStack , HStack} from "@chakra-ui/react";
+import { Link } from "react-router-dom"; 
+
 
 const MyItemsPage = () => {
-  const { items, loading, error, refetch } = useItems();
+  const { items, loading, error } = useItems();
   const { user } = useAuth();
 
   if (loading) return <Spinner />;
@@ -18,7 +20,7 @@ const MyItemsPage = () => {
     <HStack spacing={4} p={4}>
     {myItems.length ? (
       myItems.map((item) => (
-        <Box key={item.id} p={4} bg="gray.100" borderRadius="md">
+        <Box key={item.id} p={4} bg="gray.100" borderRadius="md" as={Link} to={`/items/${item.id}`} _hover={{ bg: "gray.200" }}>
           <Text fontWeight="bold">{item.name}</Text>
           <Text>{item.description}</Text>
         </Box>

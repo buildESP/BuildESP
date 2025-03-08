@@ -11,6 +11,7 @@ import SubcategoryDetailsPage from "../pages/categories/SubCategoryDetailsPage";
 import MyItemsPage from "../pages/items/MyItemsPage";
 import RegisterPage from "../pages/RegisterPage";
 import AddItemPage from "../pages/items/AddItemsPages";
+import ItemDetailsPage from "../pages/items/ItemsDetailsPages";
 
 const AppRoutes = () => {
   return (
@@ -28,6 +29,8 @@ const AppRoutes = () => {
           <Route element={<PrivateRoute />}> {/* ✅ Routes protégées */}
             <Route path="profile" element={<ProfilePage />} />
             <Route path="my-items" element={<MyItemsPage />} />
+            <Route path="items/:id" element={<ItemDetailsPage />} />
+
             <Route path="add-item" element={<AddItemPage />} />
           </Route>
         </Route>

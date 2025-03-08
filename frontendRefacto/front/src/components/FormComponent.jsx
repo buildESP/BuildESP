@@ -1,20 +1,25 @@
+import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Box, Button, VStack, Input, Textarea, NativeSelect  } from '@chakra-ui/react';
+import { Box, Button, VStack, Input, Textarea, NativeSelect, HStack } from '@chakra-ui/react';
 import { Fieldset, FieldsetLegend } from '@chakra-ui/react/fieldset';
 import { Field } from './ui/field'
 
-const FormComponent = ({ schema, fields, onSubmit, submitLabel = 'Submit', loading, title }) => {
+const FormComponent = ({ schema, fields, onSubmit, submitLabel = 'Submit', loading, title, defaultValues, onCancel }) => {
   const {
     register,
     handleSubmit,
     formState: { errors },
     reset,
-  } = useForm({ resolver: zodResolver(schema) });
+  } = useForm({ resolver: zodResolver(schema), defaultValues });
 
+
+  useEffect(() => {
+    reset(defaultValues);
+  }, [defaultValues, reset]);
   const handleFormSubmit = async (data) => {
     await onSubmit(data);
-    reset(); // Réinitialise le formulaire après soumission réussie
+    reset();
   };
 
   return (
@@ -36,16 +41,16 @@ const FormComponent = ({ schema, fields, onSubmit, submitLabel = 'Submit', loadi
               invalid={!!errors[name]}
             >
               {type === 'select' ? (
-  <NativeSelect.Root>
-  <NativeSelect.Field {...register(name)} placeholder={`Select ${label}`}>
-    {options.map((option) => (
-      <option key={option.value} value={option.value}>
-        {option.label}
-      </option>
-    ))}
-  </NativeSelect.Field>
-  <NativeSelect.Indicator />
-</NativeSelect.Root>
+                <NativeSelect.Root>
+                  <NativeSelect.Field {...register(name)} placeholder={`Select ${label}`}>
+                    {options.map((option) => (
+                      <option key={option.value} value={option.value}>
+                        {option.label}
+                      </option>
+                    ))}
+                  </NativeSelect.Field>
+                  <NativeSelect.Indicator />
+                </NativeSelect.Root>
               ) : type === 'textarea' ? (
                 <Textarea {...register(name)} placeholder={label} />
               ) : (
@@ -53,10 +58,16 @@ const FormComponent = ({ schema, fields, onSubmit, submitLabel = 'Submit', loadi
               )}
             </Field>
           ))}
-
-          <Button type="submit" colorScheme="blue" isLoading={loading}>
-            {submitLabel}
-          </Button>
+          <HStack>
+            <Button type="submit" colorScheme="blue" isLoading={loading}>
+              {submitLabel}
+            </Button>
+            {onCancel && (
+              <Button variant="outline" onClick={onCancel} isDisabled={loading}>
+                Cancel
+              </Button>
+            )}
+          </HStack>
         </VStack>
       </Fieldset.Root>
     </Box>

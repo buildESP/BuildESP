@@ -24,7 +24,7 @@ const usePostData = (endpoint) => {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    Authorization: token ? `Bearer ${token}` : "", // ✅ Ajoute le token si dispo
+                    Authorization: token ? `Bearer ${token}` : ""
                 },
                 body: JSON.stringify(data),
             });

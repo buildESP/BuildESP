@@ -10,8 +10,8 @@ const useFetchData = (endpoint, { requiresAuth = false, manual = false } = {}) =
   const [loading, setLoading] = useState(!manual); 
 
   const fetchData = useCallback(async () => {
-    if (requiresAuth && !token) {  // ✅ Only require token if `requiresAuth` is true
-      setError("Aucun token trouvé. Authentification requise.");
+    if (requiresAuth && !token) { 
+      setError(" Authentification requise.");
       setLoading(false);
       return;
     }

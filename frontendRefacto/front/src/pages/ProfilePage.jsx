@@ -1,30 +1,40 @@
+import { useState } from "react";
+
 import useAuth from "../hooks/useAuth";
 import useFetchData from "../hooks/useFetchData";
-import { Box, Text, VStack, Spinner } from "@chakra-ui/react";
-import { Avatar } from "../components/ui/avatar";
+import { VStack, Text, Spinner, Button } from "@chakra-ui/react";
+import ProfileDetails from "../components/ProfileDetails";
+import ProfileUpdateForm from "../components/ProfileUpdateForm";
 
 const ProfilePage = () => {
-  const { user } = useAuth(); // ✅ Get logged-in user
-  const { data: userData, loading, error } = useFetchData(`/users/${user?.id}`, {requiresAuth: true}); // ✅ Fetch user data
+  const { user } = useAuth();
+  const { data: userData, loading, error, refetch } = useFetchData(`/users/${user?.id}`, { requiresAuth: true });
+  const [isEditing, setIsEditing] = useState(false);
 
   if (loading) return <Spinner />;
   if (error) return <Text color="red.500">{error}</Text>;
-  if (!userData) return <Text color="gray.500">User data not found.</Text>;
 
   return (
     <VStack spacing={6} p={6} align="stretch">
-      {/* ✅ User Info Section */}
-      <Box bg="gray.100" p={6} borderRadius="md" textAlign="center">
-        <Avatar size="xl" src={userData.picture || "https://via.placeholder.com/150"} />
-        <Text fontSize="2xl" fontWeight="bold" mt={2}>
-          {userData.firstname} {userData.lastname}
-        </Text>
-        <Text color="gray.600">{userData.email}</Text>
-        <Text color="gray.600">{userData.address || "No address provided"}</Text>
-        <Text color="gray.600">📞 {userData.phone || "No phone number"}</Text>
-      </Box>
+      {/* ✅ Show profile details if not editing */}
+      {!isEditing && userData && (
+        <>
+          <ProfileDetails userData={userData} />
+          <Button onClick={() => setIsEditing(true)} colorScheme="blue">
+            Edit Profile
+          </Button>
+        </>
+      )}
 
-
+      {/* ✅ Show form only when editing */}
+      {isEditing && userData && (
+        <ProfileUpdateForm userData={userData} onSuccess={() => {
+          setIsEditing(false);
+          refetch();
+        }}
+          onCancel={() => setIsEditing(false)}
+        />
+      )}
     </VStack>
   );
 };
