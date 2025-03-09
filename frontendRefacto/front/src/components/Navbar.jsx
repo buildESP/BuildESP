@@ -10,7 +10,7 @@ import {
   VStack,
   useBreakpointValue,
 } from "@chakra-ui/react";
-import { FiMenu } from "react-icons/fi";
+import { CiMenuBurger } from "react-icons/ci";
 import {
   DrawerRoot,
   DrawerBackdrop,
@@ -33,10 +33,10 @@ const Navbar = () => {
 
 
   const isDesktop = useBreakpointValue({ base: false, md: true });
-
+  console.log("CiBurger", <CiMenuBurger />)
   console.log("🔹 Navbar : Utilisateur =", user);
   return (
-    <Box bg="gray.100" px={4} boxShadow="md">
+    <Box bg="green.300" px={4} boxShadow="md">
       <Flex h={16} alignItems="center" justifyContent="space-between">
         <Box fontWeight="bold" as={RouterLink} to="/" fontSize="lg" color="gray.800">
           Neighborrow
@@ -78,12 +78,11 @@ const Navbar = () => {
             <DrawerBackdrop />
             <DrawerTrigger asChild>
               <IconButton
-                icon={<FiMenu />}
                 aria-label="Open Menu"
                 onClick={onOpen}
-                variant="outline"
-                color="green.950"
-              />
+                
+              >
+                <CiMenuBurger size={24} color="white" /></IconButton>
             </DrawerTrigger>
             <DrawerContent>
               <DrawerCloseTrigger />
