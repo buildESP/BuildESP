@@ -1,5 +1,6 @@
 import { Box, Text, Grid, GridItem, Image, Badge, Button,  HStack } from "@chakra-ui/react";
 import { Link } from "react-router";
+import ItemCard from "./ItemCard";
 
 const ItemsGallery = ({ items, title = "Items" }) => {
   if (!items || items.length === 0) {
@@ -8,7 +9,7 @@ const ItemsGallery = ({ items, title = "Items" }) => {
 
   return (
     <Box w="full">
-      <HStack>
+      <HStack py={4}>
       <Text fontSize="xl" fontWeight="bold" mb={4}>
         {title}
       </Text>
@@ -18,21 +19,8 @@ const ItemsGallery = ({ items, title = "Items" }) => {
       </HStack>
       <Grid templateColumns={{ base: "1fr", sm: "1fr 1fr", md: "1fr 1fr 1fr" }} gap={4}>
         {items.map((item) => (
-          <GridItem key={item.id} p={4} bg="gray.200" borderRadius="md" as={Link} to={`/items/${item.id}`} >
-            <Image
-              src={item.picture || "https://via.placeholder.com/150"}
-              alt={item.name}
-              w="100%"
-              h="150px"
-              objectFit="cover"
-              borderRadius="md"
-            />
-            <Text fontWeight="bold" mt={2}>{item.name}</Text>
-            <Text fontSize="sm" color="gray.600">{item.description || "No description available."}</Text>
-            <Badge mt={2} colorScheme={item.status === "Available" ? "green" : "red"}>
-              {item.status}
-            </Badge>
-          </GridItem>
+          <ItemCard key={item.id} item={item} /> 
+
         ))}
       </Grid>
     </Box>
