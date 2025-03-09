@@ -22,19 +22,23 @@ import {
   DrawerBody,
 } from "./ui/drawer";
 import useAuth from "../hooks/useAuth"; // 🔹 Import du hook d'authentification
+import { LuMoon, LuSun } from "react-icons/lu"
+import { useColorMode } from "./ui/color-mode";
 
 const Navbar = () => {
-  const { user, logout } = useAuth(); 
+  const { user, logout } = useAuth();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [open, setOpen] = useState(false);
+  const { toggleColorMode, colorMode } = useColorMode()
+
 
   const isDesktop = useBreakpointValue({ base: false, md: true });
 
-  console.log("🔹 Navbar : Utilisateur =", user); 
+  console.log("🔹 Navbar : Utilisateur =", user);
   return (
     <Box bg="gray.100" px={4} boxShadow="md">
       <Flex h={16} alignItems="center" justifyContent="space-between">
-        <Box fontWeight="bold" as={RouterLink} to="/"  fontSize="lg" color="gray.800">
+        <Box fontWeight="bold" as={RouterLink} to="/" fontSize="lg" color="gray.800">
           Neighborrow
         </Box>
 
@@ -57,14 +61,17 @@ const Navbar = () => {
               </>
             ) : (
               <>
-              <Button as={RouterLink} to="/login" variant="ghost" color="gray.800">
-                Se connecter
-              </Button>
-              <Button as={RouterLink} to="/register" variant="ghost" color="gray.800">
-                S'enregistrer
-              </Button>
+                <Button as={RouterLink} to="/login" variant="ghost" color="gray.800">
+                  Se connecter
+                </Button>
+                <Button as={RouterLink} to="/register" variant="ghost" color="gray.800">
+                  S'enregistrer
+                </Button>
               </>
             )}
+            <IconButton onClick={toggleColorMode} variant="outline" size="sm">
+              {colorMode === "light" ? <LuSun /> : <LuMoon />}
+            </IconButton>
           </HStack>
         ) : (
           <DrawerRoot open={isOpen} onOpenChange={(e) => setOpen(e.open)}>
@@ -74,8 +81,8 @@ const Navbar = () => {
                 icon={<FiMenu />}
                 aria-label="Open Menu"
                 onClick={onOpen}
-                variant="ghost"
-                color="gray.800"
+                variant="outline"
+                color="green.950"
               />
             </DrawerTrigger>
             <DrawerContent>
@@ -90,18 +97,29 @@ const Navbar = () => {
                   </Button>
                   {user ? (
                     <>
-                      <Button as={RouterLink} to="/profile" variant="ghost" onClick={onClose}>
+                      <Button as={RouterLink} to="/my-items" variant="ghost" color="gray.800">
+                        Mes Objets
+                      </Button>
+                      <Button as={RouterLink} to="/profile" variant="ghost" color="gray.800">
                         Profil
                       </Button>
-                      <Button onClick={() => { logout(); onClose(); }} variant="ghost" color="red.600">
+                      <Button onClick={logout} variant="ghost" color="red.600">
                         Déconnexion
                       </Button>
                     </>
                   ) : (
-                    <Button as={RouterLink} to="/login" variant="ghost" onClick={onClose}>
-                      Se connecter
-                    </Button>
+                    <>
+                      <Button as={RouterLink} to="/login" variant="ghost" color="gray.800">
+                        Se connecter
+                      </Button>
+                      <Button as={RouterLink} to="/register" variant="ghost" color="gray.800">
+                        S'enregistrer
+                      </Button>
+                    </>
                   )}
+                  <IconButton onClick={toggleColorMode} variant="outline" size="sm">
+                    {colorMode === "light" ? <LuSun /> : <LuMoon />}
+                  </IconButton>
                 </VStack>
               </DrawerBody>
             </DrawerContent>

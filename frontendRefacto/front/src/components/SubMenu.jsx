@@ -1,41 +1,46 @@
-import { Button, Spinner, Text, HStack } from "@chakra-ui/react";
-import {
-  MenuContent,
-  MenuItem,
-  MenuRoot,
-  MenuTrigger,
-} from "@chakra-ui/react/menu";
+import { Button, Spinner, Text, HStack, Box, Popover, Stack, Portal
+ } from "@chakra-ui/react";
+
 import useFetchData from "../hooks/useFetchData";
 import { Link } from "react-router-dom";
 
 const SubMenu = () => {
   const { data: categories, loading, error } = useFetchData("/categories");
 
-    if (loading) return <Spinner />;
+  if (loading) return <Spinner />;
   if (error) return <Text color="red.500">{error}</Text>;
 
   return (
-    <HStack spacing={4} p={4} bg="gray.100">
+    <Stack align="center" direction="row" spacing={6} p={4} bg="gray.100">
       {categories.map((category) => (
-        <MenuRoot key={category.id}>
-          {/* ✅ Category as a horizontal button */}
-          <MenuTrigger asChild>
+        <Popover.Root key={category.id}>
+          {/* ✅ Bouton de la catégorie */}
+          <Popover.Trigger asChild>
             <Button variant="ghost" size="sm">{category.name}</Button>
-          </MenuTrigger>
+          </Popover.Trigger>
 
-          {/* ✅ Vertical Dropdown for Subcategories */}
-          {category.subcategories.length > 0 && (
-            <MenuContent positioning={{ placement: "", gutter: 4 }}>
-              {category.subcategories.map((sub) => (
-                <MenuItem key={sub.id} asChild>
-                  <Link to={`/subcategories/${sub.id}`}>{sub.name}</Link>
-                </MenuItem>
-              ))}
-            </MenuContent>
-          )}
-        </MenuRoot>
+          <Portal>
+            <Popover.Positioner>
+              <Popover.Content width="200px">
+                <Popover.Arrow />
+                <Popover.Body>
+                  <Popover.Title fontWeight="medium">{category.name}</Popover.Title>
+                  {category.subcategories.length > 0 ? (
+                    category.subcategories.map((sub) => (
+                      <Text key={sub.id} p={2} _hover={{ bg: "gray.200" }}>
+                        <Link to={`/subcategories/${sub.id}`}>{sub.name}</Link>
+                      </Text>
+                    ))
+                  ) : (
+                    <Text color="gray.500" p={2}>Aucune sous-catégorie</Text>
+                  )}
+                </Popover.Body>
+              </Popover.Content>
+            </Popover.Positioner>
+          </Portal>
+        </Popover.Root>
       ))}
-    </HStack>
+    </Stack>
   );
 };
 

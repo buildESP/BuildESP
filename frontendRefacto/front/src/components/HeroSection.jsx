@@ -7,7 +7,7 @@ const HeroSection = () => {
 
   return (
     <Box
-      bg="gray.100"
+      bg="green.50"
       py={16}
       px={8}
       textAlign="center"
@@ -17,7 +17,7 @@ const HeroSection = () => {
       justifyContent="center"
     >
 
-      <Heading as="h1" size="xl" mb={4}>
+      <Heading as="h1" size="xl" color="green.900" mb={4}>
         Share & Borrow Tools with Your Neighbors
       </Heading>
       <Text fontSize="lg" color="gray.600" maxW="600px" mb={6}>
