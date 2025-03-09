@@ -114,14 +114,16 @@ exports.updateUser = async (req, res) => {
       firstname: firstname || user.firstname,
       lastname: lastname || user.lastname,
       email: email || user.email,
-      password: password || user.password,
       address: address || user.address,
       postcode: postcode || user.postcode,
       phone: phone || user.phone,
       rating: rating || user.rating,
       picture: picture || user.picture,
       is_admin: is_admin !== undefined ? is_admin : user.is_admin,
+      ...(password ? { password } : {})
+  
     });
+
 
     // Update groups association
     if (groups && groups.length > 0) {

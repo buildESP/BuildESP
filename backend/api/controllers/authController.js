@@ -16,12 +16,13 @@ exports.generateAccessToken = async (req, res) => {
     const user = await User.findOne({ where: { email: login } });
 
     if (!user) {
-      return res.status(401).json({ message: 'Invalid credentials' });
+      return res.status(401).json({ message: 'Aucun Email trouvé' });
     }
 
     const isPasswordValid = await bcrypt.compare(password, user.password);
+    console.log(password, user.password)
     if (!isPasswordValid) {
-      return res.status(401).json({ message: 'Invalid credentials' });
+      return res.status(401).json({ message: 'Mot de pas Invalide' });
     }
 
     const payload = { id: user.id, isAdmin: user.isAdmin };
