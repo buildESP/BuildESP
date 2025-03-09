@@ -20,7 +20,7 @@ const LoginPage = () => {
     try {
       const data = await login(loginData.login, loginData.password);
       loginUser(data.token, data.userId);
-      navigate("/");
+      navigate("/my-items");
     } catch (err) {
       setError(err.message);
     }

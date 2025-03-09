@@ -6,8 +6,8 @@ import { useState } from "react";
 import useAuth from "../../hooks/useAuth";
 import usePutData from "../..//hooks/usePutData";
 
-import ItemDetails from "../../components/ItemDetails";
-import ItemEditForm from "../../components/ItemEditForm";
+import ItemDetails from "../../components/items/ItemDetails";
+import ItemEditForm from "../../components/items/ItemEditForm";
 const ItemDetailsPage = () => {
     const { id } = useParams();
     const navigate = useNavigate();

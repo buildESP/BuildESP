@@ -1,7 +1,7 @@
 import { useParams } from "react-router-dom";
 import useFetchData from "../../hooks/useFetchData";
 import { Box, Spinner, Text, VStack, Image } from "@chakra-ui/react";
-import ItemsGallery from "../../components/ItemsGallery"; // ✅ Import reusable component
+import ItemsGallery from "../../components/items/ItemsGallery"; // ✅ Import reusable component
 
 const SubcategoryDetailsPage = () => {
   const { id } = useParams(); // ✅ Get subcategory ID from URL

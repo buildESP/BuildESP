@@ -1,6 +1,6 @@
-import FormComponent from "../components/FormComponent";
-import { itemUpdateSchema } from "../validation/schemas";
-import useFetchData from "../hooks/useFetchData";
+import FormComponent from "../FormComponent";
+import { itemUpdateSchema } from "../../validation/schemas";
+import useFetchData from "../../hooks/useFetchData";
 
 const ItemEditForm = ({ item, onSubmit, loading }) => {
 

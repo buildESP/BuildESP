@@ -3,7 +3,7 @@ import { Navigate, Outlet } from "react-router";
 
 const PublicRoutes = () => {
     const {isAuthenticated } = useAuth();
-    return isAuthenticated ? <Navigate to="/profile" replace /> : <Outlet />;
+    return isAuthenticated ? <Navigate to={location.state?.from || "/my-items"} replace /> : <Outlet />;
 };
 
 export default PublicRoutes;
