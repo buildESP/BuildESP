@@ -1,14 +1,17 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Box, Button, VStack, Input, Textarea, NativeSelect, HStack } from '@chakra-ui/react';
 import { Fieldset, FieldsetLegend } from '@chakra-ui/react/fieldset';
 import { Field } from './ui/field'
+import { FileUploadList, FileUploadRoot, FileUploadTrigger } from '../components/ui/file-upload';
+import useUploadImage from '../hooks/useUploadImage';
 
 const FormComponent = ({ schema, fields, onSubmit, submitLabel = 'Submit', loading, title, defaultValues, onCancel }) => {
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors },
     reset,
   } = useForm({ resolver: zodResolver(schema), defaultValues });
@@ -18,9 +21,49 @@ const FormComponent = ({ schema, fields, onSubmit, submitLabel = 'Submit', loadi
     reset(defaultValues);
   }, [defaultValues, reset]);
   const handleFormSubmit = async (data) => {
+    console.log("Form Data before submit:", data); 
+    if (uploadedImageUrl) {
+      data.picture = uploadedImageUrl;
+    }
     await onSubmit(data);
     reset();
   };
+
+  const { uploadImage, uploading } = useUploadImage();
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [uploadedImageUrl, setUploadedImageUrl] = useState(null);
+
+
+  useEffect(() => {
+    console.log("📸 Selected File:", selectedFile);
+    const uploadSelectedFile = async () => {
+      if (selectedFile) {
+        const imageUrl = await uploadImage(selectedFile);
+        console.log("✅ Uploaded Image URL:", imageUrl);
+        if (imageUrl) {
+          setUploadedImageUrl(imageUrl);
+          const imageField = fields.some((f) => f.name === "picture")
+            ? "picture"
+            : "image_url";
+          setValue(imageField, imageUrl);
+        }
+      }
+    };
+    uploadSelectedFile();
+  }, [selectedFile, setValue, fields, uploadImage]);
+
+  const handleFileUpload = async (file) => {
+    const imageUrl = await uploadImage(file);
+    console.log("Uploaded Image URL:", imageUrl); 
+
+    if (imageUrl) {
+      const imageField = fields.some((f) => f.name === "picture") ? "picture" : "image_url";
+      setValue(imageField, imageUrl);
+    }
+  };
+
+
+
 
   return (
     <Box p={6} maxW="md" mx="auto">
@@ -53,6 +96,13 @@ const FormComponent = ({ schema, fields, onSubmit, submitLabel = 'Submit', loadi
                 </NativeSelect.Root>
               ) : type === 'textarea' ? (
                 <Textarea {...register(name)} placeholder={label} />
+              ) : type == "file" ? (
+                <FileUploadRoot onFileSelect={(file) => { setSelectedFile(file); handleFileUpload(file); }}>
+                  <FileUploadTrigger>
+                    <Button isLoading={uploading}>Upload Image</Button>
+                  </FileUploadTrigger>
+                  <FileUploadList />
+                </FileUploadRoot>
               ) : (
                 <Input {...register(name)} type={type} placeholder={label} />
               )}

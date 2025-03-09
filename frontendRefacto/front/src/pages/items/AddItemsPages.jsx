@@ -18,22 +18,24 @@ const AddItemPage = () => {
   const fields = [
     { name: "name", label: "Item Name", helperText: "Give your item a clear name" },
     { name: "description", label: "Description", type: "textarea", helperText: "Describe your item" },
-    { name: "picture", label: "Image URL", helperText: "Provide an image link" },
+    { name: "picture", label: "Image URL", type: "file", helperText: "Upload an image" }, 
     {
       name: "subcategory_id",
       label: "Subcategory",
       type: "select",
-      options: subcategories
-        ? subcategories.map((sub) => ({ value: sub.id, label: sub.name })) 
-        : [],
+      options: subcategories ? subcategories.map((sub) => ({ value: sub.id, label: sub.name })) : [],
     },
     { name: "status", label: "Status", type: "select", options: [
       { value: "Available", label: "Available" },
       { value: "Unavailable", label: "Unavailable" },
     ]},
   ];
+  
 
   const handleSubmit = async (formData) => {
+
+    console.log("Form In page submit:", formData); 
+
     const response = await postData(
       { ...formData, user_id: user.id },
       "✅ Item added successfully!",
@@ -41,8 +43,8 @@ const AddItemPage = () => {
     );
   
     if (response) {
-      await refetch(); // ✅ Fetch updated items from API
-      navigate("/my-items"); // ✅ Redirect to My Items page
+      await refetch(); 
+      navigate("/my-items"); 
     }
   };
 

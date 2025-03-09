@@ -9,7 +9,7 @@ const ItemEditForm = ({ item, onSubmit, loading }) => {
     const fields = [
         { name: "name", label: "Nom de l'item" },
         { name: "description", label: "Description", type: "textarea" },
-        { name: "picture", label: "Image URL" },
+        { name: "picture", label: "Image URL", type: "file" }, 
         {
           name: "subcategory_id",
           label: "Sous-catégorie",
