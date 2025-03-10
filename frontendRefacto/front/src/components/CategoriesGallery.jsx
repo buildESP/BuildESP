@@ -1,11 +1,11 @@
 import useFetchData from "../hooks/useFetchData";
-import { Grid, GridItem, Box, Image, Text, Spinner, SimpleGrid } from "@chakra-ui/react";
+import { Grid, GridItem, Box, Image, Text, Spinner, SimpleGrid, Skeleton } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 
 const CategoriesGallery = () => {
   const { data: categories, loading, error } = useFetchData("/categories");
 
-  if (loading) return <Spinner />;
+  if (loading) return <Skeleton />;
   if (error) return <Text color="red.500">{error}</Text>;
 
   return (

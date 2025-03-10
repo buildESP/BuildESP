@@ -52,6 +52,9 @@ const Navbar = () => {
                 <Button as={RouterLink} to="/my-items" variant="ghost" color="gray.800">
                   Mes Objets
                 </Button>
+                <Button as={RouterLink} to="/my-neighbors" variant="ghost" color="gray.800">
+                  Mes Voisins
+                </Button>
                 <Button as={RouterLink} to="/profile" variant="ghost" color="gray.800">
                   Profil
                 </Button>
@@ -80,7 +83,7 @@ const Navbar = () => {
               <IconButton
                 aria-label="Open Menu"
                 onClick={onOpen}
-                
+
               >
                 <CiMenuBurger size={24} color="white" /></IconButton>
             </DrawerTrigger>

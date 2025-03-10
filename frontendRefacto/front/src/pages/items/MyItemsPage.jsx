@@ -1,6 +1,6 @@
 import useItems from "../../hooks/useItems";
 import useAuth from "../../hooks/useAuth";
-import { Box, Spinner, Text, VStack , HStack} from "@chakra-ui/react";
+import { Box, Spinner, Text, VStack , HStack, Skeleton} from "@chakra-ui/react";
 import ItemsGallery from "../../components/items/ItemsGallery";
 import EmptyItemsHero from "../../components/items/EmptyItemsHero";
 
@@ -8,7 +8,7 @@ const MyItemsPage = () => {
   const { items, loading, error } = useItems();
   const { user } = useAuth();
 
-  if (loading) return <Spinner />;
+  if (loading) return <Skeleton />;
   if (error) return <Text color="red.500">{error}</Text>;
   if (!user) return <Text color="red.500">Utilisateur non connecté.</Text>;
 

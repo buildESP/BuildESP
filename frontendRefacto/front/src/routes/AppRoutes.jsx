@@ -6,6 +6,7 @@ import LoginPage from "../pages/LoginPage";
 import PrivateRoute from "./PrivateRoutes"; 
 import PublicRoutes from "./PublicRoutes";
 import CategoriesPage from "../pages/categories/CategoriesPage";
+import MyNeighborsPage from "../pages/MyNeighborsPage"
 import CategoryDetailsPage from "../pages/categories/CategoryDetailsPage";
 import SubcategoryDetailsPage from "../pages/categories/SubCategoryDetailsPage";
 import MyItemsPage from "../pages/items/MyItemsPage";
@@ -20,6 +21,7 @@ const AppRoutes = () => {
         <Route path="/" element={<MainLayout />}>
           <Route index element={<HomePage />} />
             <Route path="categories" element={<CategoriesPage />} />
+            <Route path="my-neighbors" element={<MyNeighborsPage/>} />
             <Route path="categories/:id" element={<CategoryDetailsPage />} /> 
             <Route path="subcategories/:id" element={<SubcategoryDetailsPage />} />
           <Route element={<PublicRoutes />}> {/* ✅ Empêche l'accès à login si connecté */}
@@ -30,7 +32,6 @@ const AppRoutes = () => {
             <Route path="profile" element={<ProfilePage />} />
             <Route path="my-items" element={<MyItemsPage />} />
             <Route path="items/:id" element={<ItemDetailsPage />} />
-
             <Route path="add-item" element={<AddItemPage />} />
           </Route>
         </Route>
