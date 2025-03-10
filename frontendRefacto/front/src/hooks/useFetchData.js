@@ -4,7 +4,7 @@ import useAuth from "./useAuth";
 const API_BASE_URL = "http://localhost:3000/api"; // 🔹 Base URL de l'API
 
 const useFetchData = (endpoint, { requiresAuth = false, manual = false } = {}) => { 
-  const { token } = useAuth(); // ✅ Get token from auth context
+  const { token } = useAuth(); // Get token from auth context
   const [data, setData] = useState(null);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(!manual); 
@@ -24,7 +24,7 @@ const useFetchData = (endpoint, { requiresAuth = false, manual = false } = {}) =
         "Content-Type": "application/json",
       };
 
-      if (requiresAuth && token) {  // ✅ Add Authorization header only when needed
+      if (requiresAuth && token) {  //  Add Authorization header only when needed
         headers.Authorization = `Bearer ${token}`;
       }
 

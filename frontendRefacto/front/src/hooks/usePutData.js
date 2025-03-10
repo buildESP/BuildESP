@@ -15,7 +15,7 @@ const usePutData = (endpoint) => {
    * @param {string} successMessage - Custom success message
    * @param {string} errorMessage - Custom error message
    */
-  const putData = async (updatedData, originalData, successMessage = "✅ Updated successfully!", errorMessage = "❌ Update failed.") => {
+  const putData = async (updatedData, originalData, successMessage = " Updated successfully!", errorMessage = " Update failed.") => {
     setLoading(true);
     setError(null);
 

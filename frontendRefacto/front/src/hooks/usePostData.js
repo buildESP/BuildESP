@@ -15,7 +15,7 @@ const usePostData = (endpoint) => {
    * @param {string} successMessage - Custom success message
    * @param {string} errorMessage - Custom error message
    */
-    const postData = async (data, successMessage = "✅ Successfully submitted!", errorMessage = "❌ An error occurred.") => {
+    const postData = async (data, successMessage = " Successfully submitted!", errorMessage = " An error occurred.") => {
         setLoading(true);
         setError(null);
 

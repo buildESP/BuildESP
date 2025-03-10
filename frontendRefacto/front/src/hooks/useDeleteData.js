@@ -14,7 +14,7 @@ const useDeleteData = (endpoint) => {
    * @param {string} successMessage - Message de succès personnalisé
    * @param {string} errorMessage - Message d'erreur personnalisé
    */
-  const deleteData = async ( successMessage = "✅ Suppression réussie!", errorMessage = "❌ Échec de la suppression.") => {
+  const deleteData = async ( successMessage = "Suppression réussie!", errorMessage = " Échec de la suppression.") => {
     setLoading(true);
     setError(null);
 
