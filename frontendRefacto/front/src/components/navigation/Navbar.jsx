@@ -20,10 +20,10 @@ import {
   DrawerHeader,
   DrawerTitle,
   DrawerBody,
-} from "./ui/drawer";
-import useAuth from "../hooks/useAuth"; // 🔹 Import du hook d'authentification
+} from "../ui/drawer";
+import useAuth from "../../hooks/useAuth"; // 🔹 Import du hook d'authentification
 import { LuMoon, LuSun } from "react-icons/lu"
-import { useColorMode } from "./ui/color-mode";
+import { useColorMode } from "../ui/color-mode";
 
 const Navbar = () => {
   const { user, logout } = useAuth();
