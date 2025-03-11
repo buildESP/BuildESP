@@ -24,6 +24,7 @@ import {
 import useAuth from "../../hooks/useAuth"; // 🔹 Import du hook d'authentification
 import { LuMoon, LuSun } from "react-icons/lu"
 import { useColorMode } from "../ui/color-mode";
+import { APP_NAME } from "@/config";
 
 const Navbar = () => {
   const { user, logout } = useAuth();
@@ -39,7 +40,7 @@ const Navbar = () => {
     <Box bg="green.300" px={4} boxShadow="md">
       <Flex h={16} alignItems="center" justifyContent="space-between">
         <Box fontWeight="bold" as={RouterLink} to="/" fontSize="lg" color="gray.800">
-          Neighborrow
+          {APP_NAME}
         </Box>
 
         {isDesktop ? (
