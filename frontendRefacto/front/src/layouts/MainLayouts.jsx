@@ -7,19 +7,18 @@ import Breadcrumbs from "../components/navigation/Breadcrumbs";
 const MainLayout = () => {
   return (
     <Box display="flex" flexDirection="column" minH="100vh">
-
-      <Navbar />
-      <Box pt={{ base: "3rem", md: "4rem" }}>
-        <SubMenu />
-      {/* <Breadcrumbs/> */}
-        <Box flex="1">
-          <Outlet />
-        </Box>
+    <Navbar />
+    
+    <Box display="flex" flexDirection="column" flex="1" pt={{ base: "3rem", md: "4rem" }}>
+      <SubMenu />
+      <Box flex="1"> 
+        <Outlet />
       </Box>
-      <Footer />
-
     </Box>
-  );
+
+    <Footer />
+  </Box>
+);
 };
 
 export default MainLayout;
