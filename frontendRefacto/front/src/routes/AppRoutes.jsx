@@ -14,6 +14,7 @@ import RegisterPage from "../pages/RegisterPage";
 import AddItemPage from "../pages/items/AddItemsPages";
 import ItemDetailsPage from "../pages/items/ItemsDetailsPages";
 import MyNeighborsItemsPages from "../pages/items/MyNeighborsItemsPage";
+import AdminPage from "@/pages/AdminPage";
 
 const AppRoutes = () => {
   return (
@@ -35,6 +36,8 @@ const AppRoutes = () => {
             <Route path="my-neighbors/:id" element={<MyNeighborsItemsPages />} />
             <Route path="items/:id" element={<ItemDetailsPage />} />
             <Route path="add-item" element={<AddItemPage />} />
+            <Route path="admin/" element={<AdminPage />} />
+
           </Route>
         </Route>
       </Routes>
