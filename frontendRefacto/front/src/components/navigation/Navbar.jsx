@@ -34,10 +34,11 @@ const Navbar = () => {
 
 
   const isDesktop = useBreakpointValue({ base: false, md: true });
-  console.log("CiBurger", <CiMenuBurger />)
   console.log("🔹 Navbar : Utilisateur =", user);
   return (
-    <Box bg="green.300" px={4} boxShadow="md">
+    <Box bg="green.300" px={4} boxShadow="md" position="fixed" zIndex="1000"
+      w="100vw"
+    >
       <Flex h={16} alignItems="center" justifyContent="space-between">
         <Box fontWeight="bold" as={RouterLink} to="/" fontSize="lg" color="gray.800">
           {APP_NAME}
