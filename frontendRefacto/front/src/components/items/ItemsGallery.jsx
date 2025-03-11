@@ -13,7 +13,7 @@ const ItemsGallery = ({ items, title = "Items" }) => {
       <Text fontSize="xl" fontWeight="bold" mb={4}>
         {title}
       </Text>
-          <Button as={Link} to="/add-item" colorScheme="blue" size="lg">
+          <Button as={Link} to="/add-item" colorPalette="green" size="lg">
               Ajouter un Item
               </Button>
       </HStack>

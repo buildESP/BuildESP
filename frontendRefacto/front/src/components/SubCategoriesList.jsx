@@ -14,7 +14,7 @@ const SubcategoriesList = ({ subcategories }) => {
       </Text>
       <Grid templateColumns={{ base: "1fr", sm: "1fr 1fr", md: "1fr 1fr 1fr" }} gap={4}>
         {subcategories.map((sub) => (
-          <GridItem key={sub.id} p={4} bg="gray.200" borderRadius="md" as={Link} to={`/subcategories/${sub.id}`}>
+          <GridItem key={sub.id} p={4} bg="green.300" borderRadius="md" as={Link} to={`/subcategories/${sub.id}`}>
             <Text fontWeight="bold">{sub.name}</Text>
           </GridItem>
         ))}

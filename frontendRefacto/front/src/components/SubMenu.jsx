@@ -11,12 +11,12 @@ const SubMenu = () => {
   if (error) return <Text color="red.500">{error}</Text>;
 
   return (
-    <Stack align="center" direction="row" spacing={6} p={4} bg="gray.100">
+    <Stack align="center" direction="row" spacing={6} p={4} bg="yellow.950">
       {categories.map((category) => (
         <Popover.Root key={category.id}>
           {/* ✅ Bouton de la catégorie */}
           <Popover.Trigger asChild>
-            <Button variant="ghost" size="sm">{category.name}</Button>
+            <Button variant="ghost" color="yellow.50" size="sm">{category.name}</Button>
           </Popover.Trigger>
 
           <Portal>

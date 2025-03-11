@@ -12,7 +12,7 @@ const CategoryDetailPage = () => {
 
   return (
     <VStack spacing={6} p={6}>
-      <Box p={4} bg="gray.100" borderRadius="md" w="full">
+      <Box p={4} bg="green.300" borderRadius="md" w="full">
         <Text fontSize="2xl" fontWeight="bold">{category.name}</Text>
         <Text>{category.description || "No description available."}</Text>
       </Box>

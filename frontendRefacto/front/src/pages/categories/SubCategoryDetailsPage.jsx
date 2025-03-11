@@ -14,7 +14,7 @@ const SubcategoryDetailsPage = () => {
   return (
     <VStack spacing={6} p={6}>
       {/* ✅ Display subcategory details */}
-      <Box p={4} bg="gray.100" borderRadius="md" w="full" textAlign="center">
+      <Box p={4} bg="yellow.100" borderRadius="md" w="full" textAlign="center">
         <Image
           src={subcategory.image_url || "https://via.placeholder.com/300"}
           alt={subcategory.name}

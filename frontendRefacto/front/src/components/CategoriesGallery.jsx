@@ -17,7 +17,7 @@ const CategoriesGallery = () => {
         {categories.map((category) => (
           <GridItem key={category.id} as={Link} to={`/categories/${category.id}`}>
             <Box
-              bg="gray.100"
+              bg="green.300"
               borderRadius="md"
               overflow="hidden"
               transition="transform 0.2s"

@@ -6,12 +6,13 @@ import { Outlet } from "react-router";
 import Breadcrumbs from "../components/navigation/Breadcrumbs";
 const MainLayout = () => {
   return (
-    <Box display="flex" flexDirection="column" minH="100vh">
+    <Box display="flex" flexDirection="column" minH="100vh" bg="yellow.50">
     <Navbar />
     
     <Box display="flex" flexDirection="column" flex="1" pt={{ base: "3rem", md: "4rem" }}>
       <SubMenu />
-      <Box flex="1"> 
+      {/* <Breadcrumbs/> */}
+      <Box bg="yellow.50" flex="1"> 
         <Outlet />
       </Box>
     </Box>

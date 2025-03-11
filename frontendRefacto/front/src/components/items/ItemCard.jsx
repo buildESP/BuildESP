@@ -27,7 +27,7 @@ const ItemCard = ({ item }) => {
   return (
     <Box
       p={4}
-      bg="gray.200"
+      bg="green.50"
       borderRadius="md"
       as={Link}
       to={`/items/${item.id}`}

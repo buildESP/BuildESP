@@ -1,7 +1,7 @@
 import { Box, Grid, Heading, Link, VStack } from '@chakra-ui/react';
 
 const Footer = () => (
-  <Box as="footer" bg="gray.800" color="white" py={10}>
+  <Box as="footer" bg="yellow.950" color="yellow.100" py={10}>
     <Grid templateColumns={{ base: '1fr', md: 'repeat(3, 1fr)' }} gap={6}>
       <VStack align="start">
         <Heading size="md" mb={2}> A propos de nous</Heading>
