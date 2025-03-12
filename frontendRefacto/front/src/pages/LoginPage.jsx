@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
 import { login } from "../services/authServices";
 import { Box, Button, Input, VStack, Heading, Text } from "@chakra-ui/react";
+import { toast, ToastContainer } from "react-toastify";
+
 
 const LoginPage = () => {
   const [loginData, setLoginData] = useState({ login: "", password: "" });
@@ -16,13 +18,20 @@ const LoginPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError(null);
     try {
       const data = await login(loginData.login, loginData.password);
       loginUser(data.token, data.userId);
+
+      // ✅ Notification de succès
+      toast.success("✅ Connexion réussie !", { position: "top-right" });
+
       navigate("/my-items");
     } catch (err) {
-      setError(err.message);
+      console.error("Erreur de connexion :", err);
+
+      // ✅ Si le serveur renvoie un message d'erreur, on l'affiche
+      const errorMessage = err.message || "❌ Une erreur est survenue.";
+      toast.error(errorMessage, { position: "top-right" });
     }
   };
 
