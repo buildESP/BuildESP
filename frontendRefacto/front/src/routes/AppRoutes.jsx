@@ -6,7 +6,7 @@ import LoginPage from "../pages/LoginPage";
 import PrivateRoute from "./PrivateRoutes"; 
 import PublicRoutes from "./PublicRoutes";
 import CategoriesPage from "../pages/categories/CategoriesPage";
-import MyNeighborsPage from "../pages/MyNeighborsPage"
+import MyNeighborsPage from "../pages/MyNeighborsPage";
 import CategoryDetailsPage from "../pages/categories/CategoryDetailsPage";
 import SubcategoryDetailsPage from "../pages/categories/SubCategoryDetailsPage";
 import MyItemsPage from "../pages/items/MyItemsPage";
@@ -16,29 +16,45 @@ import ItemDetailsPage from "../pages/items/ItemsDetailsPages";
 import MyNeighborsItemsPages from "../pages/items/MyNeighborsItemsPage";
 import AdminPage from "@/pages/AdminPage";
 
+/**
+ * @component AppRoutes
+ * @description Gère la configuration des routes de l'application avec React Router.
+ * @returns {JSX.Element} Composant contenant toutes les routes de l'application.
+ */
 const AppRoutes = () => {
   return (
     <Router>
       <Routes>
+        {/* ✅ Layout principal (Navbar, Footer...) */}
         <Route path="/" element={<MainLayout />}>
+          
+          {/* 🏠 Page d'accueil */}
           <Route index element={<HomePage />} />
-            <Route path="categories" element={<CategoriesPage />} />
-            <Route path="my-neighbors" element={<MyNeighborsPage/>} />
-            <Route path="categories/:id" element={<CategoryDetailsPage />} /> 
-            <Route path="subcategories/:id" element={<SubcategoryDetailsPage />} />
-          <Route element={<PublicRoutes />}> {/* ✅ Empêche l'accès à login si connecté */}
+
+          {/* 📂 Pages de catégories et sous-catégories */}
+          <Route path="categories" element={<CategoriesPage />} />
+          <Route path="categories/:id" element={<CategoryDetailsPage />} /> 
+          <Route path="subcategories/:id" element={<SubcategoryDetailsPage />} />
+
+          {/* 👥 Pages de voisins */}
+          <Route path="my-neighbors" element={<MyNeighborsPage />} />
+          <Route path="my-neighbors/:id" element={<MyNeighborsItemsPages />} />
+
+          {/* 🚪 Routes accessibles uniquement aux utilisateurs non connectés */}
+          <Route element={<PublicRoutes />}> 
             <Route path="login" element={<LoginPage />} />
             <Route path="register" element={<RegisterPage />} />
           </Route>
-          <Route element={<PrivateRoute />}> {/* ✅ Routes protégées */}
+
+          {/* 🔒 Routes protégées nécessitant une authentification */}
+          <Route element={<PrivateRoute />}>
             <Route path="profile" element={<ProfilePage />} />
             <Route path="my-items" element={<MyItemsPage />} />
-            <Route path="my-neighbors/:id" element={<MyNeighborsItemsPages />} />
             <Route path="items/:id" element={<ItemDetailsPage />} />
             <Route path="add-item" element={<AddItemPage />} />
             <Route path="admin/" element={<AdminPage />} />
-
           </Route>
+          
         </Route>
       </Routes>
     </Router>

@@ -29,7 +29,7 @@ const LoginForm = ({ onSubmit, error }) => {
   
           <Button
   type="submit"
-  colorScheme="blue"
+  colorPalette="blue"
   isLoading={isSubmitting}
   onClick={() => {
     console.log("Button clicked!"); // ✅ Vérifier si le bouton fonctionne

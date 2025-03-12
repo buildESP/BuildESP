@@ -3,11 +3,31 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Box, Button, VStack, Input, Textarea, NativeSelect, HStack } from '@chakra-ui/react';
 import { Fieldset, FieldsetLegend } from '@chakra-ui/react/fieldset';
-import { Field } from './ui/field'
+import { Field } from './ui/field';
 import { FileUploadList, FileUploadRoot, FileUploadTrigger } from '../components/ui/file-upload';
 import useUploadImage from '../hooks/useUploadImage';
 
+/**
+ * 📌 **Composant dynamique pour générer des formulaires.**
+ *
+ * - Prend un **schéma de validation** (`zod`).
+ * - Accepte une liste de **champs dynamiques** (`text`, `textarea`, `select`, `file`).
+ * - Gère l'**upload d'images** et met à jour les données avant soumission.
+ *
+ * @component
+ * @param {Object} props - Props du formulaire.
+ * @param {Object} props.schema - Schéma de validation `zod`.
+ * @param {Array} props.fields - Liste des champs à afficher.
+ * @param {Function} props.onSubmit - Fonction appelée à la soumission.
+ * @param {string} [props.submitLabel="Submit"] - Texte du bouton de soumission.
+ * @param {boolean} props.loading - Indique si le formulaire est en cours de soumission.
+ * @param {string} [props.title] - Titre optionnel du formulaire.
+ * @param {Object} [props.defaultValues] - Valeurs par défaut du formulaire.
+ * @param {Function} [props.onCancel] - Fonction appelée lors de l'annulation.
+ * @returns {JSX.Element} - Composant de formulaire dynamique.
+ */
 const FormComponent = ({ schema, fields, onSubmit, submitLabel = 'Submit', loading, title, defaultValues, onCancel }) => {
+  // ✅ Configuration du formulaire avec react-hook-form et validation zod
   const {
     register,
     handleSubmit,
@@ -16,15 +36,23 @@ const FormComponent = ({ schema, fields, onSubmit, submitLabel = 'Submit', loadi
     reset,
   } = useForm({ resolver: zodResolver(schema), defaultValues });
 
-
+  // ✅ Effet pour réinitialiser le formulaire quand les valeurs par défaut changent
   useEffect(() => {
     reset(defaultValues);
   }, [defaultValues, reset]);
+
+  /**
+   * 🔹 Soumission du formulaire avec gestion de l'image uploadée.
+   * @param {Object} data - Données du formulaire.
+   */
   const handleFormSubmit = async (data) => {
-    console.log("Form Data before submit:", data); 
+    console.log("Form Data before submit:", data);
+
+    // ✅ Si une image a été uploadée, on met à jour le champ `picture`
     if (uploadedImageUrl) {
       data.picture = uploadedImageUrl;
     }
+
     await onSubmit(data);
     reset();
   };
@@ -33,7 +61,9 @@ const FormComponent = ({ schema, fields, onSubmit, submitLabel = 'Submit', loadi
   const [selectedFile, setSelectedFile] = useState(null);
   const [uploadedImageUrl, setUploadedImageUrl] = useState(null);
 
-
+  /**
+   * 📸 Gestion de l'upload d'image : dès qu'un fichier est sélectionné, on l'upload.
+   */
   useEffect(() => {
     console.log("📸 Selected File:", selectedFile);
     const uploadSelectedFile = async () => {
@@ -52,18 +82,19 @@ const FormComponent = ({ schema, fields, onSubmit, submitLabel = 'Submit', loadi
     uploadSelectedFile();
   }, [selectedFile, setValue, fields, uploadImage]);
 
+  /**
+   * 🔹 Fonction appelée lorsque l'utilisateur upload un fichier.
+   * @param {File} file - Fichier sélectionné par l'utilisateur.
+   */
   const handleFileUpload = async (file) => {
     const imageUrl = await uploadImage(file);
-    console.log("Uploaded Image URL:", imageUrl); 
+    console.log("Uploaded Image URL:", imageUrl);
 
     if (imageUrl) {
       const imageField = fields.some((f) => f.name === "picture") ? "picture" : "image_url";
       setValue(imageField, imageUrl);
     }
   };
-
-
-
 
   return (
     <Box p={6} maxW="md" mx="auto">
@@ -74,6 +105,7 @@ const FormComponent = ({ schema, fields, onSubmit, submitLabel = 'Submit', loadi
           </FieldsetLegend>
         )}
 
+        {/* 🔹 Formulaire dynamique */}
         <VStack spacing={4} as="form" onSubmit={handleSubmit(handleFormSubmit)}>
           {fields.map(({ name, label, type = 'text', options, helperText }) => (
             <Field
@@ -85,7 +117,7 @@ const FormComponent = ({ schema, fields, onSubmit, submitLabel = 'Submit', loadi
             >
               {type === 'select' ? (
                 <NativeSelect.Root>
-                  <NativeSelect.Field {...register(name)} placeholder={`Select ${label}`}>
+                  <NativeSelect.Field bg="green.contrast" {...register(name)} placeholder={`Select ${label}`}>
                     {options.map((option) => (
                       <option key={option.value} value={option.value}>
                         {option.label}
@@ -95,21 +127,22 @@ const FormComponent = ({ schema, fields, onSubmit, submitLabel = 'Submit', loadi
                   <NativeSelect.Indicator />
                 </NativeSelect.Root>
               ) : type === 'textarea' ? (
-                <Textarea {...register(name)} placeholder={label} />
-              ) : type == "file" ? (
+                <Textarea bg="green.contrast" {...register(name)} placeholder={label} />
+              ) : type === "file" ? (
                 <FileUploadRoot onFileSelect={(file) => { setSelectedFile(file); handleFileUpload(file); }}>
                   <FileUploadTrigger>
-                    <Button isLoading={uploading}>Upload Image</Button>
+                    <Button colorPalette="orange" isLoading={uploading}>Upload Image</Button>
                   </FileUploadTrigger>
                   <FileUploadList />
                 </FileUploadRoot>
               ) : (
-                <Input {...register(name)} type={type} placeholder={label} />
+                <Input bg="green.contrast" {...register(name)} type={type} placeholder={label} />
               )}
             </Field>
           ))}
+          {/* 🔹 Boutons d'action */}
           <HStack>
-            <Button type="submit" colorScheme="blue" isLoading={loading}>
+            <Button type="submit" colorPalette="teal" isLoading={loading}>
               {submitLabel}
             </Button>
             {onCancel && (

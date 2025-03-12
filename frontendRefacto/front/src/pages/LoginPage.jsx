@@ -31,9 +31,9 @@ const LoginPage = () => {
       <Heading mb={6}>Connexion</Heading>
       {error && <Text color="red.500">{error}</Text>}
       <VStack spacing={4} as="form" onSubmit={handleSubmit}>
-        <Input placeholder="Email" name="login" onChange={handleChange} />
-        <Input placeholder="Mot de passe" type="password" name="password" onChange={handleChange} />
-        <Button type="submit" colorScheme="blue">Se connecter</Button>
+        <Input bg="green.contrast" placeholder="Email" name="login" onChange={handleChange} />
+        <Input bg="green.contrast" placeholder="Mot de passe" type="password" name="password" onChange={handleChange} />
+        <Button type="submit" colorPalette="teal">Se connecter</Button>
       </VStack>
     </Box>
   );

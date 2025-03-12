@@ -12,7 +12,7 @@ import { Link } from "react-router";
 
 const UserCard = ({ user }) => {
     return (
-        <Card.Root key={user.id} width="320px" as={Link} to={`/my-neighbors/${user.id}`} _hover={{ transform: "scale(1.05)", transition: "0.2s" }}>
+        <Card.Root key={user.id} bg="green.contrast" width="320px" as={Link} to={`/my-neighbors/${user.id}`} _hover={{ transform: "scale(1.05)", transition: "0.2s" }}>
             <Card.Body>
                 <HStack mb="6" gap="3">
                     <Avatar.Root>
