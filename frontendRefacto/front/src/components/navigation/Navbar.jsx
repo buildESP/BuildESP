@@ -40,24 +40,24 @@ const Navbar = () => {
       w="100vw"
     >
       <Flex h={16} alignItems="center" justifyContent="space-between">
-        <Box fontWeight="bold" as={RouterLink} to="/" fontSize="lg" color="gray.800">
+        <Box fontWeight="bold" as={RouterLink} to="/" fontSize="lg" color="yellow.900">
           {APP_NAME}
         </Box>
 
         {isDesktop ? (
           <HStack as="nav" spacing={4}>
-            <Button as={RouterLink} to="/" variant="ghost" color="gray.800">
+            <Button as={RouterLink} to="/" variant="ghost" color="yellow.900">
               Accueil
             </Button>
             {user ? (
               <>
-                <Button as={RouterLink} to="/my-items" variant="ghost" color="gray.800">
+                <Button as={RouterLink} to="/my-items" variant="ghost" color="yellow.900">
                   Mes Objets
                 </Button>
-                <Button as={RouterLink} to="/my-neighbors" variant="ghost" color="gray.800">
+                <Button as={RouterLink} to="/my-neighbors" variant="ghost" color="yellow.900">
                   Mes Voisins
                 </Button>
-                <Button as={RouterLink} to="/profile" variant="ghost" color="gray.800">
+                <Button as={RouterLink} to="/profile" variant="ghost" color="yellow.900">
                   Profil
                 </Button>
                 <Button onClick={logout} variant="ghost" color="red.600">
@@ -66,10 +66,10 @@ const Navbar = () => {
               </>
             ) : (
               <>
-                <Button as={RouterLink} to="/login" variant="ghost" color="gray.800">
+                <Button as={RouterLink} to="/login" variant="ghost" color="yellow.900">
                   Se connecter
                 </Button>
-                <Button as={RouterLink} to="/register" variant="ghost" color="gray.800">
+                <Button as={RouterLink} to="/register" variant="ghost" color="yellow.900">
                   S'enregistrer
                 </Button>
               </>
@@ -101,10 +101,10 @@ const Navbar = () => {
                   </Button>
                   {user ? (
                     <>
-                      <Button as={RouterLink} to="/my-items" variant="ghost" color="gray.800">
+                      <Button as={RouterLink} to="/my-items" variant="ghost" color="yellow.900">
                         Mes Objets
                       </Button>
-                      <Button as={RouterLink} to="/profile" variant="ghost" color="gray.800">
+                      <Button as={RouterLink} to="/profile" variant="ghost" color="yellow.900">
                         Profil
                       </Button>
                       <Button onClick={logout} variant="ghost" color="red.600">
@@ -113,10 +113,10 @@ const Navbar = () => {
                     </>
                   ) : (
                     <>
-                      <Button as={RouterLink} to="/login" variant="ghost" color="gray.800">
+                      <Button as={RouterLink} to="/login" variant="ghost" color="yellow.900">
                         Se connecter
                       </Button>
-                      <Button as={RouterLink} to="/register" variant="ghost" color="gray.800">
+                      <Button as={RouterLink} to="/register" variant="ghost" color="yellow.900">
                         S'enregistrer
                       </Button>
                     </>

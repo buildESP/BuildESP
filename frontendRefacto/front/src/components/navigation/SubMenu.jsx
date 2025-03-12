@@ -1,7 +1,7 @@
 import { Button, Spinner, Text, HStack, Box, Popover, Stack, Portal
  } from "@chakra-ui/react";
 
-import useFetchData from "../hooks/useFetchData";
+import useFetchData from "../../hooks/useFetchData";
 import { Link } from "react-router-dom";
 
 const SubMenu = () => {
@@ -16,7 +16,7 @@ const SubMenu = () => {
         <Popover.Root key={category.id}>
           {/* ✅ Bouton de la catégorie */}
           <Popover.Trigger asChild>
-            <Button variant="ghost" color="yellow.50" size="sm">{category.name}</Button>
+            <Button variant="plain" color="yellow.50" size="sm">{category.name}</Button>
           </Popover.Trigger>
 
           <Portal>

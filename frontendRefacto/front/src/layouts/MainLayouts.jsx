@@ -1,4 +1,4 @@
-import SubMenu from "../components/SubMenu";
+import SubMenu from "../components/navigation/SubMenu";
 import Footer from "../components/navigation/Footer";
 import Navbar from "../components/navigation/Navbar";
 import { Box } from "@chakra-ui/react";

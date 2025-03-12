@@ -20,7 +20,7 @@ const ProfilePage = () => {
       {!isEditing && userData && (
         <>
           <ProfileDetails userData={userData} />
-          <Button onClick={() => setIsEditing(true)} colorScheme="blue">
+          <Button onClick={() => setIsEditing(true)} colorPalette="teal">
             Edit Profile
           </Button>
         </>
