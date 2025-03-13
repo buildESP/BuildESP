@@ -1,6 +1,7 @@
 // controllers/itemController.js
 
 const { Item, User, Subcategory } = require('../models/associations');
+const { updateEntityImage } = require('../utils/imageUtils');
 
 // Create item
 exports.createItem = async (req, res) => {
