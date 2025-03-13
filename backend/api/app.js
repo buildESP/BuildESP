@@ -52,6 +52,7 @@ const categoryRoutes = require('./routes/categoryRoutes');
 const subcategoryRoutes = require('./routes/subcategoryRoutes');
 const itemRoutes = require('./routes/itemRoutes');
 const exchangeRoutes = require('./routes/exchangeRoutes');
+const imageRoutes = require('./routes/imageRoutes');
 const groupRoutes = require('./routes/groupRoutes');
 
 // Route pour rediriger la requête d'authentification vers l'API privée
@@ -78,16 +79,19 @@ app.post('/api/access-token', async (req, res) => {
 });
 
 // Définition des autres routes API
-app.use('/api', authRoutes);       // Authentification
-app.use('/api', userRoutes);       // Utilisateur
-app.use('/api', categoryRoutes);   // Catégories
-app.use('/api', subcategoryRoutes); // Sous-catégories
-app.use('/api', itemRoutes);       // Items
-app.use('/api', exchangeRoutes);   // Échanges
-app.use('/api', groupRoutes);      // Groupes
+app.use(cors({ origin: true }));
+app.use('/api', userRoutes);
+app.use('/api', authRoutes);
+app.use('/api', categoryRoutes);
+app.use('/api', subcategoryRoutes);
+app.use('/api', itemRoutes);
+app.use('/api', exchangeRoutes);
+app.use('/api', groupRoutes);
+app.use('/api/', imageRoutes);
 
 // Lancement du serveur
 app.listen(port, '0.0.0.0', () => {
   console.log(chalk.green.bold(`🚀 API is running on http://0.0.0.0:${port}`));
   console.log(chalk.blue(`📚 Swagger docs: http://0.0.0.0:${port}/doc`));
 });
+ 

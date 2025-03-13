@@ -1,6 +1,8 @@
 // controllers/userController.js
 
 const { User, Group } = require('../models/associations');
+const { updateEntityImage } = require('../utils/imageUtils');
+
 
 // Create user
 exports.createUser = async (req, res) => {
@@ -16,7 +18,7 @@ exports.createUser = async (req, res) => {
       rating,
       picture,
       is_admin,
-      groups, // Groups to associate with user
+      groups,
     } = req.body;
 
     // Create user
@@ -104,19 +106,24 @@ exports.updateUser = async (req, res) => {
       return res.status(404).json({ message: 'User not found' });
     }
 
+    await updateEntityImage(user, req.body.picture);
+
+
     // Update user fields
     await user.update({
       firstname: firstname || user.firstname,
       lastname: lastname || user.lastname,
       email: email || user.email,
-      password: password || user.password,
       address: address || user.address,
       postcode: postcode || user.postcode,
       phone: phone || user.phone,
       rating: rating || user.rating,
       picture: picture || user.picture,
       is_admin: is_admin !== undefined ? is_admin : user.is_admin,
+      ...(password ? { password } : {})
+  
     });
+
 
     // Update groups association
     if (groups && groups.length > 0) {

@@ -15,8 +15,8 @@ services:
     tty: true
     networks:
       - buildesp_network
-    # ❌ Supprimé : ports:
-    # ❌    - "3000:3000"
+    #ports:
+    #  - "5173:5173"
 
   nginx:
     image: nginx:latest
