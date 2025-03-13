@@ -1,6 +1,6 @@
 import { useState } from "react";
+import { API_BASE_URL } from "@/config";
 
-const API_BASE_URL = "http://localhost:3000/api"; // 🔹 Base URL de l'API
 
 const useUploadImage = () => {
   const [uploading, setUploading] = useState(false);

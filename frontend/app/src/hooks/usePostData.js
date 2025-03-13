@@ -1,8 +1,8 @@
 import { useState } from "react";
 import useAuth from "./useAuth";
 import { toast } from "react-toastify";
+import { API_BASE_URL } from "@/config";
 
-const API_BASE_URL = "http://localhost:3000/api"; // 🔹 Base URL de l'API
 
 const usePostData = (endpoint) => {
     const { token } = useAuth();
