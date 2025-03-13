@@ -2,7 +2,8 @@ import { useState } from "react";
 import useAuth from "./useAuth";
 import { toast } from "react-toastify";
 
-const API_BASE_URL = "http://localhost:3000/api"; // 🔹 Base URL of the API
+// Utilisez la variable d'environnement pour la base URL de l'API et ajoutez le port et le chemin
+const API_BASE_URL = `${import.meta.env.VITE_API_BASE_URL}:3000/api`;
 
 const usePutData = (endpoint) => {
   const { token } = useAuth();
