@@ -1,7 +1,7 @@
 const readline = require('readline');
 const chalk = require('chalk');
 const { sequelize } = require('../config/db');
-const { User, Category, Subcategory, Item } = require('../models/associations');
+const { User, Category, Subcategory, Item, Exchange } = require('../models/associations');
 const userFixtures = require('./userFixtures');
 const categoryFixtures = require('./categoryFixtures');
 const subcategoryFixtures = require('./subcategoryFixtures');
@@ -40,8 +40,12 @@ const applyFixtures = async () => {
     // Disable foreign key checks
     await sequelize.query('SET FOREIGN_KEY_CHECKS = 0;');
 
-    // Drop all tables
-    await sequelize.drop();
+    // Drop tables in the correct order
+    await Exchange.drop();  // Drop dependent tables first
+    await Item.drop();
+    await Subcategory.drop();
+    await Category.drop();
+    await User.drop();
 
     // Enable foreign key checks
     await sequelize.query('SET FOREIGN_KEY_CHECKS = 1;');
