@@ -46,7 +46,9 @@ jobs:
 
             echo "⚙️  Mise à jour de la base de données..."
             docker exec backend-backend-1 node config/sync.js
-            docker exec backend-backend-1 npm run fixtures
+
+            # Automatiser la réponse à "yes" pour appliquer les fixtures
+            echo "yes" | docker exec backend-backend-1 npm run fixtures
 
             echo "✅ Déploiement Backend terminé !"
           EOF
