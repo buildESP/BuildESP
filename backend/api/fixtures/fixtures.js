@@ -13,14 +13,7 @@ const rl = readline.createInterface({
 });
 
 const confirmAction = () => {
-  return new Promise((resolve) => {
-    rl.question(
-      chalk.yellow('⚠️  Are you sure you want to drop all tables and apply the fixtures? (yes/no) '),
-      (answer) => {
-        resolve(answer.toLowerCase() === 'yes');
-      }
-    );
-  });
+  return Promise.resolve(true); // Toujours répondre "yes"
 };
 
 const applyFixtures = async () => {
