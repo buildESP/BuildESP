@@ -1,5 +1,5 @@
 import { Box, Text, Spinner } from "@chakra-ui/react";
-import { Avatar } from "../components/ui/avatar";
+import { Avatar } from "./ui/avatar";
 
 const ProfileDetails = ({ userData, loading, error }) => {
   if (loading) return <Spinner />;

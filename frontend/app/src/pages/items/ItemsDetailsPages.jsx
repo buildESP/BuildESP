@@ -4,7 +4,7 @@ import { Box, Spinner, Text, Button } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import useAuth from "../../hooks/useAuth";
-import usePutData from "../..//hooks/usePutData";
+import usePutData from "../../hooks/usePutData";
 
 import ItemDetails from "../../components/items/ItemDetails";
 import ItemEditForm from "../../components/items/ItemEditForm";
