@@ -1,4 +1,3 @@
-const readline = require('readline');
 const chalk = require('chalk');
 const { sequelize } = require('../config/db');
 const { User, Category, Subcategory, Item, Exchange } = require('../models/associations');
@@ -7,43 +6,38 @@ const categoryFixtures = require('./categoryFixtures');
 const subcategoryFixtures = require('./subcategoryFixtures');
 const itemFixtures = require('./itemFixtures');
 
-const rl = readline.createInterface({
-  input: process.stdin,
-  output: process.stdout
-});
-
+// Supprimer readline et répondre toujours "yes"
 const confirmAction = () => {
-  return Promise.resolve(true); // Toujours répondre "yes"
+  return Promise.resolve(true); // Répondre automatiquement "yes"
 };
 
 const applyFixtures = async () => {
   try {
     console.log(chalk.cyan('\n🔗 Connecting to the database...'));
 
-    // Ask for user confirmation
+    // Pas de confirmation utilisateur, on applique directement
     const confirmed = await confirmAction();
     if (!confirmed) {
       console.log(chalk.red('❌ Action cancelled.'));
-      rl.close();
       return;
     }
 
     console.log(chalk.yellow('\n🚧 Dropping old tables...'));
 
-    // Disable foreign key checks
+    // Désactiver les vérifications des clés étrangères
     await sequelize.query('SET FOREIGN_KEY_CHECKS = 0;');
 
-    // Drop foreign key constraint explicitly if necessary
+    // Supprimer les contraintes de clés étrangères si nécessaire
     await sequelize.query('ALTER TABLE Exchanges DROP FOREIGN KEY Exchanges_ibfk_4;');
 
-    // Drop tables in the correct order
-    await Exchange.drop();  // Drop Exchange table first, because it references Items
-    await Item.drop();      // Then drop the Item table
+    // Supprimer les tables dans le bon ordre
+    await Exchange.drop();  // Supprimer la table Exchange en premier, car elle référence Items
+    await Item.drop();      // Ensuite, supprimer la table Item
     await Subcategory.drop();
     await Category.drop();
     await User.drop();
 
-    // Enable foreign key checks
+    // Réactiver les vérifications des clés étrangères
     await sequelize.query('SET FOREIGN_KEY_CHECKS = 1;');
 
     console.log(chalk.green('✅ Old tables dropped successfully.'));
@@ -70,10 +64,8 @@ const applyFixtures = async () => {
     console.log(chalk.bold.green('\n🎉 Fixtures applied successfully!'));
   } catch (error) {
     console.error(chalk.red('\n❌ Error while applying fixtures:'), error);
-  } finally {
-    rl.close();
   }
 };
 
-// Execute the fixture application
+// Exécuter l'application des fixtures
 applyFixtures();
