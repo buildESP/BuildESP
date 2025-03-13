@@ -40,9 +40,12 @@ const applyFixtures = async () => {
     // Disable foreign key checks
     await sequelize.query('SET FOREIGN_KEY_CHECKS = 0;');
 
+    // Drop foreign key constraint explicitly if necessary
+    await sequelize.query('ALTER TABLE Exchanges DROP FOREIGN KEY Exchanges_ibfk_4;');
+
     // Drop tables in the correct order
-    await Exchange.drop();  // Drop dependent tables first
-    await Item.drop();
+    await Exchange.drop();  // Drop Exchange table first, because it references Items
+    await Item.drop();      // Then drop the Item table
     await Subcategory.drop();
     await Category.drop();
     await User.drop();
