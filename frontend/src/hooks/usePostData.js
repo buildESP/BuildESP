@@ -1,5 +1,5 @@
 import { useState } from "react";
-import useAuth from "../hooks/useAuth";
+import useAuth from "./useAuth";
 import { toast } from "react-toastify";
 
 const API_BASE_URL = "http://localhost:3000/api"; // 🔹 Base URL de l'API

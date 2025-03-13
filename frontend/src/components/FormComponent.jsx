@@ -4,7 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Box, Button, VStack, Input, Textarea, NativeSelect, HStack } from '@chakra-ui/react';
 import { Fieldset, FieldsetLegend } from '@chakra-ui/react/fieldset';
 import { Field } from './ui/field';
-import { FileUploadList, FileUploadRoot, FileUploadTrigger } from '../components/ui/file-upload';
+import { FileUploadList, FileUploadRoot, FileUploadTrigger } from './ui/file-upload';
 import useUploadImage from '../hooks/useUploadImage';
 
 /**
