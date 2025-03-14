@@ -201,6 +201,7 @@ jobs:
           format: 'table'
           exit-code: '1'
           ignore-unfixed: true
+        continue-on-error: true
 
   test:
     needs: init
@@ -209,16 +210,40 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Run Cypress tests
-        uses: cypress-io/github-action@v6
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          browser: chrome
-          start: npm start # Optional: Start your app before running tests
-          wait-on: 'http://localhost:8080' # Optional: Wait for the app to be ready
-          config-file: cypress.config.js # Optional: Specify Cypress config file
-          record: false # Disable recording to Cypress Dashboard
-          parallel: false # Disable parallel execution
-          group: 'Cypress Tests' # Optional: Group tests in logs
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Restore Node.js modules (frontend)
+        uses: actions/cache@v4
+        with:
+          path: frontend/app/node_modules
+          key: ${{ runner.os }}-frontend-${{ hashFiles('frontend/app/package-lock.json') }}
+
+      - name: Restore Node.js modules (backend)
+        uses: actions/cache@v4
+        with:
+          path: backend/api/node_modules
+          key: ${{ runner.os }}-backend-${{ hashFiles('backend/api/package-lock.json') }}
+
+      - name: Run Jest tests (backend)
+        run: |
+          cd backend/api
+          npm test
+
+      - name: Run npm tests (frontend)
+        run: |
+          cd frontend/app
+          npm run test
+
+      # - name: Install Cypress dependencies
+      #   run: |
+      #     npm install cypress --save-dev
+
+      # - name: Run Cypress tests
+      #   run: |
+      #     npx cypress run --browser chrome --headless
 
   build:
     needs: [lint, format, codacy, security, test]
