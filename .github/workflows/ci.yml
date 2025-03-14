@@ -28,7 +28,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: frontend/app/node_modules
-          key: <span class="math-inline">\{\{ runner\.os \}\}\-frontend\-</span>{{ hashFiles('frontend/app/package-lock.json') }}
+          key: ${{ runner.os }}-frontend-${{ hashFiles('frontend/app/package-lock.json') }}
 
       - name: Install dependencies (frontend)
         if: steps.cache-frontend.outputs.cache-hit != 'true'
@@ -41,7 +41,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: backend/api/node_modules
-          key: <span class="math-inline">\{\{ runner\.os \}\}\-backend\-</span>{{ hashFiles('backend/api/package-lock.json') }}
+          key: ${{ runner.os }}-backend-${{ hashFiles('backend/api/package-lock.json') }}
 
       - name: Install dependencies (backend)
         if: steps.cache-backend.outputs.cache-hit != 'true'
@@ -65,13 +65,13 @@ jobs:
         uses: actions/cache@v4
         with:
           path: frontend/app/node_modules
-          key: <span class="math-inline">\{\{ runner\.os \}\}\-frontend\-</span>{{ hashFiles('frontend/app/package-lock.json') }}
+          key: ${{ runner.os }}-frontend-${{ hashFiles('frontend/app/package-lock.json') }}
 
       - name: Restore Node.js modules (backend)
         uses: actions/cache@v4
         with:
           path: backend/api/node_modules
-          key: <span class="math-inline">\{\{ runner\.os \}\}\-backend\-</span>{{ hashFiles('backend/api/package-lock.json') }}
+          key: ${{ runner.os }}-backend-${{ hashFiles('backend/api/package-lock.json') }}
 
       - name: Install Biome
         run: npm install --save-dev @biomejs/biome
@@ -118,13 +118,13 @@ jobs:
         uses: actions/cache@v4
         with:
           path: frontend/app/node_modules
-          key: <span class="math-inline">\{\{ runner\.os \}\}\-frontend\-</span>{{ hashFiles('frontend/app/package-lock.json') }}
+          key: ${{ runner.os }}-frontend-${{ hashFiles('frontend/app/package-lock.json') }}
 
       - name: Restore Node.js modules (backend)
         uses: actions/cache@v4
         with:
           path: backend/api/node_modules
-          key: <span class="math-inline">\{\{ runner\.os \}\}\-backend\-</span>{{ hashFiles('backend/api/package-lock.json') }}
+          key: ${{ runner.os }}-backend-${{ hashFiles('backend/api/package-lock.json') }}
 
       - name: Build (frontend)
         run: |
@@ -136,19 +136,28 @@ jobs:
         uses: actions/cache@v4
         with:
           path: frontend/app/dist
-          key: <span class="math-inline">\{\{ runner\.os \}\}\-frontend\-build\-</span>{{ hashFiles('frontend/app/dist/**/*') }}
+          key: ${{ runner.os }}-frontend-build-${{ hashFiles('frontend/app/dist/**/*') }}
 
       - name: Build Docker Image (frontend)
         run: |
           cd frontend/app
-          docker build -t YOUR_DOCKER_REGISTRY/YOUR_FRONTEND_IMAGE:latest .
-          # If you want to push the image to a registry, add a docker login and push step here
+          docker build -t stephb421/buildesp-frontend:latest .
+
+      - name: Push Docker Image (frontend)
+        run: |
+          echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+          docker push stephb421/buildesp-frontend:latest 
 
       - name: Build Docker Image (backend)
         run: |
           cd backend/api
-          docker build -t YOUR_DOCKER_REGISTRY/YOUR_BACKEND_IMAGE:latest .
+          docker build -t stephb421/buildesp-backend:latest .
           # If you want to push the image to a registry, add a docker login and push step here
+
+      - name: Push Docker Image (backend)
+        run: |
+          echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+          docker push stephb421/buildesp-backend:latest
 
   test:
     needs: build
@@ -166,13 +175,13 @@ jobs:
         uses: actions/cache@v4
         with:
           path: frontend/app/node_modules
-          key: <span class="math-inline">\{\{ runner\.os \}\}\-frontend\-</span>{{ hashFiles('frontend/app/package-lock.json') }}
+          key: ${{ runner.os }}-frontend-${{ hashFiles('frontend/app/package-lock.json') }}
 
       - name: Restore Node.js modules (backend)
         uses: actions/cache@v4
         with:
           path: backend/api/node_modules
-          key: <span class="math-inline">\{\{ runner\.os \}\}\-backend\-</span>{{ hashFiles('backend/api/package-lock.json') }}
+          key: ${{ runner.os }}-backend-${{ hashFiles('backend/api/package-lock.json') }}
 
       - name: Test (frontend)
         run: |
@@ -202,13 +211,13 @@ jobs:
         uses: actions/cache@v4
         with:
           path: frontend/app/node_modules
-          key: <span class="math-inline">\{\{ runner\.os \}\}\-frontend\-</span>{{ hashFiles('frontend/app/package-lock.json') }}
+          key: ${{ runner.os }}-frontend-${{ hashFiles('frontend/app/package-lock.json') }}
 
       - name: Restore Node.js modules (backend)
         uses: actions/cache@v4
         with:
           path: backend/api/node_modules
-          key: <span class="math-inline">\{\{ runner\.os \}\}\-backend\-</span>{{ hashFiles('backend/api/package-lock.json') }}
+          key: ${{ runner.os }}-backend-${{ hashFiles('backend/api/package-lock.json') }}
 
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@master
