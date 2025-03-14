@@ -3,15 +3,17 @@ name: Fullstack Frontend/Backend CI/CD
 on:
   push:
     branches:
-      - DevOps_ESP-51 # or your main branch
+      - DevOps_ESP-51
   pull_request:
     branches:
-      - DevOps_ESP-51 # or your main branch
+      - DevOps_ESP-51
 
 jobs:
-  ci:
+  init:
     runs-on: ubuntu-latest
-
+    outputs:
+      node_modules_frontend: ${{ steps.cache-frontend.outputs.cache-hit }}
+      node_modules_backend: ${{ steps.cache-backend.outputs.cache-hit }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -19,43 +21,167 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20' # or your desired Node.js version
+          node-version: '20'
+
+      - name: Cache Node.js modules (frontend)
+        id: cache-frontend
+        uses: actions/cache@v4
+        with:
+          path: frontend/app/node_modules
+          key: <span class="math-inline">\{\{ runner\.os \}\}\-frontend\-</span>{{ hashFiles('frontend/app/package-lock.json') }}
 
       - name: Install dependencies (frontend)
+        if: steps.cache-frontend.outputs.cache-hit != 'true'
         run: |
           cd frontend/app
           npm ci
-        continue-on-error: true
+
+      - name: Cache Node.js modules (backend)
+        id: cache-backend
+        uses: actions/cache@v4
+        with:
+          path: backend/api/node_modules
+          key: <span class="math-inline">\{\{ runner\.os \}\}\-backend\-</span>{{ hashFiles('backend/api/package-lock.json') }}
 
       - name: Install dependencies (backend)
+        if: steps.cache-backend.outputs.cache-hit != 'true'
         run: |
           cd backend/api
-          npm i
-        continue-on-error: true
+          npm install
+
+  lint:
+    needs: init
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Restore Node.js modules (frontend)
+        uses: actions/cache@v4
+        with:
+          path: frontend/app/node_modules
+          key: <span class="math-inline">\{\{ runner\.os \}\}\-frontend\-</span>{{ hashFiles('frontend/app/package-lock.json') }}
+
+      - name: Restore Node.js modules (backend)
+        uses: actions/cache@v4
+        with:
+          path: backend/api/node_modules
+          key: <span class="math-inline">\{\{ runner\.os \}\}\-backend\-</span>{{ hashFiles('backend/api/package-lock.json') }}
 
       - name: Lint (frontend)
         run: |
           cd frontend/app
-          npm run lint # or your lint command
+          npm run lint
         continue-on-error: true
 
       - name: Lint (backend)
         run: |
           cd backend/api
-          npm run lint # or your lint command
+          npm run lint
         continue-on-error: true
+
+  build:
+    needs: init
+    runs-on: ubuntu-latest
+    outputs:
+      frontend_build_cache: ${{ steps.cache-frontend-build.outputs.cache-hit }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Restore Node.js modules (frontend)
+        uses: actions/cache@v4
+        with:
+          path: frontend/app/node_modules
+          key: <span class="math-inline">\{\{ runner\.os \}\}\-frontend\-</span>{{ hashFiles('frontend/app/package-lock.json') }}
+
+      - name: Restore Node.js modules (backend)
+        uses: actions/cache@v4
+        with:
+          path: backend/api/node_modules
+          key: <span class="math-inline">\{\{ runner\.os \}\}\-backend\-</span>{{ hashFiles('backend/api/package-lock.json') }}
+
+      - name: Build (frontend)
+        run: |
+          cd frontend/app
+          npm run build
+
+      - name: Cache frontend build output
+        id: cache-frontend-build
+        uses: actions/cache@v4
+        with:
+          path: frontend/app/dist
+          key: <span class="math-inline">\{\{ runner\.os \}\}\-frontend\-build\-</span>{{ hashFiles('frontend/app/dist/**/*') }}
+
+  test:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Restore Node.js modules (frontend)
+        uses: actions/cache@v4
+        with:
+          path: frontend/app/node_modules
+          key: <span class="math-inline">\{\{ runner\.os \}\}\-frontend\-</span>{{ hashFiles('frontend/app/package-lock.json') }}
+
+      - name: Restore Node.js modules (backend)
+        uses: actions/cache@v4
+        with:
+          path: backend/api/node_modules
+          key: <span class="math-inline">\{\{ runner\.os \}\}\-backend\-</span>{{ hashFiles('backend/api/package-lock.json') }}
 
       - name: Test (frontend)
         run: |
           cd frontend/app
-          npm run test:coverage # or your test command with coverage
+          npm run test:coverage
         continue-on-error: true
 
       - name: Test (backend)
         run: |
           cd backend/api
-          npm run test:coverage # or your test command with coverage
+          npm run test:coverage
         continue-on-error: true
+
+  sonar:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Restore Node.js modules (frontend)
+        uses: actions/cache@v4
+        with:
+          path: frontend/app/node_modules
+          key: <span class="math-inline">\{\{ runner\.os \}\}\-frontend\-</span>{{ hashFiles('frontend/app/package-lock.json') }}
+
+      - name: Restore Node.js modules (backend)
+        uses: actions/cache@v4
+        with:
+          path: backend/api/node_modules
+          key: <span class="math-inline">\{\{ runner\.os \}\}\-backend\-</span>{{ hashFiles('backend/api/package-lock.json') }}
 
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@master
@@ -66,16 +192,15 @@ jobs:
           args: >-
             -Dsonar.organization=YOUR_SONAR_ORGANIZATION
             -Dsonar.projectKey=YOUR_SONAR_PROJECT_KEY
-            -Dsonar.sources=frontend/src,backend/src # Adjust source paths
-            -Dsonar.tests=frontend/src,backend/test # Adjust test paths
-            -Dsonar.javascript.lcov.reportPaths=frontend/coverage/lcov.info,backend/coverage/lcov.info # Adjust coverage paths
+            -Dsonar.sources=frontend/src,backend/src
+            -Dsonar.tests=frontend/src,backend/test
+            -Dsonar.javascript.lcov.reportPaths=frontend/coverage/lcov.info,backend/coverage/lcov.info
         continue-on-error: true
 
-        
 # cd:
-#   needs: ci
+#   needs: sonar
 #   runs-on: ubuntu-latest
-#   if: github.ref == 'refs/heads/main' # Only deploy on push to main branch
+#   if: github.ref == 'refs/heads/main'
 #   environment:
 #     name: production
 #     url: ${{ steps.deploy.outputs.url }}
@@ -89,27 +214,13 @@ jobs:
 #       with:
 #         node-version: '20'
 
-#     - name: Install dependencies (frontend)
-#       run: |
-#         cd frontend
-#         npm ci
-
-#     - name: Install dependencies (backend)
-#       run: |
-#         cd backend
-#         npm ci
-
-#     - name: Build (frontend)
-#       run: |
-#         cd frontend
-#         npm run build
-
-#     - name: Deploy to your hosting provider
-#       id: deploy
-#       # Example using Heroku. Adapt to your hosting provider
-#       uses: akhileshns/heroku-deploy@v3.12.12
+#     - name: Restore Node.js modules (frontend)
+#       uses: actions/cache@v4
 #       with:
-#         heroku_api_key: ${{secrets.HEROKU_API_KEY}}
-#         heroku_app_name: "YOUR_HEROKU_APP_NAME" # Replace with your Heroku app name
-#         heroku_email: "YOUR_HEROKU_EMAIL" # Replace with your Heroku email
-#         appdir: "backend" #Deploy the backend folder.
+#         path: frontend/app/node_modules
+#         key: <span class="math-inline">\{\{ runner\.os \}\}\-frontend\-</span>{{ hashFiles('frontend/app/package-lock.json') }}
+
+#     - name: Restore Node.js modules (backend)
+#       uses: actions/cache@v4
+#       with:
+#         path: backend/api
