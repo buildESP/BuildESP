@@ -13,7 +13,6 @@ env:
   DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
   DOCKER_IMAGE_FRONTEND: stephb421/buildesp-frontend
   DOCKER_IMAGE_BACKEND: stephb421/buildesp-backend
-  CYPRESS_CACHE_FOLDER: ~/.cache/Cypress
 
 jobs:
   init:
@@ -202,7 +201,6 @@ jobs:
           format: 'table'
           exit-code: '1'
           ignore-unfixed: true
-        continue-on-error: true
 
   test:
     needs: init
@@ -211,28 +209,16 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-
-      - name: Cache Cypress binary
-        id: cache-cypress
-        uses: actions/cache@v4
-        with:
-          path: ~/.cache/Cypress
-          key: ${{ runner.os }}-cypress-${{ hashFiles('cypress/package-lock.json') }}
-
-      - name: Install Cypress dependencies
-        run: |
-          cd cypress
-          npm i
-
       - name: Run Cypress tests
-        run: |
-          cd cypress
-          npx cypress run --browser chrome --headless
-
+        uses: cypress-io/github-action@v6
+        with:
+          browser: chrome
+          start: npm start # Optional: Start your app before running tests
+          wait-on: 'http://localhost:8080' # Optional: Wait for the app to be ready
+          config-file: cypress.config.js # Optional: Specify Cypress config file
+          record: false # Disable recording to Cypress Dashboard
+          parallel: false # Disable parallel execution
+          group: 'Cypress Tests' # Optional: Group tests in logs
 
   build:
     needs: [lint, format, codacy, security, test]
