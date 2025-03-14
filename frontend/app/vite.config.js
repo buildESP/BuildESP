@@ -18,5 +18,8 @@ export default defineConfig(({ mode }) => {
     define: {
       __APP_ENV__: env.APP_ENV,
     },
+    server: {
+      allowedHosts: ["www.neighborrow.hephel.fr", "neighborrow.hephel.fr"],
+    },
   };
 });
