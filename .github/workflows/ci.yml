@@ -127,8 +127,42 @@ jobs:
           npx prettier --write .
         continue-on-error: true
 
+  codacy:
+    needs: init
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Restore Node.js modules (frontend)
+        uses: actions/cache@v4
+        with:
+          path: frontend/app/node_modules
+          key: ${{ runner.os }}-frontend-${{ hashFiles('frontend/app/package-lock.json') }}
+
+      - name: Restore Node.js modules (backend)
+        uses: actions/cache@v4
+        with:
+          path: backend/api/node_modules
+          key: ${{ runner.os }}-backend-${{ hashFiles('backend/api/package-lock.json') }}
+
+      - name: Run Codacy Analysis CLI
+        uses: codacy/codacy-analysis-cli-action@master
+        with:
+          project-token: ${{ secrets.CODACY_PROJECT_TOKEN }}
+          upload: true
+          max-allowed-issues: 100
+          fail-if-incomplete: false
+          verbose: true
+        continue-on-error: true
+
   build:
-    needs: [lint, format]
+    needs: [lint, format, codacy]
     runs-on: ubuntu-latest
     outputs:
       frontend_build_cache: ${{ steps.cache-frontend-build.outputs.cache-hit }}
