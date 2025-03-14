@@ -71,6 +71,7 @@ jobs:
             -Dsonar.javascript.lcov.reportPaths=frontend/coverage/lcov.info,backend/coverage/lcov.info # Adjust coverage paths
         continue-on-error: true
 
+        
 # cd:
 #   needs: ci
 #   runs-on: ubuntu-latest
