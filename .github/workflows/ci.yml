@@ -8,6 +8,12 @@ on:
     branches:
       - DevOps_ESP-51
 
+env:
+  NODE_VERSION: '20'
+  DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+  DOCKER_IMAGE_FRONTEND: stephb421/buildesp-frontend
+  DOCKER_IMAGE_BACKEND: stephb421/buildesp-backend
+
 jobs:
   init:
     runs-on: ubuntu-latest
@@ -21,7 +27,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: ${{ env.NODE_VERSION }}
 
       - name: Cache Node.js modules (frontend)
         id: cache-frontend
@@ -49,123 +55,12 @@ jobs:
           cd backend/api
           npm install
 
-#   lint:
-#     needs: init
-#     runs-on: ubuntu-latest
-#     steps:
-#       - name: Checkout code
-#         uses: actions/checkout@v4
-
-#       - name: Setup Node.js
-#         uses: actions/setup-node@v4
-#         with:
-#           node-version: '20'
-
-#       - name: Restore Node.js modules (frontend)
-#         uses: actions/cache@v4
-#         with:
-#           path: frontend/app/node_modules
-#           key: ${{ runner.os }}-frontend-${{ hashFiles('frontend/app/package-lock.json') }}
-
-#       - name: Restore Node.js modules (backend)
-#         uses: actions/cache@v4
-#         with:
-#           path: backend/api/node_modules
-#           key: ${{ runner.os }}-backend-${{ hashFiles('backend/api/package-lock.json') }}
-
-#       - name: Install ESLint
-#         run: npm install --save-dev eslint
-
-#       - name: Lint (frontend)
-#         run: |
-#           cd frontend/app
-#           npx eslint .
-#         continue-on-error: true
-
-#       - name: Lint (backend)
-#         run: |
-#           cd backend/api
-#           npx eslint .
-#         continue-on-error: true
-
-#   format:
-#     needs: init
-#     runs-on: ubuntu-latest
-#     steps:
-#       - name: Checkout code
-#         uses: actions/checkout@v4
-
-#       - name: Setup Node.js
-#         uses: actions/setup-node@v4
-#         with:
-#           node-version: '20'
-
-#       - name: Restore Node.js modules (frontend)
-#         uses: actions/cache@v4
-#         with:
-#           path: frontend/app/node_modules
-#           key: ${{ runner.os }}-frontend-${{ hashFiles('frontend/app/package-lock.json') }}
-
-#       - name: Restore Node.js modules (backend)
-#         uses: actions/cache@v4
-#         with:
-#           path: backend/api/node_modules
-#           key: ${{ runner.os }}-backend-${{ hashFiles('backend/api/package-lock.json') }}
-
-#       - name: Install Prettier
-#         run: npm install --save-dev prettier
-
-#       - name: Format (frontend)
-#         run: |
-#           cd frontend/app
-#           npx prettier --write .
-#         continue-on-error: true
-
-#       - name: Format (backend)
-#         run: |
-#           cd backend/api
-#           npx prettier --write .
-#         continue-on-error: true
-
-#   codacy:
-#     needs: init
-#     runs-on: ubuntu-latest
-#     steps:
-#       - name: Checkout code
-#         uses: actions/checkout@v4
-
-#       - name: Setup Node.js
-#         uses: actions/setup-node@v4
-#         with:
-#           node-version: '20'
-
-#       - name: Restore Node.js modules (frontend)
-#         uses: actions/cache@v4
-#         with:
-#           path: frontend/app/node_modules
-#           key: ${{ runner.os }}-frontend-${{ hashFiles('frontend/app/package-lock.json') }}
-
-#       - name: Restore Node.js modules (backend)
-#         uses: actions/cache@v4
-#         with:
-#           path: backend/api/node_modules
-#           key: ${{ runner.os }}-backend-${{ hashFiles('backend/api/package-lock.json') }}
-
-#       - name: Run Codacy Analysis CLI
-#         uses: codacy/codacy-analysis-cli-action@master
-#         with:
-#           project-token: ${{ secrets.CODACY_PROJECT_TOKEN }}
-#           upload: true
-#           max-allowed-issues: 100
-#           fail-if-incomplete: false
-#           verbose: true
-#         continue-on-error: true
-
-  build:
-   # needs: [lint, format, codacy]
+  lint:
+    needs: init
     runs-on: ubuntu-latest
-    outputs:
-      frontend_build_cache: ${{ steps.cache-frontend-build.outputs.cache-hit }}
+    strategy:
+      matrix:
+        project: [frontend, backend]
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -173,7 +68,126 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Restore Node.js modules
+        uses: actions/cache@v4
+        with:
+          path: ${{ matrix.project }}/app/node_modules
+          key: ${{ runner.os }}-${{ matrix.project }}-${{ hashFiles('${{ matrix.project }}/app/package-lock.json') }}
+
+      - name: Install ESLint
+        run: npm install --save-dev eslint
+
+      - name: Lint ${{ matrix.project }}
+        run: |
+          cd ${{ matrix.project }}/app
+          npx eslint .
+        continue-on-error: true
+
+  format:
+    needs: init
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        project: [frontend, backend]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Restore Node.js modules
+        uses: actions/cache@v4
+        with:
+          path: ${{ matrix.project }}/app/node_modules
+          key: ${{ runner.os }}-${{ matrix.project }}-${{ hashFiles('${{ matrix.project }}/app/package-lock.json') }}
+
+      - name: Install Prettier
+        run: npm install --save-dev prettier
+
+      - name: Format ${{ matrix.project }}
+        run: |
+          cd ${{ matrix.project }}/app
+          npx prettier --write .
+        continue-on-error: true
+
+  codacy:
+    needs: init
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Restore Node.js modules (frontend)
+        uses: actions/cache@v4
+        with:
+          path: frontend/app/node_modules
+          key: ${{ runner.os }}-frontend-${{ hashFiles('frontend/app/package-lock.json') }}
+
+      - name: Restore Node.js modules (backend)
+        uses: actions/cache@v4
+        with:
+          path: backend/api/node_modules
+          key: ${{ runner.os }}-backend-${{ hashFiles('backend/api/package-lock.json') }}
+
+      - name: Run Codacy Analysis CLI
+        uses: codacy/codacy-analysis-cli-action@master
+        with:
+          project-token: ${{ secrets.CODACY_PROJECT_TOKEN }}
+          upload: true
+          max-allowed-issues: 100
+          fail-if-incomplete: false
+          verbose: true
+        continue-on-error: true
+
+  security:
+    needs: init
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Run Snyk for dependency scanning
+        uses: snyk/actions/node@master
+        with:
+          command: test
+          args: --all-projects
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+
+      - name: Run Trivy for container scanning
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: ${{ env.DOCKER_IMAGE_FRONTEND }}:latest
+          format: 'table'
+          exit-code: '1'
+          ignore-unfixed: true
+
+  build:
+    needs: [lint, format, codacy, security]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
 
       - name: Restore Node.js modules (frontend)
         uses: actions/cache@v4
@@ -192,33 +206,40 @@ jobs:
           cd frontend/app
           npm run build
 
-      - name: Cache frontend build output
-        id: cache-frontend-build
-        uses: actions/cache@v4
-        with:
-          path: frontend/app/dist
-          key: ${{ runner.os }}-frontend-build-${{ hashFiles('frontend/app/dist/**/*') }}
-
       - name: Login to Docker Hub
         uses: docker/login-action@v3
         with:
-            username: ${{ secrets.DOCKER_USERNAME }}
-            password: ${{ secrets.DOCKERHUB_TOKEN }}
+          username: ${{ env.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Build Docker Image (frontend)
-        run: |
-          cd frontend/app
-          docker build -t stephb421/buildesp-frontend:latest .
+      - name: Build and Push Docker Image (frontend)
+        uses: docker/build-push-action@v5
+        with:
+          context: frontend/app
+          push: true
+          tags: ${{ env.DOCKER_IMAGE_FRONTEND }}:latest
 
-      - name: Push Docker Image (frontend)
-        run: |
-          docker push stephb421/buildesp-frontend:latest
+      - name: Build and Push Docker Image (backend)
+        uses: docker/build-push-action@v5
+        with:
+          context: backend/api
+          push: true
+          tags: ${{ env.DOCKER_IMAGE_BACKEND }}:latest
 
-      - name: Build Docker Image (backend)
-        run: |
-          cd backend/api
-          docker build -t stephb421/buildesp-backend:latest .
+#   deploy:
+#     needs: build
+#     runs-on: ubuntu-latest
+#     environment: ${{ github.event_name == 'push' && 'production' || 'qa' }}
+#     steps:
+#       - name: Checkout code
+#         uses: actions/checkout@v4
 
-      - name: Push Docker Image (backend)
-        run: |
-          docker push stephb421/buildesp-backend:latest
+#       - name: Deploy to Kubernetes (example)
+#         run: |
+#           echo "Deploying to ${{ github.event_name == 'push' && 'production' || 'qa' }} environment"
+#           # Add your deployment script here (e.g., kubectl apply)
+
+#       - name: Health Check
+#         run: |
+#           echo "Running health check..."
+#           curl -I http://your-app-url/health
