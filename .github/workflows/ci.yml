@@ -23,32 +23,32 @@ jobs:
 
       - name: Install dependencies (frontend)
         run: |
-          cd frontend
+          cd frontend/app
           npm ci
 
       - name: Install dependencies (backend)
         run: |
-          cd backend
+          cd backend/api
           npm ci
 
       - name: Lint (frontend)
         run: |
-          cd frontend
+          cd frontend/app
           npm run lint # or your lint command
 
       - name: Lint (backend)
         run: |
-          cd backend
+          cd backend/api
           npm run lint # or your lint command
 
       - name: Test (frontend)
         run: |
-          cd frontend
+          cd frontend/app
           npm run test:coverage # or your test command with coverage
 
       - name: Test (backend)
         run: |
-          cd backend
+          cd backend/api
           npm run test:coverage # or your test command with coverage
 
       - name: SonarCloud Scan
