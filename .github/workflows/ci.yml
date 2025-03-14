@@ -13,6 +13,7 @@ env:
   DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
   DOCKER_IMAGE_FRONTEND: stephb421/buildesp-frontend
   DOCKER_IMAGE_BACKEND: stephb421/buildesp-backend
+  CYPRESS_CACHE_FOLDER: ~/.cache/Cypress
 
 jobs:
   init:
@@ -34,7 +35,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: frontend/app/node_modules
-          key: <span class="math-inline">\{\{ runner\.os \}\}\-frontend\-</span>{{ hashFiles('frontend/app/package-lock.json') }}
+          key: ${{ runner.os }}-frontend-${{ hashFiles('frontend/app/package-lock.json') }}
 
       - name: Install dependencies (frontend)
         if: steps.cache-frontend.outputs.cache-hit != 'true'
@@ -47,13 +48,13 @@ jobs:
         uses: actions/cache@v4
         with:
           path: backend/api/node_modules
-          key: <span class="math-inline">\{\{ runner\.os \}\}\-backend\-</span>{{ hashFiles('backend/api/package-lock.json') }}
+          key: ${{ runner.os }}-backend-${{ hashFiles('backend/api/package-lock.json') }}
 
       - name: Install dependencies (backend)
         if: steps.cache-backend.outputs.cache-hit != 'true'
         run: |
           cd backend/api
-          npm install
+          npm ci
 
   lint:
     needs: init
@@ -74,7 +75,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ${{ matrix.project }}/app/node_modules
-          key: <span class="math-inline">\{\{ runner\.os \}\}\-</span>{{ matrix.project }}-<span class="math-inline">\{\{ hashFiles\('</span>{{ matrix.project }}/app/package-lock.json') }}
+          key: ${{ runner.os }}-${{ matrix.project }}-${{ hashFiles('${{ matrix.project }}/app/package-lock.json') }}
 
       - name: Install ESLint
         run: npm install --save-dev eslint
@@ -104,7 +105,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ${{ matrix.project }}/app/node_modules
-          key: <span class="math-inline">\{\{ runner\.os \}\}\-</span>{{ matrix.project }}-<span class="math-inline">\{\{ hashFiles\('</span>{{ matrix.project }}/app/package-lock.json') }}
+          key: ${{ runner.os }}-${{ matrix.project }}-${{ hashFiles('${{ matrix.project }}/app/package-lock.json') }}
 
       - name: Install Prettier
         run: npm install --save-dev prettier
@@ -131,13 +132,13 @@ jobs:
         uses: actions/cache@v4
         with:
           path: frontend/app/node_modules
-          key: <span class="math-inline">\{\{ runner\.os \}\}\-frontend\-</span>{{ hashFiles('frontend/app/package-lock.json') }}
+          key: ${{ runner.os }}-frontend-${{ hashFiles('frontend/app/package-lock.json') }}
 
       - name: Restore Node.js modules (backend)
         uses: actions/cache@v4
         with:
           path: backend/api/node_modules
-          key: <span class="math-inline">\{\{ runner\.os \}\}\-backend\-</span>{{ hashFiles('backend/api/package-lock.json') }}
+          key: ${{ runner.os }}-backend-${{ hashFiles('backend/api/package-lock.json') }}
 
       - name: Run Codacy Analysis CLI
         uses: codacy/codacy-analysis-cli-action@master
@@ -165,7 +166,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: frontend/app/node_modules
-          key: <span class="math-inline">\{\{ runner\.os \}\}\-frontend\-</span>{{ hashFiles('frontend/app/package-lock.json') }}
+          key: ${{ runner.os }}-frontend-${{ hashFiles('frontend/app/package-lock.json') }}
 
       - name: Install dependencies (frontend)
         if: steps.cache-frontend.outputs.cache-hit != 'true'
@@ -177,13 +178,13 @@ jobs:
         uses: actions/cache@v4
         with:
           path: backend/api/node_modules
-          key: <span class="math-inline">\{\{ runner\.os \}\}\-backend\-</span>{{ hashFiles('backend/api/package-lock.json') }}
+          key: ${{ runner.os }}-backend-${{ hashFiles('backend/api/package-lock.json') }}
 
       - name: Install dependencies (backend)
         if: steps.cache-backend.outputs.cache-hit != 'true'
         run: |
           cd backend/api
-          npm i
+          npm ci
 
       - name: Run Snyk for dependency scanning
         uses: snyk/actions/node@master
@@ -193,6 +194,7 @@ jobs:
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         continue-on-error: true
+
       - name: Run Trivy for container scanning
         uses: aquasecurity/trivy-action@master
         with:
@@ -201,8 +203,49 @@ jobs:
           exit-code: '1'
           ignore-unfixed: true
 
+  test:
+    needs: init
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        containers: [1, 2, 3] # Number of parallel containers
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Cache Cypress binary
+        id: cache-cypress
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/Cypress
+          key: ${{ runner.os }}-cypress-${{ hashFiles('cypress/package-lock.json') }}
+
+      - name: Install Cypress dependencies
+        run: |
+          cd cypress
+          npm ci
+
+      - name: Run Cypress tests in parallel
+        run: |
+          cd cypress
+          npx cypress run --browser chrome --headless --parallel --ci-build-id ${{ github.run_id }} --record false
+
+      - name: Upload Cypress artifacts
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: cypress-artifacts-${{ matrix.containers }}
+          path: |
+            cypress/screenshots
+            cypress/videos
+
   build:
-    needs: [lint, format, codacy, security]
+    needs: [lint, format, codacy, security, test]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -217,13 +260,13 @@ jobs:
         uses: actions/cache@v4
         with:
           path: frontend/app/node_modules
-          key: <span class="math-inline">\{\{ runner\.os \}\}\-frontend\-</span>{{ hashFiles('frontend/app/package-lock.json') }}
+          key: ${{ runner.os }}-frontend-${{ hashFiles('frontend/app/package-lock.json') }}
 
       - name: Restore Node.js modules (backend)
         uses: actions/cache@v4
         with:
           path: backend/api/node_modules
-          key: <span class="math-inline">\{\{ runner\.os \}\}\-backend\-</span>{{ hashFiles('backend/api/package-lock.json') }}
+          key: ${{ runner.os }}-backend-${{ hashFiles('backend/api/package-lock.json') }}
 
       - name: Build (frontend)
         run: |
@@ -249,9 +292,3 @@ jobs:
           context: backend/api
           push: true
           tags: ${{ env.DOCKER_IMAGE_BACKEND }}:latest
-
-  # deploy:
-  #   needs: build
-  #   runs-on: ubuntu-latest
-  #   environment: ${{ github.event_name == 'push' && 'production' || 'qa' }}
-  #   steps:
