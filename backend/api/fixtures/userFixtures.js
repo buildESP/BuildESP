@@ -10,7 +10,7 @@ module.exports = [
     postcode: '75001',
     phone: '0102030405',
     rating: 4.5,
-    picture: 'https://randomuser.me/api/portraits/women/50.jpg',
+    picture: 'https://buildesp.s3.eu-west-3.amazonaws.com/user-1.jpg',
     is_admin: true,
   },
   {
@@ -22,7 +22,7 @@ module.exports = [
     postcode: '69001',
     phone: '0102030406',
     rating: 4.0,
-    picture: 'https://randomuser.me/api/portraits/men/60.jpg',
+    picture: 'https://buildesp.s3.eu-west-3.amazonaws.com/user-2.jpg',
     is_admin: false,
   },
   {
@@ -34,7 +34,7 @@ module.exports = [
     postcode: '31000',
     phone: '0102030407',
     rating: 4.8,
-    picture: 'https://randomuser.me/api/portraits/women/20.jpg',
+    picture: 'https://buildesp.s3.eu-west-3.amazonaws.com/user-6.jpg',
     is_admin: false,
   },
   {
@@ -46,7 +46,7 @@ module.exports = [
     postcode: '33000',
     phone: '0102030408',
     rating: 3.9,
-    picture: 'https://randomuser.me/api/portraits/men/70.jpg',
+    picture: 'https://buildesp.s3.eu-west-3.amazonaws.com/user-4.jpg',
     is_admin: false,
   },
   {
@@ -58,7 +58,7 @@ module.exports = [
     postcode: '44000',
     phone: '0102030409',
     rating: 4.7,
-    picture: 'https://randomuser.me/api/portraits/women/30.jpg',
+    picture: 'https://buildesp.s3.eu-west-3.amazonaws.com/user-5.jpg',
     is_admin: false,
   },
 ];

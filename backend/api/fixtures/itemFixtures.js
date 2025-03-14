@@ -4,7 +4,7 @@ module.exports = [
   {
     name: 'Perceuse sans fil',
     description: "Ma perceuse sans fil est légère et très pratique pour tous vos travaux de bricolage. Elle est idéale pour percer dans le bois, le métal ou même les murs légers. Elle est facile à manipuler, et grâce à sa batterie rechargeable, vous n'êtes pas limité par un câble. Je l'utilise régulièrement pour de petits travaux à la maison.",
-    picture: 'https://www.lesitedubricolage.com/images/dossiers/2017-09/outils-115205.jpg',
+    picture: 'https://buildesp.s3.eu-west-3.amazonaws.com/item-1.jpeg',
     status: 'Available',
     user_id: 1,
     subcategory_id: 1,
@@ -12,7 +12,7 @@ module.exports = [
   {
     name: 'Perceuse à choc',
     description: "Si vous avez besoin de percer des matériaux plus résistants comme le béton ou la brique, cette perceuse à choc est ce qu'il vous faut. Elle offre une puissance supplémentaire avec sa fonction de percussion. Très robuste, elle permet de travailler plus efficacement sur des projets de construction ou de rénovation.",
-    picture: 'https://www.lesitedubricolage.com/images/dossiers/2017-09/outils-115205.jpg',
+    picture: 'https://buildesp.s3.eu-west-3.amazonaws.com/item-2.jpeg',
     status: 'Rented',
     user_id: 2,
     subcategory_id: 1,
@@ -20,7 +20,7 @@ module.exports = [
   {
     name: 'Clé plate',
     description: "Voici ma clé plate, parfaite pour les travaux de mécanique ou d'assemblage. Elle permet de serrer ou desserrer les écrous et boulons de manière efficace, et sa forme la rend facile à utiliser dans des espaces étroits.",
-    picture: 'https://www.lesitedubricolage.com/images/dossiers/2017-09/outils-115205.jpg',
+    picture: 'https://buildesp.s3.eu-west-3.amazonaws.com/item-3.jpeg',
     status: 'Available',
     user_id: 3,
     subcategory_id: 1,
@@ -28,7 +28,7 @@ module.exports = [
   {
     name: 'Ponceuse',
     description: "Si vous avez besoin de poncer des surfaces en bois ou d'autres matériaux, cette ponceuse est l'outil qu'il vous faut. Elle est légère, mais suffisamment puissante pour obtenir une finition lisse. C'est un excellent choix pour vos projets de rénovation ou de décoration.",
-    picture: 'https://www.lesitedubricolage.com/images/dossiers/2017-09/outils-115205.jpg',
+    picture: 'https://buildesp.s3.eu-west-3.amazonaws.com/item-4.jpeg',
     status: 'Available',
     user_id: 4,
     subcategory_id: 1,
@@ -36,7 +36,7 @@ module.exports = [
   {
     name: 'Rallonge',
     description: "Une rallonge pratique pour tous vos appareils électriques. Avec plusieurs mètres de câble, elle vous permettra d'atteindre des endroits éloignés sans problème. Parfaite pour travailler à l'extérieur ou dans des espaces où les prises sont peu accessibles.",
-    picture: 'https://www.lesitedubricolage.com/images/dossiers/2017-09/outils-115205.jpg',
+    picture: 'https://buildesp.s3.eu-west-3.amazonaws.com/item-5.jpeg',
     status: 'Available',
     user_id: 5,
     subcategory_id: 1,
@@ -44,7 +44,7 @@ module.exports = [
   {
     name: 'Décapeur thermique',
     description: "Ce décapeur thermique est très utile pour enlever de la peinture, décoller des autocollants ou même souder certaines pièces. Il chauffe rapidement et offre une chaleur réglable, ce qui permet de l'utiliser dans de nombreuses situations.",
-    picture: 'https://www.lesitedubricolage.com/images/dossiers/2017-09/outils-115205.jpg',
+    picture: 'https://buildesp.s3.eu-west-3.amazonaws.com/item-6.jpeg',
     status: 'Available',
     user_id: 1,
     subcategory_id: 1,
@@ -52,7 +52,7 @@ module.exports = [
   {
     name: 'Tournevis',
     description: "Mon tournevis est un outil simple mais indispensable pour tous vos petits travaux de réparation ou d'assemblage. Il est idéal pour visser et dévisser dans les endroits difficiles d'accès grâce à sa forme pratique et ergonomique.",
-    picture: 'https://www.lesitedubricolage.com/images/dossiers/2017-09/outils-115205.jpg',
+    picture: 'https://buildesp.s3.eu-west-3.amazonaws.com/item-7.jpeg',
     status: 'Rented',
     user_id: 4,
     subcategory_id: 1,
@@ -60,7 +60,7 @@ module.exports = [
   {
     name: 'Lime à métaux',
     description: "Si vous avez besoin de travailler sur du métal, ma lime à métaux est un outil fiable. Elle permet d'affiner les bords des pièces métalliques pour un ajustement parfait. Elle est robuste et idéale pour les projets de mécanique ou de fabrication.",
-    picture: 'https://www.lesitedubricolage.com/images/dossiers/2017-09/outils-115205.jpg',
+    picture: 'https://buildesp.s3.eu-west-3.amazonaws.com/item-8.jpeg',
     status: 'Unavailable',
     user_id: 4,
     subcategory_id: 1,
@@ -68,7 +68,7 @@ module.exports = [
   {
     name: 'Scie sauteuse',
     description: "Cette scie sauteuse est parfaite pour découper des formes irrégulières ou des courbes dans des matériaux comme le bois, le plastique ou l'aluminium. Elle est facile à utiliser et permet des coupes nettes et précises.",
-    picture: 'https://www.lesitedubricolage.com/images/dossiers/2017-09/outils-115205.jpg',
+    picture: 'https://buildesp.s3.eu-west-3.amazonaws.com/item-9.jpeg',
     status: 'Rented',
     user_id: 5,
     subcategory_id: 1,

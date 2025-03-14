@@ -22,8 +22,8 @@ app.use('/doc', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 // Configuration CORS pour autoriser certaines origines (frontends)
 const allowedOrigins = [
   'http://172.31.41.254',          // IP privée de votre Frontend
-  'http://15.188.11.254',          // IP publique de votre Frontend
-  'https://15.188.11.254',         // Si votre frontend utilise HTTPS
+  'http://15.237.77.97',          // IP publique de votre Frontend
+  'https://15.237.77.97',         // Si votre frontend utilise HTTPS
   'http://localhost:3000',        // Pour développement local
   'http://localhost:5173',        // Autre port frontend (ex: Vite.js)
   'https://172.31.41.254',        // Si vous utilisez HTTPS dans votre réseau privé
@@ -52,6 +52,7 @@ const categoryRoutes = require('./routes/categoryRoutes');
 const subcategoryRoutes = require('./routes/subcategoryRoutes');
 const itemRoutes = require('./routes/itemRoutes');
 const exchangeRoutes = require('./routes/exchangeRoutes');
+const imageRoutes = require('./routes/imageRoutes');
 const groupRoutes = require('./routes/groupRoutes');
 
 // Route pour rediriger la requête d'authentification vers l'API privée
@@ -78,16 +79,19 @@ app.post('/api/access-token', async (req, res) => {
 });
 
 // Définition des autres routes API
-app.use('/api', authRoutes);       // Authentification
-app.use('/api', userRoutes);       // Utilisateur
-app.use('/api', categoryRoutes);   // Catégories
-app.use('/api', subcategoryRoutes); // Sous-catégories
-app.use('/api', itemRoutes);       // Items
-app.use('/api', exchangeRoutes);   // Échanges
-app.use('/api', groupRoutes);      // Groupes
+app.use(cors({ origin: true }));
+app.use('/api', userRoutes);
+app.use('/api', authRoutes);
+app.use('/api', categoryRoutes);
+app.use('/api', subcategoryRoutes);
+app.use('/api', itemRoutes);
+app.use('/api', exchangeRoutes);
+app.use('/api', groupRoutes);
+app.use('/api/', imageRoutes);
 
 // Lancement du serveur
 app.listen(port, '0.0.0.0', () => {
   console.log(chalk.green.bold(`🚀 API is running on http://0.0.0.0:${port}`));
   console.log(chalk.blue(`📚 Swagger docs: http://0.0.0.0:${port}/doc`));
 });
+ 

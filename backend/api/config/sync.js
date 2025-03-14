@@ -13,4 +13,5 @@ sequelize
   })
   .catch((err) => {
     console.error(chalk.red.bold('❌ Error during synchronization:'), chalk.red(err));
+    console.error(chalk.blue.bold('🧐 Please check that database is running !'));
   });

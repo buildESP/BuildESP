@@ -1,7 +1,7 @@
-// routes/categoryRoutes.js
 const express = require('express');
 const router = express.Router();
 const categoryController = require('../controllers/categoryController');
+const authenticateToken = require('../middlewares/authMiddleware');
 
 /**
  * @swagger
@@ -19,13 +19,33 @@ const categoryController = require('../controllers/categoryController');
  *               name:
  *                 type: string
  *                 description: Name of the category
+ *               image_url:
+ *                 type: string
+ *                 format: uri
+ *                 description: URL of the category image
+ *                 example: "https://s3.amazonaws.com/my-bucket/images/category-123.jpg"
  *     responses:
  *       201:
  *         description: Category created successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: string
+ *                   description: Category ID
+ *                 name:
+ *                   type: string
+ *                   description: Category name
+ *                 image_url:
+ *                   type: string
+ *                   format: uri
+ *                   description: URL of the category image
  *       500:
  *         description: Error during category creation
  */
-router.post('/categories', categoryController.createCategory);
+router.post('/categories', authenticateToken, categoryController.createCategory);
 
 /**
  * @swagger
@@ -46,9 +66,14 @@ router.post('/categories', categoryController.createCategory);
  *                   id:
  *                     type: string
  *                     description: Category's ID
+ *                     example: "1"
  *                   name:
  *                     type: string
  *                     description: Category's name
+ *                   image_url:
+ *                     type: string
+ *                     format: uri
+ *                     description: URL of the category image
  *                   subcategories:
  *                     type: array
  *                     description: List of subcategories under the category
@@ -58,9 +83,11 @@ router.post('/categories', categoryController.createCategory);
  *                         id:
  *                           type: string
  *                           description: Subcategory's ID
+ *                           example: "2"
  *                         name:
  *                           type: string
  *                           description: Subcategory's name
+ *                           example: "Mobile Phones"
  */
 router.get('/categories', categoryController.getCategories);
 
@@ -77,9 +104,25 @@ router.get('/categories', categoryController.getCategories);
  *         schema:
  *           type: string
  *         description: The category's ID
+ *         example: "1"
  *     responses:
  *       200:
  *         description: Category found successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: string
+ *                   description: Category ID
+ *                 name:
+ *                   type: string
+ *                   description: Category name
+ *                 image_url:
+ *                   type: string
+ *                   format: uri
+ *                   description: URL of the category image
  *       404:
  *         description: Category not found
  *       500:
@@ -100,6 +143,7 @@ router.get('/categories/:category_id', categoryController.getCategoryById);
  *         schema:
  *           type: string
  *         description: The category's ID
+ *         example: "1"
  *     requestBody:
  *       required: true
  *       content:
@@ -110,15 +154,35 @@ router.get('/categories/:category_id', categoryController.getCategoryById);
  *               name:
  *                 type: string
  *                 description: The new name of the category
+ *               image_url:
+ *                 type: string
+ *                 format: uri
+ *                 description: New URL of the category image
+ *                 example: "https://s3.amazonaws.com/my-bucket/images/category-123-new.jpg"
  *     responses:
  *       200:
  *         description: Category updated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: string
+ *                   description: Category ID
+ *                 name:
+ *                   type: string
+ *                   description: Category name
+ *                 image_url:
+ *                   type: string
+ *                   format: uri
+ *                   description: Updated URL of the category image
  *       404:
  *         description: Category not found
  *       500:
  *         description: Error during category update
  */
-router.put('/categories/:category_id', categoryController.updateCategory);
+router.put('/categories/:category_id', authenticateToken, categoryController.updateCategory);
 
 /**
  * @swagger
@@ -133,14 +197,23 @@ router.put('/categories/:category_id', categoryController.updateCategory);
  *         schema:
  *           type: string
  *         description: The category's ID
+ *         example: "1"
  *     responses:
  *       200:
  *         description: Category deleted successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Category deleted successfully"
  *       404:
  *         description: Category not found
  *       500:
  *         description: Error during category deletion
  */
-router.delete('/categories/:category_id', categoryController.deleteCategory);
+router.delete('/categories/:category_id', authenticateToken, categoryController.deleteCategory);
 
 module.exports = router;
