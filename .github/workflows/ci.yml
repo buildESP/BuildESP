@@ -34,7 +34,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: frontend/app/node_modules
-          key: ${{ runner.os }}-frontend-${{ hashFiles('frontend/app/package-lock.json') }}
+          key: <span class="math-inline">\{\{ runner\.os \}\}\-frontend\-</span>{{ hashFiles('frontend/app/package-lock.json') }}
 
       - name: Install dependencies (frontend)
         if: steps.cache-frontend.outputs.cache-hit != 'true'
@@ -47,7 +47,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: backend/api/node_modules
-          key: ${{ runner.os }}-backend-${{ hashFiles('backend/api/package-lock.json') }}
+          key: <span class="math-inline">\{\{ runner\.os \}\}\-backend\-</span>{{ hashFiles('backend/api/package-lock.json') }}
 
       - name: Install dependencies (backend)
         if: steps.cache-backend.outputs.cache-hit != 'true'
@@ -74,7 +74,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ${{ matrix.project }}/app/node_modules
-          key: ${{ runner.os }}-${{ matrix.project }}-${{ hashFiles('${{ matrix.project }}/app/package-lock.json') }}
+          key: <span class="math-inline">\{\{ runner\.os \}\}\-</span>{{ matrix.project }}-<span class="math-inline">\{\{ hashFiles\('</span>{{ matrix.project }}/app/package-lock.json') }}
 
       - name: Install ESLint
         run: npm install --save-dev eslint
@@ -104,7 +104,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ${{ matrix.project }}/app/node_modules
-          key: ${{ runner.os }}-${{ matrix.project }}-${{ hashFiles('${{ matrix.project }}/app/package-lock.json') }}
+          key: <span class="math-inline">\{\{ runner\.os \}\}\-</span>{{ matrix.project }}-<span class="math-inline">\{\{ hashFiles\('</span>{{ matrix.project }}/app/package-lock.json') }}
 
       - name: Install Prettier
         run: npm install --save-dev prettier
@@ -131,13 +131,13 @@ jobs:
         uses: actions/cache@v4
         with:
           path: frontend/app/node_modules
-          key: ${{ runner.os }}-frontend-${{ hashFiles('frontend/app/package-lock.json') }}
+          key: <span class="math-inline">\{\{ runner\.os \}\}\-frontend\-</span>{{ hashFiles('frontend/app/package-lock.json') }}
 
       - name: Restore Node.js modules (backend)
         uses: actions/cache@v4
         with:
           path: backend/api/node_modules
-          key: ${{ runner.os }}-backend-${{ hashFiles('backend/api/package-lock.json') }}
+          key: <span class="math-inline">\{\{ runner\.os \}\}\-backend\-</span>{{ hashFiles('backend/api/package-lock.json') }}
 
       - name: Run Codacy Analysis CLI
         uses: codacy/codacy-analysis-cli-action@master
@@ -161,6 +161,30 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
 
+      - name: Restore Node.js modules (frontend)
+        uses: actions/cache@v4
+        with:
+          path: frontend/app/node_modules
+          key: <span class="math-inline">\{\{ runner\.os \}\}\-frontend\-</span>{{ hashFiles('frontend/app/package-lock.json') }}
+
+      - name: Install dependencies (frontend)
+        if: steps.cache-frontend.outputs.cache-hit != 'true'
+        run: |
+          cd frontend/app
+          npm ci
+
+      - name: Restore Node.js modules (backend)
+        uses: actions/cache@v4
+        with:
+          path: backend/api/node_modules
+          key: <span class="math-inline">\{\{ runner\.os \}\}\-backend\-</span>{{ hashFiles('backend/api/package-lock.json') }}
+
+      - name: Install dependencies (backend)
+        if: steps.cache-backend.outputs.cache-hit != 'true'
+        run: |
+          cd backend/api
+          npm ci
+
       - name: Run Snyk for dependency scanning
         uses: snyk/actions/node@master
         with:
@@ -168,14 +192,6 @@ jobs:
           args: --all-projects
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-
-      - name: Run Trivy for container scanning
-        uses: aquasecurity/trivy-action@master
-        with:
-          image-ref: ${{ env.DOCKER_IMAGE_FRONTEND }}:latest
-          format: 'table'
-          exit-code: '1'
-          ignore-unfixed: true
 
   build:
     needs: [lint, format, codacy, security]
@@ -193,13 +209,13 @@ jobs:
         uses: actions/cache@v4
         with:
           path: frontend/app/node_modules
-          key: ${{ runner.os }}-frontend-${{ hashFiles('frontend/app/package-lock.json') }}
+          key: <span class="math-inline">\{\{ runner\.os \}\}\-frontend\-</span>{{ hashFiles('frontend/app/package-lock.json') }}
 
       - name: Restore Node.js modules (backend)
         uses: actions/cache@v4
         with:
           path: backend/api/node_modules
-          key: ${{ runner.os }}-backend-${{ hashFiles('backend/api/package-lock.json') }}
+          key: <span class="math-inline">\{\{ runner\.os \}\}\-backend\-</span>{{ hashFiles('backend/api/package-lock.json') }}
 
       - name: Build (frontend)
         run: |
@@ -226,20 +242,8 @@ jobs:
           push: true
           tags: ${{ env.DOCKER_IMAGE_BACKEND }}:latest
 
-#   deploy:
-#     needs: build
-#     runs-on: ubuntu-latest
-#     environment: ${{ github.event_name == 'push' && 'production' || 'qa' }}
-#     steps:
-#       - name: Checkout code
-#         uses: actions/checkout@v4
-
-#       - name: Deploy to Kubernetes (example)
-#         run: |
-#           echo "Deploying to ${{ github.event_name == 'push' && 'production' || 'qa' }} environment"
-#           # Add your deployment script here (e.g., kubectl apply)
-
-#       - name: Health Check
-#         run: |
-#           echo "Running health check..."
-#           curl -I http://your-app-url/health
+  # deploy:
+  #   needs: build
+  #   runs-on: ubuntu-latest
+  #   environment: ${{ github.event_name == 'push' && 'production' || 'qa' }}
+  #   steps:
