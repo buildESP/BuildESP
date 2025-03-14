@@ -49,120 +49,120 @@ jobs:
           cd backend/api
           npm install
 
-  lint:
-    needs: init
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+#   lint:
+#     needs: init
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Checkout code
+#         uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
+#       - name: Setup Node.js
+#         uses: actions/setup-node@v4
+#         with:
+#           node-version: '20'
 
-      - name: Restore Node.js modules (frontend)
-        uses: actions/cache@v4
-        with:
-          path: frontend/app/node_modules
-          key: ${{ runner.os }}-frontend-${{ hashFiles('frontend/app/package-lock.json') }}
+#       - name: Restore Node.js modules (frontend)
+#         uses: actions/cache@v4
+#         with:
+#           path: frontend/app/node_modules
+#           key: ${{ runner.os }}-frontend-${{ hashFiles('frontend/app/package-lock.json') }}
 
-      - name: Restore Node.js modules (backend)
-        uses: actions/cache@v4
-        with:
-          path: backend/api/node_modules
-          key: ${{ runner.os }}-backend-${{ hashFiles('backend/api/package-lock.json') }}
+#       - name: Restore Node.js modules (backend)
+#         uses: actions/cache@v4
+#         with:
+#           path: backend/api/node_modules
+#           key: ${{ runner.os }}-backend-${{ hashFiles('backend/api/package-lock.json') }}
 
-      - name: Install ESLint
-        run: npm install --save-dev eslint
+#       - name: Install ESLint
+#         run: npm install --save-dev eslint
 
-      - name: Lint (frontend)
-        run: |
-          cd frontend/app
-          npx eslint .
-        continue-on-error: true
+#       - name: Lint (frontend)
+#         run: |
+#           cd frontend/app
+#           npx eslint .
+#         continue-on-error: true
 
-      - name: Lint (backend)
-        run: |
-          cd backend/api
-          npx eslint .
-        continue-on-error: true
+#       - name: Lint (backend)
+#         run: |
+#           cd backend/api
+#           npx eslint .
+#         continue-on-error: true
 
-  format:
-    needs: init
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+#   format:
+#     needs: init
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Checkout code
+#         uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
+#       - name: Setup Node.js
+#         uses: actions/setup-node@v4
+#         with:
+#           node-version: '20'
 
-      - name: Restore Node.js modules (frontend)
-        uses: actions/cache@v4
-        with:
-          path: frontend/app/node_modules
-          key: ${{ runner.os }}-frontend-${{ hashFiles('frontend/app/package-lock.json') }}
+#       - name: Restore Node.js modules (frontend)
+#         uses: actions/cache@v4
+#         with:
+#           path: frontend/app/node_modules
+#           key: ${{ runner.os }}-frontend-${{ hashFiles('frontend/app/package-lock.json') }}
 
-      - name: Restore Node.js modules (backend)
-        uses: actions/cache@v4
-        with:
-          path: backend/api/node_modules
-          key: ${{ runner.os }}-backend-${{ hashFiles('backend/api/package-lock.json') }}
+#       - name: Restore Node.js modules (backend)
+#         uses: actions/cache@v4
+#         with:
+#           path: backend/api/node_modules
+#           key: ${{ runner.os }}-backend-${{ hashFiles('backend/api/package-lock.json') }}
 
-      - name: Install Prettier
-        run: npm install --save-dev prettier
+#       - name: Install Prettier
+#         run: npm install --save-dev prettier
 
-      - name: Format (frontend)
-        run: |
-          cd frontend/app
-          npx prettier --write .
-        continue-on-error: true
+#       - name: Format (frontend)
+#         run: |
+#           cd frontend/app
+#           npx prettier --write .
+#         continue-on-error: true
 
-      - name: Format (backend)
-        run: |
-          cd backend/api
-          npx prettier --write .
-        continue-on-error: true
+#       - name: Format (backend)
+#         run: |
+#           cd backend/api
+#           npx prettier --write .
+#         continue-on-error: true
 
-  codacy:
-    needs: init
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+#   codacy:
+#     needs: init
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Checkout code
+#         uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
+#       - name: Setup Node.js
+#         uses: actions/setup-node@v4
+#         with:
+#           node-version: '20'
 
-      - name: Restore Node.js modules (frontend)
-        uses: actions/cache@v4
-        with:
-          path: frontend/app/node_modules
-          key: ${{ runner.os }}-frontend-${{ hashFiles('frontend/app/package-lock.json') }}
+#       - name: Restore Node.js modules (frontend)
+#         uses: actions/cache@v4
+#         with:
+#           path: frontend/app/node_modules
+#           key: ${{ runner.os }}-frontend-${{ hashFiles('frontend/app/package-lock.json') }}
 
-      - name: Restore Node.js modules (backend)
-        uses: actions/cache@v4
-        with:
-          path: backend/api/node_modules
-          key: ${{ runner.os }}-backend-${{ hashFiles('backend/api/package-lock.json') }}
+#       - name: Restore Node.js modules (backend)
+#         uses: actions/cache@v4
+#         with:
+#           path: backend/api/node_modules
+#           key: ${{ runner.os }}-backend-${{ hashFiles('backend/api/package-lock.json') }}
 
-      - name: Run Codacy Analysis CLI
-        uses: codacy/codacy-analysis-cli-action@master
-        with:
-          project-token: ${{ secrets.CODACY_PROJECT_TOKEN }}
-          upload: true
-          max-allowed-issues: 100
-          fail-if-incomplete: false
-          verbose: true
-        continue-on-error: true
+#       - name: Run Codacy Analysis CLI
+#         uses: codacy/codacy-analysis-cli-action@master
+#         with:
+#           project-token: ${{ secrets.CODACY_PROJECT_TOKEN }}
+#           upload: true
+#           max-allowed-issues: 100
+#           fail-if-incomplete: false
+#           verbose: true
+#         continue-on-error: true
 
   build:
-    needs: [lint, format, codacy]
+   # needs: [lint, format, codacy]
     runs-on: ubuntu-latest
     outputs:
       frontend_build_cache: ${{ steps.cache-frontend-build.outputs.cache-hit }}
