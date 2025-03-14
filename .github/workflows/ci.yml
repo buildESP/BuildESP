@@ -192,6 +192,13 @@ jobs:
           args: --all-projects
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+      - name: Run Trivy for container scanning
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: ${{ env.DOCKER_IMAGE_FRONTEND }}:latest
+          format: 'table'
+          exit-code: '1'
+          ignore-unfixed: true
 
   build:
     needs: [lint, format, codacy, security]
