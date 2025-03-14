@@ -29,7 +29,7 @@ jobs:
       - name: Install dependencies (backend)
         run: |
           cd backend/api
-          npm ci
+          npm i
 
       - name: Lint (frontend)
         run: |
