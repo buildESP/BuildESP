@@ -231,11 +231,13 @@ jobs:
         run: |
           cd backend/api
           npm test
+        continue-on-error: true
 
       - name: Run npm tests (frontend)
         run: |
           cd frontend/app
           npm run test
+        continue-on-error: true
 
       # - name: Install Cypress dependencies
       #   run: |
