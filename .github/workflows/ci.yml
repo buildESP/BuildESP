@@ -54,7 +54,7 @@ jobs:
         if: steps.cache-backend.outputs.cache-hit != 'true'
         run: |
           cd backend/api
-          npm i
+          npm ci
 
   lint:
     needs: init
@@ -184,7 +184,7 @@ jobs:
         if: steps.cache-backend.outputs.cache-hit != 'true'
         run: |
           cd backend/api
-          npm i
+          npm ci
 
       - name: Run Snyk for dependency scanning
         uses: snyk/actions/node@master
@@ -206,9 +206,6 @@ jobs:
   test:
     needs: init
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        containers: [1, 2, 3] # Number of parallel containers
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -228,18 +225,18 @@ jobs:
       - name: Install Cypress dependencies
         run: |
           cd cypress
-          npm i
+          npm ci
 
-      - name: Run Cypress tests in parallel
+      - name: Run Cypress tests
         run: |
           cd cypress
-          npx cypress run --browser chrome --headless --parallel --ci-build-id ${{ github.run_id }} --record false
+          npx cypress run --browser chrome --headless
 
       - name: Upload Cypress artifacts
         uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: cypress-artifacts-${{ matrix.containers }}
+          name: cypress-artifacts
           path: |
             cypress/screenshots
             cypress/videos
