@@ -183,7 +183,7 @@ jobs:
         if: steps.cache-backend.outputs.cache-hit != 'true'
         run: |
           cd backend/api
-          npm ci
+          npm i
 
       - name: Run Snyk for dependency scanning
         uses: snyk/actions/node@master
