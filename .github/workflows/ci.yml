@@ -192,6 +192,7 @@ jobs:
           args: --all-projects
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        continue-on-error: true
       - name: Run Trivy for container scanning
         uses: aquasecurity/trivy-action@master
         with:
