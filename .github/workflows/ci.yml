@@ -60,7 +60,9 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        project: [frontend, backend]
+        project: 
+          - { path: 'frontend/app', name: 'frontend' }
+          - { path: 'backend/api', name: 'backend' }
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -73,15 +75,17 @@ jobs:
       - name: Restore Node.js modules
         uses: actions/cache@v4
         with:
-          path: ${{ matrix.project }}/app/node_modules
-          key: ${{ runner.os }}-${{ matrix.project }}-${{ hashFiles('${{ matrix.project }}/app/package-lock.json') }}
+          path: ${{ matrix.project.path }}/node_modules
+          key: ${{ runner.os }}-${{ matrix.project.name }}-${{ hashFiles('${{ matrix.project.path }}/package-lock.json') }}
 
       - name: Install ESLint
-        run: npm install --save-dev eslint
-
-      - name: Lint ${{ matrix.project }}
         run: |
-          cd ${{ matrix.project }}/app
+          cd ${{ matrix.project.path }}
+          npm install --save-dev eslint
+
+      - name: Lint ${{ matrix.project.name }}
+        run: |
+          cd ${{ matrix.project.path }}
           npx eslint .
         continue-on-error: true
 
@@ -90,7 +94,9 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        project: [frontend, backend]
+        project: 
+          - { path: 'frontend/app', name: 'frontend' }
+          - { path: 'backend/api', name: 'backend' }
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -103,15 +109,17 @@ jobs:
       - name: Restore Node.js modules
         uses: actions/cache@v4
         with:
-          path: ${{ matrix.project }}/app/node_modules
-          key: ${{ runner.os }}-${{ matrix.project }}-${{ hashFiles('${{ matrix.project }}/app/package-lock.json') }}
+          path: ${{ matrix.project.path }}/node_modules
+          key: ${{ runner.os }}-${{ matrix.project.name }}-${{ hashFiles('${{ matrix.project.path }}/package-lock.json') }}
 
       - name: Install Prettier
-        run: npm install --save-dev prettier
-
-      - name: Format ${{ matrix.project }}
         run: |
-          cd ${{ matrix.project }}/app
+          cd ${{ matrix.project.path }}
+          npm install --save-dev prettier
+
+      - name: Format ${{ matrix.project.name }}
+        run: |
+          cd ${{ matrix.project.path }}
           npx prettier --write .
         continue-on-error: true
 
@@ -201,7 +209,6 @@ jobs:
           format: 'table'
           exit-code: '1'
           ignore-unfixed: true
-        continue-on-error: true
 
   test:
     needs: init
@@ -231,13 +238,20 @@ jobs:
         run: |
           cd backend/api
           npm test
-        continue-on-error: true
 
       - name: Run npm tests (frontend)
         run: |
           cd frontend/app
           npm run test
-        continue-on-error: true
+
+      # - name: Start Docker Compose
+      #   run: |
+      #     docker-compose up -d
+
+      # - name: Wait for application to be ready
+      #   run: |
+      #     docker-compose logs -f &
+      #     timeout 300 bash -c 'while ! curl -s http://localhost:8080 >/dev/null; do sleep 1; done'
 
       # - name: Install Cypress dependencies
       #   run: |
@@ -246,6 +260,11 @@ jobs:
       # - name: Run Cypress tests
       #   run: |
       #     npx cypress run --browser chrome --headless
+
+      # - name: Stop Docker Compose
+      #   if: always()
+      #   run: |
+      #     docker-compose down
 
   build:
     needs: [lint, format, codacy, security, test]
