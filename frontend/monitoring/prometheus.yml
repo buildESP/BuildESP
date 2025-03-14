@@ -1,6 +1,7 @@
 global:
   scrape_interval: 10s
   evaluation_interval: 10s
+
 rule_files:
   - rules.yml
 
@@ -36,22 +37,20 @@ scrape_configs:
       - targets: ['loki:3100']
 
   - job_name: 'blackbox'
-  metrics_path: /probe
-  params:
-    module: [http_2xx]  # Nom du module à utiliser
-  static_configs:
-    - targets:
-      - http://15.237.77.97/  # Remplacez par l'URL de votre site web
-  relabel_configs:
-    - source_labels: [__address__]
-      target_label: __param_target
-    - source_labels: [__param_target]
-      target_label: instance  
-    - target_label: __address__
-      replacement: blackbox_exporter:9115  # Adresse de Blackbox Exporter
+    metrics_path: /probe
+    params:
+      module: [http_2xx]  # Nom du module à utiliser
+    static_configs:
+      - targets:
+          - http://15.237.77.97/  # Remplacez par l'URL de votre site web
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: instance  
+      - target_label: __address__
+        replacement: blackbox_exporter:9115  # Adresse de Blackbox Exporter
 
-        
   - job_name: 'redis'
     static_configs:
       - targets: ['redis_exporter:9121']
-
