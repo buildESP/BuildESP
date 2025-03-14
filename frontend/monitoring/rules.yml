@@ -74,14 +74,13 @@ groups:
         summary: "Very High CPU usage detected (instance {{ $labels.instance }})"
         description: "CPU usage is above 90% for more than 1 minute."
 
-    # HttpStatusAlert
   - name: HttpStatusAlert
-    rules:
-    - alert: HttpStatusNot200
-      expr: probe_http_status_code{target=~"()"} != 200
-      for: 1m
-      labels:
-        severity: critical
-      annotations:
-        summary: "HTTP status is not 200"
-        description: "The HTTP status code returned by the probe is not equal to 200."
+  rules:
+  - alert: HttpStatusNot200
+    expr: probe_http_status_code{target=~"()"} != 200
+    for: 1m
+    labels:
+      severity: critical
+    annotations:
+      summary: "HTTP status est différent de 200"
+      description: "L'URL surveillée ne renvoie pas un code HTTP 200."
