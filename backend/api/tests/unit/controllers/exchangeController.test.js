@@ -11,9 +11,13 @@ jest.mock('../../../models/associations');
 
 describe('ExchangeController', () => {
   let req, res;
+  
   beforeEach(() => {
     req = { params: {}, body: {} };
     res = { status: jest.fn().mockReturnThis(), json: jest.fn() };
+    
+    // Clear all mocks before each test
+    jest.clearAllMocks();
   });
 
   describe('createExchange', () => {
@@ -66,13 +70,28 @@ describe('ExchangeController', () => {
     test('should update exchange when all conditions are met', async () => {
       req.params.exchange_id = 1;
       req.body = { item_id: 1, lender_user_id: 1, borrow_user_id: 2, start_date: '2023-01-01', end_date: '2023-01-02', status: 'confirmed' };
-      const exchange = { id: 1, update: jest.fn().mockResolvedValue() };
-      Exchange.findByPk.mockResolvedValue(exchange);
-      Item.findByPk.mockResolvedValue({ id: 1 });
-      User.findByPk.mockResolvedValueOnce({ id: 1 }).mockResolvedValueOnce({ id: 2 });
+      
+      // Define the mock with the update method
+      const mockExchange = { 
+        id: 1, 
+        update: jest.fn().mockResolvedValue({}) 
+      };
+      
+      // Set up mocks with explicit return values
+      Exchange.findByPk = jest.fn().mockResolvedValue(mockExchange);
+      Item.findByPk = jest.fn().mockResolvedValue({ id: 1 });
+      User.findByPk = jest.fn()
+        .mockResolvedValueOnce({ id: 1 })  // First call (lender)
+        .mockResolvedValueOnce({ id: 2 });  // Second call (borrower)
+      
       await updateExchange(req, res);
-      expect(res.status).toHaveBeenCalledWith(200); !!!!error
-      expect(res.json).toHaveBeenCalledWith({ message: 'Exchange updated successfully', exchange });
+      
+      expect(mockExchange.update).toHaveBeenCalled();
+      expect(res.status).toHaveBeenCalledWith(200);
+      expect(res.json).toHaveBeenCalledWith({ 
+        message: 'Exchange updated successfully', 
+        exchange: mockExchange 
+      });
     });
     test('should return 404 if exchange not found', async () => {
       req.params.exchange_id = 1;

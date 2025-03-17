@@ -1,4 +1,5 @@
 // controllers/subcategoryController.js
+const { updateEntityImage } = require('../utils/imageUtils');
 
 const { Category, Subcategory, Item } = require('../models/associations');
 

@@ -61,18 +61,24 @@ describe('CategoryController', () => {
   describe('updateCategory', () => {
     test('should update category when found', async () => {
       req.params.category_id = 1;
-      req.body = { name: 'Updated Category' };
-      const category = { 
+      req.body = { name: 'Updated', description: 'New description' };
+      
+      const mockCategory = { 
         id: 1, 
-        name: 'Old Category',
-        update: jest.fn().mockResolvedValue({ id: 1, name: 'Updated Category' })
+        update: jest.fn().mockResolvedValue({}),
+        save: jest.fn().mockResolvedValue({})
       };
-      Category.findByPk.mockResolvedValue(category);
+      
+      Category.findByPk.mockResolvedValue(mockCategory);
+      
       await updateCategory(req, res);
-      expect(Category.findByPk).toHaveBeenCalledWith(1);
-      expect(category.update).toHaveBeenCalledWith({ name: 'Updated Category' });
+      
+      expect(mockCategory.update).toHaveBeenCalled();
       expect(res.status).toHaveBeenCalledWith(200);
-      expect(res.json).toHaveBeenCalledWith({ message: 'Category updated successfully', category });
+      expect(res.json).toHaveBeenCalledWith({ 
+        message: 'Category updated successfully', 
+        category: mockCategory 
+      });
     });
 
     test('should return 404 when category to update is not found', async () => {

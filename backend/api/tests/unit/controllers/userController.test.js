@@ -75,13 +75,14 @@ describe('UserController', () => {
     test('should update user and groups', async () => {
       req.params.user_id = 1;
       req.body = { firstname: 'Jane', groups: [1] };
-      const user = { id: 1, update: jest.fn().mockResolvedValue(), setGroups: jest.fn().mockResolvedValue() };
+      const user = { id: 1, update: jest.fn().mockResolvedValue(), setGroups: jest.fn().mockResolvedValue(), save: jest.fn() };
       User.findByPk.mockResolvedValue(user);
       Group.findAll.mockResolvedValue([{ id: 1 }]);
       await updateUser(req, res);
       expect(res.status).toHaveBeenCalledWith(200);
       expect(res.json).toHaveBeenCalledWith({ message: 'User updated successfully', user });
     });
+
     test('should return 404 when user to update not found', async () => {
       req.params.user_id = 1;
       User.findByPk.mockResolvedValue(null);

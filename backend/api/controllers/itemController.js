@@ -1,6 +1,7 @@
 // controllers/itemController.js
 
 const { Item, User, Subcategory } = require('../models/associations');
+const { updateEntityImage } = require('../utils/imageUtils');
 
 // Create item
 exports.createItem = async (req, res) => {
@@ -107,7 +108,7 @@ exports.updateItem = async (req, res) => {
     res.status(200).json({ message: 'Item updated successfully', item });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Error during item update' });
+    res.status(500).json({ error: 'Error during item update, ' + error });
   }
 };
 
