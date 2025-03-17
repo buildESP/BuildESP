@@ -1,5 +1,5 @@
 # Use Node.js 18 with Alpine for a lightweight base image
-FROM node:18-alpine
+FROM node:23.9.0-alpine
 
 # Set the working directory inside the container
 WORKDIR /app
@@ -8,16 +8,16 @@ WORKDIR /app
 COPY package.json package-lock.json ./
 
 # Install dependencies consistently with npm ci
-RUN npm i
+RUN npm ci
 
-RUN mkdir node_modules/.cache && chmod -R 777 node_modules/.cache
+# Ensure Vite has proper cache permissions
+RUN mkdir -p node_modules/.cache && chmod -R 777 node_modules/.cache
 
-# Copy the rest of your application code
+# Copy the rest of the application code
 COPY . .
 
+# Expose the port Vite typically runs on (si tu utilises Vite, c'est souvent 5173)
+EXPOSE 5173
 
-# Expose the port your app runs on (assuming 8080)
-EXPOSE 8080
-
-# Define the command to start your application
-CMD ["npm", "run", "start-watch"]
+# Command to run the application (adapté pour Vite)
+CMD ["npm", "run", "dev"]

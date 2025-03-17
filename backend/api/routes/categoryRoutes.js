@@ -89,7 +89,7 @@ router.post('/categories', authenticateToken, categoryController.createCategory)
  *                           description: Subcategory's name
  *                           example: "Mobile Phones"
  */
-router.get('/categories', authenticateToken, categoryController.getCategories);
+router.get('/categories', categoryController.getCategories);
 
 /**
  * @swagger
@@ -128,7 +128,7 @@ router.get('/categories', authenticateToken, categoryController.getCategories);
  *       500:
  *         description: Error during fetching category
  */
-router.get('/categories/:category_id', authenticateToken, categoryController.getCategoryById);
+router.get('/categories/:category_id', categoryController.getCategoryById);
 
 /**
  * @swagger

@@ -3,9 +3,9 @@ name: Deploy Frontend
 on:
   push:
     branches:
-      - DevOps_ESP-51  # Déclenche l'action sur cette branche
+      - main
     paths:
-      - 'frontend/**'  # Ne déploie que si des fichiers dans frontend/ changent
+      - 'frontend/**'
 
 jobs:
   deploy:
@@ -25,32 +25,45 @@ jobs:
       - name: Deploy Frontend to EC2
         run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.MY_FRONT_SERVER }}@${{ secrets.EC2_FRONT_HOST }} << 'EOF'
-            echo "🚀 Déploiement en cours sur le serveur..."
+            echo "🚀 Déploiement du Frontend & Monitoring..."
 
-            cd /var/www/front
+            # Assurez-vous que nous sommes dans le bon répertoire
+            cd /var/www/front/frontend || { echo "Répertoire /var/www/front/frontend non trouvé"; exit 1; }
+
+            echo "📥 Sauvegarde temporaire du .env..."
+            git stash push -m "Sauvegarde temporaire du .env" .env || echo "Aucun fichier .env à stasher"
+
+            # Stasher toutes les autres modifications locales
+            git stash push -m "Sauvegarde des modifications locales" --keep-index || echo "Aucune modification locale à stasher"
+
             echo "📥 Pulling latest changes..."
-            git pull origin DevOps_ESP-51  # Récupère les nouvelles modifications
+            git checkout main || git checkout -b main
+            git pull origin main --rebase
 
-            cd frontend/app  # Aller dans le bon dossier
+            echo "📥 Restauration du .env..."
+            git stash pop || echo "⚠️ Aucun stash à restaurer"
+
+            echo "🧹 Nettoyage des fichiers inutiles..."
+            rm -rf /var/www/front/backend /var/www/front/cypress
+
+            # Se rendre dans le répertoire où se trouve le fichier package.json
+            cd /var/www/front/frontend/app || { echo "Répertoire /var/www/front/frontend/app non trouvé"; exit 1; }
+
+            # Vérifier si package.json existe avant de lancer le build
             if [ -f package.json ]; then
-              echo "📦 Installing dependencies..."
-              npm install  # Installe les dépendances
-
-              echo "⚙️  Building frontend..."
-              npm run build  # Compile le projet si nécessaire
+              echo "⚙️ Building frontend..."
+              npm run build
             else
-              echo "❌ ERREUR: package.json non trouvé dans /var/www/front/frontend/app/"
+              echo "❌ ERREUR: package.json non trouvé dans /var/www/front/frontend/app."
               exit 1
             fi
 
-            echo "🚀 Vérification de PM2..."
-            if ! command -v pm2 &> /dev/null; then
-              echo "⚠️  PM2 non trouvé. Installation en cours..."
-              npm install -g pm2
-            fi
+            echo "🔄 Mise à jour et redémarrage des conteneurs Docker..."
+            docker-compose down
+            sudo docker system prune -af
+            docker network create buildesp_network || echo "Réseau déjà existant"
+            docker-compose build
+            docker-compose up -d
 
-            echo "🔄 Restarting frontend app..."
-            pm2 restart front || pm2 start npm --name "front" -- run start  # Démarre ou redémarre l'application
-            
-            echo "✅ Déploiement terminé avec succès !"
+            echo "✅ Déploiement Frontend & Monitoring terminé !"
           EOF
