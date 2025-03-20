@@ -1,7 +1,6 @@
 // controllers/subcategoryController.js
-const { updateEntityImage } = require('../utils/imageUtils');
-
-const { Category, Subcategory, Item } = require('../models/associations');
+import { updateEntityImage } from '../utils/imageUtils';
+import { Category, Subcategory, Item } from '../models/associations';
 
 
 // create a subcategory
