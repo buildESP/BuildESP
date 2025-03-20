@@ -91,15 +91,15 @@ jobs:
           key: ${{ runner.os }}-node-${{ hashFiles(format('{0}/package-lock.json', matrix.project.path )) }}
           restore-keys: |
             ${{ runner.os }}-node-
+            
+      - name: Install dependencies
+        run: |
+          cd ${{ matrix.project.path }} && npm install --no-audit
 
       - name: Quality checks
         id: quality
         run: |
           cd ${{ matrix.project.path }}
-          echo "::group::Install dev dependencies"
-          npm install --save-dev eslint prettier jest
-          echo "::endgroup::"
-          
           echo "::group::ESLint check"
           npx eslint . --max-warnings 0
           echo "::endgroup::"
