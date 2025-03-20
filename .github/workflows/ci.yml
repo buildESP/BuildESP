@@ -60,11 +60,17 @@ jobs:
 
       - name: Install dependencies Frontend
         run: |
-          cd frontend/app && if [ "${{ steps.cache-deps.outputs.cache-hit }}" == "true" ]; then npm ci --no-audit; else npm install --no-audit; fi
+          cd frontend/app
+          if [ "${{ steps.cache-deps.outputs.cache-hit }}" == "true" ]; then
+            npm ci --no-audit
+          else
+            npm install --no-audit --include=dev  # Force devDependencies
+          fi
 
       - name: Install dependencies Backend
         run: |
-          cd backend/api && npm install --no-audit
+          cd backend/api
+          npm install --no-audit --include=dev  # Force devDependencies
 
   quality:
     needs: init
