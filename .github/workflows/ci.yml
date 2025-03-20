@@ -93,6 +93,7 @@ jobs:
           key: ${{ runner.os }}-${{ matrix.project.name }}-${{ hashFiles('${{ matrix.project.path }}/package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-${{ matrix.project.name }}-
+
       - name: Install quality tools
         working-directory: ${{ matrix.project.path }}
         run: npm install --save-dev eslint prettier eslint-config-prettier eslint-plugin-prettier
@@ -109,7 +110,7 @@ jobs:
         uses: codacy/codacy-analysis-cli-action@v4
         with:
           project-token: ${{ env.CODACY_PROJECT_TOKEN }}
-          directory: ${{ matrix.project.path }}
+          directory: ${{ github.workspace }}/${{ matrix.project.path }}  # Utilisez le chemin absolu
 
   security:
     needs: init
