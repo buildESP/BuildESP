@@ -49,19 +49,10 @@ jobs:
             # Se rendre dans le répertoire où se trouve le fichier package.json
             cd /var/www/front/frontend/app || { echo "Répertoire /var/www/front/frontend/app non trouvé"; exit 1; }
 
-            # Vérifier si package.json existe avant de lancer l'installation des dépendances
-            if [ -f package.json ]; then
-              echo "⚙️ Installation des dépendances..."
-              npm install --save-dev vite || { echo "❌ ERREUR: Impossible d'installer les dépendances"; exit 1; }
-            else
-              echo "❌ ERREUR: package.json non trouvé dans /var/www/front/frontend/app."
-              exit 1
-            fi
-
             # Vérifier si package.json existe avant de lancer le build
             if [ -f package.json ]; then
               echo "⚙️ Building frontend..."
-              npm run build || { echo "❌ ERREUR: Le build a échoué"; exit 1; }
+              npm run build
             else
               echo "❌ ERREUR: package.json non trouvé dans /var/www/front/frontend/app."
               exit 1
