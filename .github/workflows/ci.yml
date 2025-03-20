@@ -94,7 +94,7 @@ jobs:
         run: |
           cd ${{ matrix.project.path }}
           echo "::group::ESLint check"
-          npx eslint . --max-warnings 0
+          npm run eslint
           echo "::endgroup::"
           
           echo "::group::Prettier check"
