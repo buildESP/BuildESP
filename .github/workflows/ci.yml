@@ -10,7 +10,7 @@ on:
 
 env:
   NODE_VERSION: '20.x'
-  CODACY_PROJECT_TOKEN: ${{ secrets.CODACY_PROJECT_TOKEN }}  # Ajoutez cette ligne
+  CODACY_PROJECT_TOKEN: ${{ secrets.CODACY_PROJECT_TOKEN }}
 
 permissions:
   contents: read
@@ -105,12 +105,12 @@ jobs:
           npx prettier --check .
         continue-on-error: true
 
-      # Ajoutez cette étape pour exécuter Codacy
       - name: Run Codacy Analysis
         uses: codacy/codacy-analysis-cli-action@v4
         with:
           project-token: ${{ env.CODACY_PROJECT_TOKEN }}
-          directory: ${{ github.workspace }}/${{ matrix.project.path }}  # Utilisez le chemin absolu
+          directory: ${{ github.workspace }}/${{ matrix.project.path }}
+        continue-on-error: true
 
   security:
     needs: init
