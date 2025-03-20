@@ -86,7 +86,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          cd ${{ matrix.project.path }} && if [ "${{ needs.init.outputs.node_modules_frontend }}" == "true" ] || [ "${{ needs.init.outputs.node_modules_backend }}" == "true" ]; then npm ci --no-audit; else npm install --no-audit; fi
+          cd ${{ matrix.project.path }} && if [ "${{ needs.init.outputs.node_modules_frontend }}" == "true" ] || [ "${{ needs.init.outputs.node_modules_backend }}" == "true" ]; then npm i --no-audit; else npm install --no-audit; fi
 
       - name: Quality checks
         id: quality
@@ -101,7 +101,7 @@ jobs:
           echo "::endgroup::"
 
           echo "::group::Run tests"
-          npm test -- --ci --coverage
+          npm test -- --i --coverage
           echo "::endgroup::"
 
       - name: Upload test coverage
