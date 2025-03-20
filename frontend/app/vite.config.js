@@ -17,13 +17,7 @@ export default defineConfig(({ mode }) => {
       __APP_ENV__: env.APP_ENV,
     },
     server: {
-      host: '0.0.0.0',  // Permet d'accepter les connexions externes
-      port: 5173,  // Port d'écoute du frontend
-      allowedHosts: [
-        'neighborrow.hephel.fr',  // Hôte sans www
-        'www.neighborrow.hephel.fr',  // Hôte avec www
-        'localhost',  // Accès local
-      ],
-    },
+      allowedHosts: true
+    }
   };
 });
