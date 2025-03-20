@@ -24,12 +24,54 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
 
+      - name: Cache Node.js modules
+        uses: actions/cache@v4
+        with:
+          path: |
+            frontend/app/node_modules
+            backend/api/node_modules
+          key: ${{ runner.os }}-modules-${{ hashFiles('**/package-lock.json') }}
+
   quality:
     runs-on: ubuntu-22.04
     steps:
+      - name: Lint and Format Check
+        run: |
+          cd frontend/app
+          npx eslint . --max-warnings=0
+          npx prettier --check .
+          cd ../../backend/api
+          npx eslint . --max-warnings=0
+          npx prettier --check .
+
       - name: Run Codacy Analysis
         uses: codacy/codacy-analysis-cli-action@v4
         with:
           project-token: ${{ env.CODACY_PROJECT_TOKEN }}
-          # Optionnel : Spécifiez le répertoire à analyser
           directory: .
+
+  security:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Run Snyk Monitor
+        uses: snyk/actions/node@master
+        with:
+          command: monitor
+          args: --all-projects --severity-threshold=high
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+
+  test:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Run Unit Tests
+        run: |
+          cd backend/api
+          npm test -- --coverage
+          cd ../../frontend/app
+          npm test -- --coverage
+
+      - name: Upload coverage reports
+        uses: codecov/codecov-action@v3
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
