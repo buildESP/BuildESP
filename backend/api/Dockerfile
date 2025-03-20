@@ -1,26 +1,29 @@
-# Use a lighter Alpine-based Node.js image
+# Utilisation d'une image Node.js basée sur Alpine
 FROM node:22-alpine
 
-# Set the working directory inside the container
+# Définir le répertoire de travail dans le container
 WORKDIR /usr/src/app
 
-# Copy package.json and package-lock.json for dependency installation
-COPY package.json  ./
+# Copier package.json et package-lock.json pour installer les dépendances
+COPY package.json ./
 
-# Install only production dependencies
+# Installer uniquement les dépendances de production
 RUN npm i
 
-# Copy the rest of the application code
+# Installer AWS CLI et curl
+RUN apk add --no-cache aws-cli curl
+
+# Copier le reste du code de l'application
 COPY . .
 
-# Change ownership of the application files to the node user
+# Changer les permissions pour l'utilisateur node
 RUN chown -R node:node /usr/src/app
 
-# Set the container to run as the non-root node user
+# Exécuter en tant qu'utilisateur non root
 USER node
 
-# Expose the port the app runs on
+# Exposer le port de l'application
 EXPOSE 3000
 
-# Define the command to run the app
+# Définir la commande pour démarrer l'application
 CMD ["node", "app.js"]
