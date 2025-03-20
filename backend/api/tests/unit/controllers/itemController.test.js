@@ -1,5 +1,6 @@
 const { Item, User, Subcategory } = require('../../../models/associations');
 const { createItem, getItems, getItemById, updateItem, deleteItem } = require('../../../controllers/itemController');
+const { updateEntityImage } = require('../../../utils/imageUtils');
 
 jest.mock('../../../models/associations');
 
@@ -92,17 +93,32 @@ describe('ItemController', () => {
     });
   });
 
-  describe('updateItem', () => {
-    // fails
-    
+  describe('updateItem', () => {    
     test('should update item when all conditions are met', async () => {
+      // jest.unmock('../../../models/Item');
+
       const mockItem = {
         id: 1,
         name: 'Test Item',
-        update: jest.fn().mockResolvedValue(true)
+        save: jest.fn(),
+        update: jest.fn().mockResolvedValue({
+          id: 1,
+          name: 'Updated Item',
+          description: 'Updated Description',
+          picture: 'updated.jpg',
+          status: 'available'
+        })
       };
+      const mockUser = { id: 1, save : jest.fn(), name: 'Test User' };
+      const mockSubcategory = { id: 1, save : jest.fn(), name: 'Test Subcategory' };
+
       
-      mockReq.params.item_id = 1;
+      User.findByPk.mockResolvedValue(mockUser);
+      Subcategory.findByPk.mockResolvedValue(mockSubcategory);
+      Item.findByPk.mockResolvedValue(mockItem);
+      //ATTENTION : les mocks marchent mal car findbyPk.mockResolvedValue mock le retour sur tous les objets. Donc ici, seul le dernier mock est effectif
+      
+      mockReq.params.item_id = '1';
       mockReq.body = {
         user_id: 1,
         subcategory_id: 1,
@@ -112,9 +128,11 @@ describe('ItemController', () => {
         status: 'available'
       };
 
-      Item.findByPk.mockResolvedValue(mockItem);
-      User.findByPk.mockResolvedValue({ id: 1 });
-      Subcategory.findByPk.mockResolvedValue({ id: 1 });
+      const mockUpdateEntityImage = jest.fn();
+      jest.mock('../../../utils/imageUtils', () => ({
+        updateEntityImage: mockUpdateEntityImage
+      }));
+      mockUpdateEntityImage.mockResolvedValue();
 
       await updateItem(mockReq, mockRes);
 

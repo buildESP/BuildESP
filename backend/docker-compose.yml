@@ -19,6 +19,7 @@ services:
     restart: always
     networks:
       - buildesp_network
+    command: sh -c "npm install && npm run start && node config/sync.js && npm run fixtures"
 
   db:
     image: mysql:8.0
