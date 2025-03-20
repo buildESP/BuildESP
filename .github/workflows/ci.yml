@@ -2,152 +2,128 @@ name: Fullstack Frontend/Backend CI/CD
 
 on:
   push:
-    branches:
-      - DevOps_ESP-51
+    branches: [ DevOps_ESP-51 ]
+    paths-ignore:
+      - '**.md'
+      - 'docs/**'
+      - '.github/*.md'
   pull_request:
-    branches:
-      - DevOps_ESP-51
+    branches: [ DevOps_ESP-51 ]
+    types: [opened, synchronize, reopened]
+  schedule:
+    - cron: '0 0 * * 0'  # Weekly security scans
+  workflow_dispatch:  # Manual trigger
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 env:
   NODE_VERSION: '20'
   DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
   DOCKER_IMAGE_FRONTEND: stephb421/buildesp-frontend
   DOCKER_IMAGE_BACKEND: stephb421/buildesp-backend
+  DOCKER_BUILDKIT: 1
+  NODE_ENV: production
+  HUSKY: 0
 
 jobs:
   init:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     outputs:
       node_modules_frontend: ${{ steps.cache-frontend.outputs.cache-hit }}
       node_modules_backend: ${{ steps.cache-backend.outputs.cache-hit }}
     steps:
-      - name: Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v4
-
+        with:
+          fetch-depth: 0
+          submodules: recursive
+      
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
 
-      - name: Cache Node.js modules (frontend)
-        id: cache-frontend
+      - name: Cache dependencies
+        id: cache-deps
         uses: actions/cache@v4
         with:
-          path: frontend/app/node_modules
-          key: ${{ runner.os }}-frontend-${{ hashFiles('frontend/app/package-lock.json') }}
+          path: |
+            **/node_modules
+            ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
 
-      - name: Install dependencies (frontend)
-        if: steps.cache-frontend.outputs.cache-hit != 'true'
+      - name: Install dependencies
+        if: steps.cache-deps.outputs.cache-hit != 'true'
         run: |
-          cd frontend/app
-          npm ci
+          cd frontend/app && npm ci --no-audit
+          cd ../../backend/api && npm ci --no-audit
 
-      - name: Cache Node.js modules (backend)
-        id: cache-backend
-        uses: actions/cache@v4
-        with:
-          path: backend/api/node_modules
-          key: ${{ runner.os }}-backend-${{ hashFiles('backend/api/package-lock.json') }}
-
-      - name: Install dependencies (backend)
-        if: steps.cache-backend.outputs.cache-hit != 'true'
-        run: |
-          cd backend/api
-          npm i
-
-  lint:
+  quality:
     needs: init
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     strategy:
+      fail-fast: false
       matrix:
-        project: 
-          - { path: 'frontend/app', name: 'frontend' }
-          - { path: 'backend/api', name: 'backend' }
+        project: [
+          { path: 'frontend/app', name: 'frontend' },
+          { path: 'backend/api', name: 'backend' }
+        ]
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-
-      - name: Restore Node.js modules
+      - uses: actions/checkout@v4
+      
+      - name: Restore cache
         uses: actions/cache@v4
         with:
-          path: ${{ matrix.project.path }}/node_modules
-          key: ${{ runner.os }}-${{ matrix.project.name }}-${{ hashFiles('${{ matrix.project.path }}/package-lock.json') }}
-
-      - name: Install ESLint
+          path: |
+            **/node_modules
+            ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          
+      - name: Quality checks
+        id: quality
         run: |
           cd ${{ matrix.project.path }}
-          npm install --save-dev eslint
+          echo "::group::Install dev dependencies"
+          npm install --save-dev eslint prettier jest
+          echo "::endgroup::"
+          
+          echo "::group::ESLint check"
+          npx eslint . --max-warnings 0
+          echo "::endgroup::"
+          
+          echo "::group::Prettier check"
+          npx prettier --check .
+          echo "::endgroup::"
+          
+          echo "::group::Run tests"
+          npm test -- --ci --coverage
+          echo "::endgroup::"
 
-      - name: Lint ${{ matrix.project.name }}
-        run: |
-          cd ${{ matrix.project.path }}
-          npx eslint .
-        continue-on-error: true
-
-  format:
-    needs: init
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        project: 
-          - { path: 'frontend/app', name: 'frontend' }
-          - { path: 'backend/api', name: 'backend' }
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - name: Upload test coverage
+        if: always()
+        uses: actions/upload-artifact@v4
         with:
-          node-version: ${{ env.NODE_VERSION }}
-
-      - name: Restore Node.js modules
-        uses: actions/cache@v4
-        with:
-          path: ${{ matrix.project.path }}/node_modules
-          key: ${{ runner.os }}-${{ matrix.project.name }}-${{ hashFiles('${{ matrix.project.path }}/package-lock.json') }}
-
-      - name: Install Prettier
-        run: |
-          cd ${{ matrix.project.path }}
-          npm install --save-dev prettier
-
-      - name: Format ${{ matrix.project.name }}
-        run: |
-          cd ${{ matrix.project.path }}
-          npx prettier --write .
-        continue-on-error: true
+          name: coverage-${{ matrix.project.name }}
+          path: ${{ matrix.project.path }}/coverage
+          retention-days: 14
 
   codacy:
     needs: init
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - uses: actions/checkout@v4
         with:
-          node-version: ${{ env.NODE_VERSION }}
+          fetch-depth: 0
 
-      - name: Restore Node.js modules (frontend)
-        uses: actions/cache@v4
-        with:
-          path: frontend/app/node_modules
-          key: ${{ runner.os }}-frontend-${{ hashFiles('frontend/app/package-lock.json') }}
-
-      - name: Restore Node.js modules (backend)
-        uses: actions/cache@v4
-        with:
-          path: backend/api/node_modules
-          key: ${{ runner.os }}-backend-${{ hashFiles('backend/api/package-lock.json') }}
-
-      - name: Run Codacy Analysis CLI
+      - name: Run Codacy Analysis
         uses: codacy/codacy-analysis-cli-action@master
         with:
           project-token: ${{ secrets.CODACY_PROJECT_TOKEN }}
@@ -155,165 +131,97 @@ jobs:
           max-allowed-issues: 100
           fail-if-incomplete: false
           verbose: true
-        continue-on-error: true
 
   security:
     needs: init
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-
-      - name: Restore Node.js modules (frontend)
-        uses: actions/cache@v4
-        with:
-          path: frontend/app/node_modules
-          key: ${{ runner.os }}-frontend-${{ hashFiles('frontend/app/package-lock.json') }}
-
-      - name: Install dependencies (frontend)
-        if: steps.cache-frontend.outputs.cache-hit != 'true'
-        run: |
-          cd frontend/app
-          npm ci
-
-      - name: Restore Node.js modules (backend)
-        uses: actions/cache@v4
-        with:
-          path: backend/api/node_modules
-          key: ${{ runner.os }}-backend-${{ hashFiles('backend/api/package-lock.json') }}
-
-      - name: Install dependencies (backend)
-        if: steps.cache-backend.outputs.cache-hit != 'true'
-        run: |
-          cd backend/api
-          npm i
-
-      - name: Run Snyk for dependency scanning
+      - uses: actions/checkout@v4
+      
+      - name: Run Snyk
         uses: snyk/actions/node@master
-        with:
-          command: test
-          args: --all-projects
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-        continue-on-error: true
-
-      - name: Run Trivy for container scanning
+          
+      - name: Run Trivy
         uses: aquasecurity/trivy-action@master
         with:
-          image-ref: ${{ env.DOCKER_IMAGE_FRONTEND }}:latest
-          format: 'table'
-          exit-code: '1'
-          ignore-unfixed: true
-        continue-on-error: true
+          scan-type: 'fs'
+          scan-ref: '.'
+          format: 'sarif'
+          output: 'trivy-results.sarif'
+          severity: 'CRITICAL,HIGH'
 
-  test:
-    needs: init
+      - name: Upload Trivy results
+        uses: github/codeql-action/upload-sarif@v3
+        if: always()
+        with:
+          sarif_file: 'trivy-results.sarif'
+
+  build-deploy:
+    needs: [quality, security, codacy]
     runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      REGISTRY: docker.io
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - uses: actions/checkout@v4
+      
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
         with:
-          node-version: ${{ env.NODE_VERSION }}
-
-      - name: Restore Node.js modules (frontend)
-        uses: actions/cache@v4
-        with:
-          path: frontend/app/node_modules
-          key: ${{ runner.os }}-frontend-${{ hashFiles('frontend/app/package-lock.json') }}
-
-      - name: Restore Node.js modules (backend)
-        uses: actions/cache@v4
-        with:
-          path: backend/api/node_modules
-          key: ${{ runner.os }}-backend-${{ hashFiles('backend/api/package-lock.json') }}
-
-      - name: Run Jest tests (backend)
-        run: |
-          cd backend/api
-          npm test
-        continue-on-error: true
-
-      - name: Run npm tests (frontend)
-        run: |
-          cd frontend/app
-          npm run test
-        continue-on-error: true
-
-      # - name: Start Docker Compose
-      #   run: |
-      #     docker-compose up -d
-
-      # - name: Wait for application to be ready
-      #   run: |
-      #     docker-compose logs -f &
-      #     timeout 300 bash -c 'while ! curl -s http://localhost:8080 >/dev/null; do sleep 1; done'
-
-      # - name: Install Cypress dependencies
-      #   run: |
-      #     npm install cypress --save-dev
-
-      # - name: Run Cypress tests
-      #   run: |
-      #     npx cypress run --browser chrome --headless
-
-      # - name: Stop Docker Compose
-      #   if: always()
-      #   run: |
-      #     docker-compose down
-
-  build:
-    needs: [lint, format, codacy, security, test]
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-
-      - name: Restore Node.js modules (frontend)
-        uses: actions/cache@v4
-        with:
-          path: frontend/app/node_modules
-          key: ${{ runner.os }}-frontend-${{ hashFiles('frontend/app/package-lock.json') }}
-
-      - name: Restore Node.js modules (backend)
-        uses: actions/cache@v4
-        with:
-          path: backend/api/node_modules
-          key: ${{ runner.os }}-backend-${{ hashFiles('backend/api/package-lock.json') }}
-
-      - name: Build (frontend)
-        run: |
-          cd frontend/app
-          npm run build
-
+          platforms: linux/amd64,linux/arm64
+        
       - name: Login to Docker Hub
         uses: docker/login-action@v3
         with:
+          registry: ${{ env.REGISTRY }}
           username: ${{ env.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
+          
+      - name: Extract metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: |
+            ${{ env.DOCKER_IMAGE_FRONTEND }}
+            ${{ env.DOCKER_IMAGE_BACKEND }}
+          tags: |
+            type=ref,event=branch
+            type=ref,event=pr
+            type=semver,pattern={{version}}
+            type=sha,format=long
+            type=raw,value=latest,enable=${{ github.ref == format('refs/heads/{0}', 'DevOps_ESP-51') }}
 
-      - name: Build and Push Docker Image (frontend)
+      - name: Build and push Frontend
         uses: docker/build-push-action@v5
         with:
           context: frontend/app
-          push: true
-          tags: ${{ env.DOCKER_IMAGE_FRONTEND }}:latest
+          platforms: linux/amd64,linux/arm64
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          build-args: |
+            NODE_ENV=production
+            BUILD_VERSION=${{ github.sha }}
 
-      - name: Build and Push Docker Image (backend)
+      - name: Build and push Backend
         uses: docker/build-push-action@v5
         with:
           context: backend/api
-          push: true
-          tags: ${{ env.DOCKER_IMAGE_BACKEND }}:latest
+          platforms: linux/amd64,linux/arm64
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          build-args: |
+            NODE_ENV=production
+            BUILD_VERSION=${{ github.sha }}
+
