@@ -172,8 +172,13 @@ jobs:
 
       - name: Run Unit Tests
         run: |
-          cd backend/api && npm test -- --coverage
-          cd frontend/app && npm test -- --coverage
+          cd backend/api
+          npm install --save-dev jest supertest @types/jest @types/supertest
+          npm test -- --coverage
+          
+          cd ../../frontend/app
+          npm install --save-dev jest
+          npm test -- --coverage
 
       - name: Upload coverage reports
         uses: codecov/codecov-action@v3
