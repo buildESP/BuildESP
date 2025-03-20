@@ -32,7 +32,7 @@ services:
     environment:
       - REDIS_ADDR=redis:6379
     networks:
-      - epitech_localprom
+      - buildesp_network  # Utilisez le même réseau ici
     ports:
       - 9121:9121
     depends_on:
@@ -141,6 +141,4 @@ volumes:
 
 networks:
   buildesp_network:
-    external: true
-  epitech_localprom:
     external: true
