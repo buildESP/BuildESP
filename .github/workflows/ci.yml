@@ -129,7 +129,7 @@ jobs:
 
       - name: Dependency Audit
         run: |
-          npm audit --production
+          npm audit --fix
           npx depcheck frontend/app
           npx depcheck backend/api
 
