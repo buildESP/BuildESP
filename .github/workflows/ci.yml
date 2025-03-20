@@ -37,7 +37,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
+          #cache: 'npm' # Removed built-in caching
 
       - name: Configure npm cache
         run: npm config set cache .npm --global
@@ -88,7 +88,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
+          #cache: 'npm' # Removed built-in caching
 
       - name: Restore Node.js modules
         uses: actions/cache@v4
@@ -119,7 +119,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
+          #cache: 'npm' # Removed built-in caching
 
       - name: Restore dependencies
         uses: actions/cache@v4
@@ -166,7 +166,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
+          #cache: 'npm' # Removed built-in caching
 
       - name: Restore dependencies
         uses: actions/cache@v4
@@ -198,8 +198,8 @@ jobs:
     strategy:
       matrix:
         project:
-          - { context: 'frontend/app', image: '${{ vars.DOCKER_IMAGE_FRONTEND }}' }
-          - { context: 'backend/api', image: '${{ vars.DOCKER_IMAGE_BACKEND }}' }
+          - { context: 'frontend/app', image: '${{ env.DOCKER_IMAGE_FRONTEND }}' }
+          - { context: 'backend/api', image: '${{ env.DOCKER_IMAGE_BACKEND }}' }
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -208,7 +208,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
+          #cache: 'npm' # Removed built-in caching
 
       - name: Restore dependencies
         uses: actions/cache@v4
