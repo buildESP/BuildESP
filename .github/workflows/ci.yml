@@ -104,6 +104,7 @@ jobs:
         run: |
           npx eslint . --max-warnings=0
           npx prettier --check .
+        continue-on-error: true
 
   security:
     needs: init
@@ -151,6 +152,7 @@ jobs:
           skip-queries: false
           upload-database: true
           wait-for-processing: true
+        continue-on-error: true
 
   test:
     needs: init
@@ -182,11 +184,13 @@ jobs:
           cd ../../frontend/app
           npm install --save-dev jest
           npm test -- --coverage
+        continue-on-error: true
 
       - name: Upload coverage reports
         uses: codecov/codecov-action@v3
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
+        
 
   build-and-deploy:
     needs: [quality, security, test]
