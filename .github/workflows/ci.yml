@@ -12,7 +12,6 @@ on:
 env:
   NODE_VERSION: '20.x'
   DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-  COMPOSE_FILE: docker-compose.yml
 
 permissions:
   contents: read
@@ -105,7 +104,6 @@ jobs:
         run: |
           npx eslint . --max-warnings=0
           npx prettier --check .
-        continue-on-error: true
 
   security:
     needs: init
@@ -128,14 +126,6 @@ jobs:
           key: ${{ runner.os }}-*-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-*-
-
-      - name: Install dependencies for Snyk
-        run: |
-          cd backend/api
-          npm install
-          cd ../../frontend/app
-          npm install
-        shell: bash
 
       - name: Run Snyk Monitor
         uses: snyk/actions/node@master
@@ -161,7 +151,6 @@ jobs:
           skip-queries: false
           upload-database: true
           wait-for-processing: true
-        continue-on-error: true
 
   test:
     needs: init
@@ -193,7 +182,6 @@ jobs:
           cd ../../frontend/app
           npm install --save-dev jest
           npm test -- --coverage
-        continue-on-error: true
 
       - name: Upload coverage reports
         uses: codecov/codecov-action@v3
@@ -206,8 +194,8 @@ jobs:
     strategy:
       matrix:
         project:
-          - { context: 'frontend/app', image_key: 'DOCKER_IMAGE_FRONTEND' }
-          - { context: 'backend/api', image_key: 'DOCKER_IMAGE_BACKEND' }
+          - { context: 'frontend/app', image_name: 'frontend' }
+          - { context: 'backend/api', image_name: 'backend' }
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -227,12 +215,6 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-*-
 
-      - name: Build applications
-        working-directory: ${{ matrix.project.context }}
-        run: |
-          ls
-          npm run 
-
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
@@ -248,7 +230,7 @@ jobs:
           context: ${{ matrix.project.context }}
           push: true
           tags: |
-            ${{ env[matrix.project.image_key] }}:latest
-            ${{ env[matrix.project.image_key] }}:${{ github.sha }}
+            ${{ env.DOCKER_USERNAME }}/${{ matrix.project.image_name }}:latest
+            ${{ env.DOCKER_USERNAME }}/${{ matrix.project.image_name }}:${{ github.sha }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
