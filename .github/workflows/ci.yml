@@ -1,4 +1,4 @@
-name: Fullstack CI/CD Pipeline
+name: Fullstack-CI-CD-Pipeline
 
 on:
   push:
@@ -82,17 +82,22 @@ jobs:
           - { path: 'frontend/app', name: 'frontend' }
           - { path: 'backend/api', name: 'backend' }
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
 
       - name: Restore Node.js modules
-        uses: actions/cache/restore@v4
+        uses: actions/cache@v4
         with:
           path: ${{ matrix.project.path }}/node_modules
           key: ${{ runner.os }}-${{ matrix.project.name }}-${{ hashFiles('${{ matrix.project.path }}/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-${{ matrix.project.name }}-
 
       - name: Install quality tools
         working-directory: ${{ matrix.project.path }}
@@ -108,19 +113,24 @@ jobs:
     needs: init
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
 
       - name: Restore dependencies
-        uses: actions/cache/restore@v4
+        uses: actions/cache@v4
         with:
           path: |
             frontend/app/node_modules
             backend/api/node_modules
           key: ${{ runner.os }}-*-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-*-
 
       - name: Dependency Audit
         run: |
@@ -150,19 +160,24 @@ jobs:
         ports:
           - 6379:6379
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
 
       - name: Restore dependencies
-        uses: actions/cache/restore@v4
+        uses: actions/cache@v4
         with:
           path: |
             frontend/app/node_modules
             backend/api/node_modules
           key: ${{ runner.os }}-*-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-*-
 
       - name: Run Unit Tests
         run: |
@@ -181,25 +196,36 @@ jobs:
   build-and-deploy:
     needs: [quality, security, test]
     runs-on: ubuntu-22.04
+    strategy:
+      matrix:
+        include:
+          - context: 'frontend/app'
+            image: ${{ env.DOCKER_IMAGE_FRONTEND }}
+          - context: 'backend/api'
+            image: ${{ env.DOCKER_IMAGE_BACKEND }}
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
 
       - name: Restore dependencies
-        uses: actions/cache/restore@v4
+        uses: actions/cache@v4
         with:
           path: |
             frontend/app/node_modules
             backend/api/node_modules
           key: ${{ runner.os }}-*-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-*-
 
       - name: Build applications
         run: |
-          cd frontend/app && npm run build -- --prod
-          cd backend/api && npm run build -- --prod
+          cd ${{ matrix.context }} && npm run build -- --prod
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -213,14 +239,10 @@ jobs:
       - name: Build and push Docker images
         uses: docker/build-push-action@v5
         with:
-          context: "{{defaultContext}}:${{ matrix.context }}"
+          context: ${{ matrix.context }}
           push: true
           tags: |
             ${{ matrix.image }}:latest
             ${{ matrix.image }}:${{ github.sha }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
-        strategy:
-          matrix:
-            context: ['frontend/app', 'backend/api']
-            image: ['${{ env.DOCKER_IMAGE_FRONTEND }}', '${{ env.DOCKER_IMAGE_BACKEND }}']
