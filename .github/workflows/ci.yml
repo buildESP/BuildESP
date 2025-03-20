@@ -84,9 +84,13 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
 
-      - name: Install dependencies
-        run: |
-          cd ${{ matrix.project.path }} && if [ "${{ needs.init.outputs.node_modules_frontend }}" == "true" ] || [ "${{ needs.init.outputs.node_modules_backend }}" == "true" ]; then npm i --no-audit; else npm install --no-audit; fi
+      - name: Restore cached dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            frontend/app/node_modules
+            backend/api/node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
 
       - name: Quality checks
         id: quality
@@ -157,8 +161,8 @@ jobs:
           severity: 'CRITICAL,HIGH'
 
       - name: Upload Trivy results
-        uses: github/codeql-action/upload-sarif@v3
         if: always()
+        uses: github/codeql-action/upload-sarif@v3
         with:
           sarif_file: 'trivy-results.sarif'
 
