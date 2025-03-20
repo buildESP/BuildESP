@@ -40,23 +40,24 @@ jobs:
         with:
           fetch-depth: 0
           submodules: recursive
-      
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
 
       - name: Cache dependencies
         id: cache-deps
         uses: actions/cache@v4
         with:
           path: |
-            **/node_modules
+            frontend/app/node_modules
+            backend/api/node_modules
             ~/.npm
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-node-
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
 
       - name: Install dependencies
         if: steps.cache-deps.outputs.cache-hit != 'true'
@@ -77,15 +78,23 @@ jobs:
         ]
     steps:
       - uses: actions/checkout@v4
-      
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
       - name: Restore cache
         uses: actions/cache@v4
         with:
           path: |
-            **/node_modules
+            ${{ matrix.project.path }}/node_modules
             ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-          
+          key: ${{ runner.os }}-node-${{ hashFiles(format('{0}/package-lock.json', matrix.project.path )) }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
       - name: Quality checks
         id: quality
         run: |
@@ -138,6 +147,12 @@ jobs:
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
       
       - name: Run Snyk
         uses: snyk/actions/node@master
@@ -224,4 +239,3 @@ jobs:
           build-args: |
             NODE_ENV=production
             BUILD_VERSION=${{ github.sha }}
-
