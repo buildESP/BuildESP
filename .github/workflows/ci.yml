@@ -10,7 +10,7 @@ on:
 
 env:
   NODE_VERSION: '20.x'
-  CODACY_PROJECT_TOKEN: ${{ secrets.CODACY_API_TOKEN }}
+  CODACY_PROJECT_TOKEN: ${{ secrets.CODACY_PROJECT_TOKEN }}
 
 jobs:
   init:
