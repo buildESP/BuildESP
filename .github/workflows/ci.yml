@@ -58,10 +58,13 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
 
-      - name: Install dependencies
+      - name: Install dependencies Frontend
         run: |
           cd frontend/app && if [ "${{ steps.cache-deps.outputs.cache-hit }}" == "true" ]; then npm ci --no-audit; else npm install --no-audit; fi
-          cd ../../backend/api && if [ "${{ steps.cache-deps.outputs.cache-hit }}" == "true" ]; then npm ci --no-audit; else npm install --no-audit; fi
+
+      - name: Install dependencies Backend
+        run: |
+          cd backend/api && npm install --no-audit
 
   quality:
     needs: init
@@ -91,7 +94,7 @@ jobs:
           key: ${{ runner.os }}-node-${{ hashFiles(format('{0}/package-lock.json', matrix.project.path )) }}
           restore-keys: |
             ${{ runner.os }}-node-
-            
+
       - name: Install dependencies
         run: |
           cd ${{ matrix.project.path }} && npm install --no-audit
