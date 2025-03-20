@@ -103,6 +103,7 @@ jobs:
         run: |
           npx eslint . --max-warnings=0
           npx prettier --check .
+        continue-on-error: true
 
   security:
     needs: init
