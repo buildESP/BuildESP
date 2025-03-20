@@ -103,6 +103,7 @@ jobs:
         run: |
           cd ${{ matrix.project.path }}
           echo "::group::ESLint check"
+          npm install
           npm run eslint
           echo "::endgroup::"
 
