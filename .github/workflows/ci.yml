@@ -229,7 +229,7 @@ jobs:
 
       - name: Build applications
         working-directory: ${{ matrix.project.context }}
-        run: 
+        run: |
           ls
           npm run build 
 
