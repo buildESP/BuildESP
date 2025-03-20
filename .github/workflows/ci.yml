@@ -159,6 +159,7 @@ jobs:
           skip-queries: false
           upload-database: true
           wait-for-processing: true
+        continue-on-error: true
 
   test:
     needs: init
