@@ -143,10 +143,23 @@ jobs:
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
 
-      - name: CodeQL Analysis
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v3
+        with:
+          languages: javascript
+          queries: security-extended
+
+      - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v3
         with:
           category: security
+          output: ../results
+          upload: always
+          cleanup-level: brutal
+          add-snippets: false
+          skip-queries: false
+          upload-database: true
+          wait-for-processing: true
 
   test:
     needs: init
@@ -175,7 +188,6 @@ jobs:
           cd backend/api
           npm install --save-dev jest supertest @types/jest @types/supertest
           npm test -- --coverage
-          
           cd ../../frontend/app
           npm install --save-dev jest
           npm test -- --coverage
