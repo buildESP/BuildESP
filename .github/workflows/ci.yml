@@ -231,7 +231,7 @@ jobs:
         working-directory: ${{ matrix.project.context }}
         run: |
           ls
-          npm run build 
+          npm run 
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
