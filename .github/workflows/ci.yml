@@ -142,6 +142,9 @@ jobs:
           npm audit fix
         continue-on-error: true
 
+      - name: install snyk
+        run: npm install
+
       - name: Snyk Security Scan
         uses: snyk/actions/node@master
         with:
