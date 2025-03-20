@@ -133,11 +133,13 @@ jobs:
           cd frontend/app
           npm audit  --omit=dev
           npx depcheck
+          npm audit fix
 
           echo "Running npm audit --fix and depcheck for backend/api"
           cd ../../backend/api
           npm audit  --omit=dev
           npx depcheck
+          npm audit fix
 
       - name: Snyk Security Scan
         uses: snyk/actions/node@master
