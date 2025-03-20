@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node app.js",
     "sync": "node config/sync.js",
-    "lint": "eslint .",
+    "eslint": "eslint . --max-warnings 0",
     "fixtures": "node fixtures/fixtures.js",
     "test": "jest",
     "make-entity": "node config/makeEntity.js"
