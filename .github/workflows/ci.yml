@@ -127,22 +127,15 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-*-
 
-      - name: Dependency Audit
+      - name: Install dependencies for Snyk
         run: |
-          echo "Running npm audit --fix and depcheck for frontend/app"
-          cd frontend/app
-          npm audit  --omit=dev
-          npx depcheck
-          npm audit fix
+          cd backend/api
+          npm install
+          cd ../../frontend/app
+          npm install
+        shell: bash
 
-          echo "Running npm audit --fix and depcheck for backend/api"
-          cd ../../backend/api
-          npm audit  --omit=dev
-          npx depcheck
-          npm audit fix
-        continue-on-error: true
-
-      - name: Snyk Security Scan
+      - name: Run Snyk Monitor
         uses: snyk/actions/node@master
         with:
           command: monitor
@@ -153,7 +146,7 @@ jobs:
       - name: CodeQL Analysis
         uses: github/codeql-action/analyze@v3
         with:
-          category: "security"
+          category: security
 
   test:
     needs: init
