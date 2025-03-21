@@ -1,4 +1,4 @@
-name: Fullstack-CD-Pipeline
+name: CD-Pipeline
 
 on:
   workflow_dispatch:
