@@ -43,11 +43,13 @@ services:
     ports:
       - "80:80"
     volumes:
+      - ./app/src/nginx/nginx.conf:/etc/nginx/nginx.conf  # Ajout du fichier principal
       - ./app/src/nginx/conf.d/default.conf:/etc/nginx/conf.d/default.conf
     networks:
       - buildesp_network
     depends_on:
       - frontend
+
 
   prometheus:
     image: prom/prometheus
