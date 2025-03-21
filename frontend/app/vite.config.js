@@ -1,11 +1,9 @@
-import { defineConfig, loadEnv } from 'vite'
-import react from '@vitejs/plugin-react-swc'
-import path from 'path'
-
+import { defineConfig, loadEnv } from 'vite';
+import react from '@vitejs/plugin-react-swc';
+import path from 'path';
 
 // https://vite.dev/config/
 export default defineConfig(({ mode }) => {
-
   const env = loadEnv(mode, process.cwd());
 
   return {
@@ -19,7 +17,7 @@ export default defineConfig(({ mode }) => {
       __APP_ENV__: env.APP_ENV,
     },
     server: {
-      allowedHosts: ["*"], // Permet à n'importe quel hôte d'accéder à votre serveur
-    },    
+      allowedHosts: true
+    }
   };
 });
