@@ -7,13 +7,13 @@ import useItems from "../../hooks/useItems";
 const ItemCard = ({ item }) => {
 
   const { user } = useAuth();
-  const { deleteData, loading } = useDeleteData(`/items/${item.id}`);
+  const { deleteData, loading } = useDeleteData(`/items`);
   const navigate = useNavigate();
 
   const { refetch } = useItems();
   const handleDelete = async () => {
     if (window.confirm("Voulez-vous vraiment supprimer cet item ?")) {
-      const success = await deleteData();
+      const success = await deleteData(item.id);
       if (success) {
         refetch(); 
         navigate("/my-items");

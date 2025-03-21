@@ -34,7 +34,6 @@ const Navbar = () => {
 
 
   const isDesktop = useBreakpointValue({ base: false, md: true });
-  console.log("🔹 Navbar : Utilisateur =", user);
   return (
     <Box bg="green.300" px={4} boxShadow="md" position="fixed" zIndex="1000"
       w="100vw"

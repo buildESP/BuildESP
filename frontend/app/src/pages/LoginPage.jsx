@@ -23,14 +23,14 @@ const LoginPage = () => {
       loginUser(data.token, data.userId);
 
       // ✅ Notification de succès
-      toast.success("✅ Connexion réussie !", { position: "top-right" });
+      toast.success(" Connexion réussie !", { position: "top-right" });
 
       navigate("/my-items");
     } catch (err) {
       console.error("Erreur de connexion :", err);
 
       // ✅ Si le serveur renvoie un message d'erreur, on l'affiche
-      const errorMessage = err.message || "❌ Une erreur est survenue.";
+      const errorMessage = err.message || " Une erreur est survenue.";
       toast.error(errorMessage, { position: "top-right" });
     }
   };

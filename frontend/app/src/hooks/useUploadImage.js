@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { API_BASE_URL } from "@/config";
 
 // Utilisez la variable d'environnement pour la base URL de l'API et ajoutez le port et le chemin
 const API_BASE_URL = `${import.meta.env.VITE_API_BASE_URL}:/api`;

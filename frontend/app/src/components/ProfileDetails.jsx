@@ -8,7 +8,7 @@ const ProfileDetails = ({ userData, loading, error }) => {
 
   return (
     <Box bg="green.50" p={6} borderRadius="md" textAlign="center">
-      <Avatar size="xl" src={userData.picture || "https://via.placeholder.com/150"} />
+      <Avatar size="xl" src={userData.picture || "https://via.placevia.placeholder.comholder.com/150"} />
       <Text fontSize="2xl" fontWeight="bold" mt={2}>
         {userData.firstname} {userData.lastname}
       </Text>

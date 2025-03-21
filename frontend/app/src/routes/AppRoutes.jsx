@@ -3,8 +3,9 @@ import MainLayout from "../layouts/MainLayouts";
 import HomePage from "../pages/HomePage";
 import ProfilePage from "../pages/ProfilePage";
 import LoginPage from "../pages/LoginPage";
-import PrivateRoute from "./PrivateRoutes"; 
+import PrivateRoute from "./PrivateRoutes";
 import PublicRoutes from "./PublicRoutes";
+import AdminRoute from "./AdminRoute";
 import CategoriesPage from "../pages/categories/CategoriesPage";
 import MyNeighborsPage from "../pages/MyNeighborsPage";
 import CategoryDetailsPage from "../pages/categories/CategoryDetailsPage";
@@ -27,13 +28,13 @@ const AppRoutes = () => {
       <Routes>
         {/* ✅ Layout principal (Navbar, Footer...) */}
         <Route path="/" element={<MainLayout />}>
-          
+
           {/* 🏠 Page d'accueil */}
           <Route index element={<HomePage />} />
 
           {/* 📂 Pages de catégories et sous-catégories */}
           <Route path="categories" element={<CategoriesPage />} />
-          <Route path="categories/:id" element={<CategoryDetailsPage />} /> 
+          <Route path="categories/:id" element={<CategoryDetailsPage />} />
           <Route path="subcategories/:id" element={<SubcategoryDetailsPage />} />
 
           {/* 👥 Pages de voisins */}
@@ -41,7 +42,7 @@ const AppRoutes = () => {
           <Route path="my-neighbors/:id" element={<MyNeighborsItemsPages />} />
 
           {/* 🚪 Routes accessibles uniquement aux utilisateurs non connectés */}
-          <Route element={<PublicRoutes />}> 
+          <Route element={<PublicRoutes />}>
             <Route path="login" element={<LoginPage />} />
             <Route path="register" element={<RegisterPage />} />
           </Route>
@@ -52,9 +53,12 @@ const AppRoutes = () => {
             <Route path="my-items" element={<MyItemsPage />} />
             <Route path="items/:id" element={<ItemDetailsPage />} />
             <Route path="add-item" element={<AddItemPage />} />
-            <Route path="admin/" element={<AdminPage />} />
           </Route>
-          
+
+
+          <Route element={<AdminRoute />}>
+            <Route path="admin" element={<AdminPage />} />
+          </Route>
         </Route>
       </Routes>
     </Router>

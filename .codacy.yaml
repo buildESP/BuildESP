@@ -1,0 +1,60 @@
+# .codacy.yaml
+
+# Exclude unnecessary files and directories
+exclude_paths:
+  - "**/node_modules/**"       # Exclude node_modules for both frontend and backend
+  - "**/dist/**"               # Exclude build/dist directories
+  - "**/coverage/**"           # Exclude test coverage reports
+  - "**/*.spec.js"             # Exclude test files
+  - "**/*.test.js"             # Exclude test files
+  - "frontend/app/public/**"   # Exclude frontend static files (if applicable)
+  - "backend/api/logs/**"      # Exclude backend logs (if applicable)
+
+# Configure tools for both frontend and backend
+tools:
+  # ESLint for JavaScript/TypeScript linting
+  - name: eslint
+    patterns:
+      - "frontend/app/**/*.js"      # Frontend JavaScript files
+      - "frontend/app/**/*.jsx"     # Frontend JSX files (if using React)
+      - "backend/api/**/*.js"       # Backend JavaScript files
+      - "**/*.ts"                   # TypeScript files (if applicable)
+      - "**/*.tsx"                  # TypeScript JSX files (if applicable)
+
+  # Prettier for code formatting
+  - name: prettier
+    patterns:
+      - "frontend/app/**/*.js"      # Frontend JavaScript files
+      - "frontend/app/**/*.jsx"     # Frontend JSX files
+      - "backend/api/**/*.js"       # Backend JavaScript files
+      - "**/*.ts"                   # TypeScript files
+      - "**/*.tsx"                  # TypeScript JSX files
+
+  # Trivy for Dockerfile and YAML file security scanning
+  - name: trivy
+    patterns:
+      - "**/Dockerfile"             # Dockerfiles
+      - "**/*.yaml"                 # YAML files (e.g., Kubernetes configs)
+      - "**/*.yml"                  # YAML files
+
+  # PMD for static code analysis (if using Java or XML in backend)
+  - name: pmd
+    patterns:
+      - "backend/api/**/*.java"     # Backend Java files (if applicable)
+      - "**/*.xml"                  # XML files (if applicable)
+
+# Tool-specific configurations
+eslint:
+  rules:
+    - no-console: error             # Treat console.log as an error
+    - no-unused-vars: warning       # Treat unused variables as a warning
+    - react/prop-types: off         # Disable React prop-types rule (if using React)
+
+prettier:
+  rules:
+    - printWidth: 80                # Set max line width to 80 characters
+    - singleQuote: true             # Use single quotes
+    - trailingComma: es5            # Add trailing commas where valid in ES5
+
+trivy:
+  severity: high                    # Only report high-severity vulnerabilities
