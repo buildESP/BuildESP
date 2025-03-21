@@ -1,12 +1,14 @@
 name: Fullstack-light-ci-Pipeline
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - DevOps_ESP-51
   pull_request:
     branches:
       - DevOps_ESP-51
+    
 
 env:
   NODE_VERSION: '20.x'
