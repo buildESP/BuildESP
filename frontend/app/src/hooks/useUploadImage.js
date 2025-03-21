@@ -1,18 +1,11 @@
+// src/hooks/useUploadImage.js
 import { useState } from "react";
-import { API_BASE_URL } from "@/config";
-
-// Utilisez la variable d'environnement pour la base URL de l'API et ajoutez le port et le chemin
-const API_BASE_URL = `${import.meta.env.VITE_API_BASE_URL}:/api`;
+import { API_BASE_URL } from "@/config"; // Import de la variable depuis config.js
 
 const useUploadImage = () => {
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState(null);
 
-  /**
-   * Uploads an image file to the backend
-   * @param {File} file - Image file to upload
-   * @returns {Promise<string|null>} - URL of the uploaded image or null if failed
-   */
   const uploadImage = async (file) => {
     if (!file) return null;
 
@@ -33,7 +26,7 @@ const useUploadImage = () => {
       }
 
       const data = await response.json();
-      return data.imageUrl; // ✅ Retourne l'URL de l'image envoyée par l'API
+      return data.imageUrl;
     } catch (err) {
       setError(err.message);
       return null;
