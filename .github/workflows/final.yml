@@ -1,7 +1,15 @@
 name: Fullstack-light-ci-Pipeline
 
 on:
-  workflow_dispatch:
+  workflow_dispatch: # Add this to enable manual triggering
+    inputs:
+      logLevel:
+        description: 'trigger manually'
+        required: true
+        default: 'warning'
+      tags:
+        description: 'light testing'
+        required: false
   push:
     branches:
       - DevOps_ESP-51
