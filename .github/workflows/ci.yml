@@ -131,7 +131,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-*-
       - name: Run Snyk Monitor
-        uses: snyk/actions/node@bdfda70b7c925f4f3e0a85e8a7e3b1c5f5b5f5b5
+        uses: snyk/actions/node@master
         with:
           command: monitor
           args: --all-projects --severity-threshold=high
@@ -188,6 +188,6 @@ jobs:
         continue-on-error: true
 
       - name: Upload coverage reports
-        uses: codecov/codecov-action@f1a6e3b5d5f5b5f5b5f5b5f5b5f5b5f5b5f5b5f5
+        uses: codecov/codecov-action@v3
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
