@@ -145,4 +145,4 @@ volumes:
 
 networks:
   buildesp_network:
-    external: true
+    driver: bridge
