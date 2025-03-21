@@ -1,4 +1,4 @@
-name: Fullstack-CI-Pipeline
+name: Fullstack-light-ci-Pipeline
 
 on:
   push:
