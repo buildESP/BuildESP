@@ -9,11 +9,12 @@ const AdminTabs = ({ users, items, categories, refetchUsers, refetchItems, refet
     <Tabs.Root defaultValue="items">
       <Tabs.List>
         <Tabs.Trigger value="items">
-          <LuUser />
+          <LuFolder />
+
           Items
         </Tabs.Trigger>
         <Tabs.Trigger value="users">
-          <LuFolder />
+          <LuUser />
           Utilisateurs
         </Tabs.Trigger>
         <Tabs.Trigger value="categories">

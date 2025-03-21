@@ -1,10 +1,17 @@
 import { useState } from "react";
 import { ActionBar, Button, Kbd, Portal, Table, Image, Text } from "@chakra-ui/react";
 import { Checkbox } from "@/components/ui/checkbox";
+import useDeleteData from "@/hooks/useDeleteData";
 
-const AdminTable = ({ items }) => {
+const AdminTable = ({ items, refetch, basePath }) => {
   const [selection, setSelection] = useState([]);
+  const { deleteData, loading } = useDeleteData(basePath);
 
+
+  if (!basePath) {
+    console.error(" AdminTable : basePath manquant !");
+    return <Text color="red.500">Erreur: basePath non défini.</Text>;
+  }
   if (!items || items.length === 0) {
     return <Text>Aucun élément à afficher.</Text>;
   }
@@ -35,6 +42,22 @@ const AdminTable = ({ items }) => {
   const handleSelectAll = (checked) => {
     setSelection(checked ? items.map((item) => item.id) : []);
   };
+  /**
+   * ✅ **Suppression par lot avec un délai**
+   * - Permet d'éviter de surcharger l'API en supprimant en batch.
+   */
+  const handleDeleteSelected = async () => {
+    if (!window.confirm(`Voulez-vous vraiment supprimer ces ${selection.length} éléments ?`)) return;
+  
+    try {
+      await deleteData(selection); // 🔹 Supprime chaque élément individuellement
+      setSelection([]); // ✅ Réinitialise la sélection
+      refetch(); // ✅ Rafraîchit les données
+    } catch (error) {
+      console.error(" Erreur lors de la suppression de plusieurs éléments :", error);
+    }
+  };
+
 
   // ✅ Fonction de formatage des valeurs
   const formatValue = (key, value, item) => {
@@ -139,7 +162,7 @@ const AdminTable = ({ items }) => {
                 {selection.length} sélectionné(s)
               </ActionBar.SelectionTrigger>
               <ActionBar.Separator />
-              <Button variant="outline" size="sm">
+              <Button variant="outline" size="sm" onClick={handleDeleteSelected} isLoading={loading}>
                 Supprimer <Kbd>⌫</Kbd>
               </Button>
               <Button variant="outline" size="sm">

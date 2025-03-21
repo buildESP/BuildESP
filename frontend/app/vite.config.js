@@ -14,6 +14,8 @@ export default defineConfig(({ mode }) => {
       },
     },
     define: {
+      'process.env': process.env,
+      '__dirname': JSON.stringify(__dirname),
       __APP_ENV__: env.APP_ENV,
     },
     server: {
