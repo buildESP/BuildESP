@@ -7,7 +7,6 @@ env:
   NODE_VERSION: '20.x'
   DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
 
-
 jobs:
   build-and-deploy:
     runs-on: ubuntu-22.04
