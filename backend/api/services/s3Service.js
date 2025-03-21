@@ -1,5 +1,4 @@
-const { S3Client, PutObjectCommand, GetObjectCommand, DeleteObjectCommand } = require('@aws-sdk/client-s3');
-const { getSignedUrl } = require('@aws-sdk/s3-request-presigner');
+const { S3Client, PutObjectCommand } = require('@aws-sdk/client-s3');
 require('dotenv').config();
 
 const s3 = new S3Client({
@@ -18,6 +17,7 @@ const s3 = new S3Client({
  * @returns {string} Public URL of the image on S3
  */
 const uploadImageForEntity = async (file, entityType, entityId) => {
+    console.log('Uploading image for entity:', entityType, entityId);
     const key = `${entityType}-${entityId}.${file.mimetype.split('/')[1]}`;
 
     const params = {
@@ -27,37 +27,14 @@ const uploadImageForEntity = async (file, entityType, entityId) => {
         ContentType: file.mimetype,
     };
 
-    await s3.send(new PutObjectCommand(params));
-    return `https://${process.env.AWS_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${key}`;
+    try {
+        await s3.send(new PutObjectCommand(params));
+        console.log('Image uploaded successfully:', key);
+        return `https://${process.env.AWS_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${key}`;
+    } catch (error) {
+        console.error('Error uploading image:', error);
+        throw error;
+    }
 };
 
-/**
- * Generates a signed URL to temporarily access a private image.
- * @param {string} fileKey - File key on S3
- * @returns {string} Temporary signed URL
- */
-const getImageUrl = async (fileKey) => {
-    const params = {
-        Bucket: process.env.AWS_BUCKET_NAME,
-        Key: fileKey,
-    };
-    return getSignedUrl(s3, new GetObjectCommand(params), { expiresIn: 3600 });
-};
-
-/**
- * Deletes an image from S3.
- * @param {string} imageUrl - Full URL of the image to be deleted
- */
-const deleteImage = async (imageUrl) => {
-    if (!imageUrl) return;
-
-    const fileKey = imageUrl.split('.amazonaws.com/')[1];
-    const params = {
-        Bucket: process.env.AWS_BUCKET_NAME,
-        Key: fileKey,
-    };
-
-    await s3.send(new DeleteObjectCommand(params));
-};
-
-module.exports = { uploadImageForEntity, getImageUrl, deleteImage };
+module.exports = { uploadImageForEntity };
