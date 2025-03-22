@@ -1,6 +1,6 @@
 const express = require('express');
 const multer = require('multer');
-const { uploadImageForEntity, deleteImage } = require('../../../services/s3Service');
+const { uploadImageForEntity, deleteImage } = require('/usr/src/app/services/s3Service');
 
 const app = express();
 
