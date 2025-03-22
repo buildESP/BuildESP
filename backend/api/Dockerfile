@@ -10,8 +10,8 @@ COPY package.json ./
 # Installer uniquement les dépendances de production
 RUN npm i
 
-# Installer AWS CLI et curl correctement
-RUN apk add --no-cache curl unzip \
+# Installer AWS CLI et curl
+RUN apk add --no-cache curl unzip python3 py3-pip \
     && curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" \
     && unzip awscliv2.zip \
     && ./aws/install \
