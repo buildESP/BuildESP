@@ -4,8 +4,8 @@ FROM node:22-alpine
 # Définir le répertoire de travail dans le container
 WORKDIR /usr/src/app
 
-# Copier package.json et package-lock.json pour installer les dépendances
-COPY package.json package-lock.json ./
+# Copier uniquement package.json pour installer les dépendances
+COPY package.json ./
 
 # Installer les dépendances (y compris axios et autres)
 RUN npm install
