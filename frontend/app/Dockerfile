@@ -20,4 +20,5 @@ COPY . .
 EXPOSE 5173
 
 # Command to run the application (adapté pour Vite)
-CMD ["npm", "run", "dev"]
+CMD ["npm", "run", "dev", "--", "--host"]
+
