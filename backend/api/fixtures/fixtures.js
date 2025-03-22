@@ -1,28 +1,3 @@
-const readline = require('readline');
-const chalk = require('chalk');
-const { sequelize } = require('../config/db');
-const { User, Category, Subcategory, Item, Exchange } = require('../models/associations');
-const userFixtures = require('./userFixtures');
-const categoryFixtures = require('./categoryFixtures');
-const subcategoryFixtures = require('./subcategoryFixtures');
-const itemFixtures = require('./itemFixtures');
-
-const rl = readline.createInterface({
-  input: process.stdin,
-  output: process.stdout
-});
-
-const confirmAction = () => {
-  return new Promise((resolve) => {
-    rl.question(
-      chalk.yellow('⚠️  Are you sure you want to drop all tables and apply the fixtures? (yes/no) '),
-      (answer) => {
-        resolve(answer.toLowerCase() === 'yes');
-      }
-    );
-  });
-};
-
 const applyFixtures = async () => {
   try {
     console.log(chalk.cyan('\n🔗 Connecting to the database...'));
@@ -39,9 +14,6 @@ const applyFixtures = async () => {
 
     // Disable foreign key checks
     await sequelize.query('SET FOREIGN_KEY_CHECKS = 0;');
-
-    // Drop foreign key constraint explicitly if necessary
-    await sequelize.query('ALTER TABLE Exchanges DROP FOREIGN KEY Exchanges_ibfk_4;');
 
     // Drop tables in the correct order
     await Exchange.drop();  // Drop Exchange table first, because it references Items
@@ -76,11 +48,8 @@ const applyFixtures = async () => {
 
     console.log(chalk.bold.green('\n🎉 Fixtures applied successfully!'));
   } catch (error) {
-    console.error(chalk.red('\n❌ Error while applying fixtures:'), error);
+    console.error(chalk.red('\n❌ Error while applying fixtures:'), error.message || error);
   } finally {
     rl.close();
   }
 };
-
-// Execute the fixture application
-applyFixtures();
