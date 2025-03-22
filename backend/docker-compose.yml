@@ -19,7 +19,6 @@ services:
     depends_on:
       db:
         condition: service_healthy
-    #image: stephb421/buildesp-backend:latest
     restart: always
     networks:
       - buildesp_network
