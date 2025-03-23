@@ -11,11 +11,7 @@ COPY package.json ./
 RUN npm install
 
 # Installer AWS CLI et curl
-RUN apk add --no-cache curl unzip python3 py3-pip \
-    && curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" \
-    && unzip awscliv2.zip \
-    && ./aws/install \
-    && rm -rf aws awscliv2.zip
+RUN apk add --no-cache curl unzip python3 py3-pip mysql-client
 
 # Copier le reste du code de l'application
 COPY . .
