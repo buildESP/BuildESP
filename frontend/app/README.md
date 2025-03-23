@@ -14,7 +14,7 @@
 
 ### 1️⃣ Cloner le repo
 
-git clone https://github.com/votre-org/neighborrow.git
+git clone git@github.com:buildESP/BuildESP.git
 cd frontend
  ###2️⃣ Créer un fichier .env
 
