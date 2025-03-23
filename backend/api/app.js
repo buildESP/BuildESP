@@ -7,6 +7,7 @@ const cors = require('cors');
 const chalk = require('chalk');
 const helmet = require('helmet');
 const morgan = require('morgan');
+const WebSocket = require('ws');  // Importation de la librairie WebSocket
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -23,7 +24,7 @@ app.use(helmet());
 // 📝 Logger des requêtes avec Morgan
 app.use(morgan('dev'));
 
-// 📦 Middleware pour parser les requêtes JSON (body-parser n'est plus nécessaire)
+// 📦 Middleware pour parser les requêtes JSON
 app.use(express.json());
 
 // 🔍 Middleware pour logger les requêtes et leur origine
@@ -91,7 +92,6 @@ app.post('/api/access-token', async (req, res) => {
     res.status(response.status).json(response.data);
   } catch (error) {
     console.error('❌ Erreur API privée:', error.message);
-    // Afficher les détails de l'erreur
     if (error.response) {
       console.error('Détails de la réponse de l\'API privée :', error.response.data);
       return res.status(error.response.status).json({
@@ -128,4 +128,17 @@ app.use((err, req, res, next) => {
 app.listen(port, '0.0.0.0', () => {
   console.log(chalk.green.bold(`🚀 API en ligne : http://0.0.0.0:${port}`));
   console.log(chalk.blue(`📚 Docs Swagger : http://0.0.0.0:${port}/doc`));
+});
+
+// WebSocket Server (ajouter à la fin de votre fichier)
+const wss = new WebSocket.Server({ port: 5173 });
+
+wss.on('connection', (ws) => {
+  console.log('Client connecté');
+  
+  ws.on('message', (message) => {
+    console.log('Message reçu :', message);
+  });
+
+  ws.send('Bienvenu sur le WebSocket');
 });
