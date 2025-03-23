@@ -1,12 +1,61 @@
-# React + Vite
+# 🚀 README – Lancement du **Frontend**
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## ⚛️ Lancement du Frontend (React)
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 📦 Prérequis
 
-## Expanding the ESLint configuration
+- Node.js `v22+`
+- npm ou yarn
+- Docker (optionnel, pour MySQL backend)
 
-If you are developing a production application, we recommend using TypeScript and enable type-aware lint rules. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+---
+
+### 1️⃣ Cloner le repo
+
+git clone https://github.com/votre-org/neighborrow.git
+cd frontend
+ ###2️⃣ Créer un fichier .env
+
+# .env
+```bash
+VITE_API_BASE_URL=http://localhost:3000/api
+VITE_AUTH_TOKEN_KEY=authToken
+VITE_APP_NAME=Neighborrow
+VITE_DEFAULT_LANGUAGE=fr
+VITE_DEBUG_MODE=true
+VITE_IMAGE_MAX_SIZE=5000000
+VITE_ENVIRONMENT=development
+VITE_LOG_LEVEL=debug
+```
+ ### 3️⃣ Installer les dépendances
+```bash
+npm install
+```
+4️⃣ Lancer le projet
+
+```bash
+npm run dev
+```
+
+✅ L'application est maintenant accessible sur : http://localhost:5173 🎉
+
+### 🧱 Architecture du dossier `src/`
+
+| Dossier / Fichier        | Description |
+|--------------------------|-------------|
+| `assets/`                | Images et fichiers statiques |
+| `components/`            | Composants UI réutilisables (Navbar, Modals, Tables…) |
+| `context/`               | Providers React (AuthContext, ItemContext…) |
+| `hooks/`                 | Hooks personnalisés (useAuth, useFetchData, etc.) |
+| `layouts/`               | Layouts d’application (MainLayout, AuthLayout…) |
+| `lib/`                   | Fonctions utilitaires (formatDate, etc.) |
+| `pages/`                 | Pages principales (Accueil, Profil, etc.) |
+| `routes/`                | Fichier de routing (AppRoutes.jsx) |
+| `services/`              | Fonctions de requêtes API (userService, authService…) |
+| `validation/`            | Schémas de validation Zod |
+| `App.jsx`                | Composant racine de l’application |
+| `main.jsx`               | Point d’entrée de l’application |
+| `index.css / App.css`    | Styles globaux et principaux |
+
