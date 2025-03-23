@@ -1,14 +1,11 @@
 import { Table } from "@chakra-ui/react";
 import FormattedCell from "../FormattedCell";
-import EditableCell from "../EditTableCell";
 import { Checkbox } from "../ui/checkbox";
 
 
 
-const AdminTableRow = ({ item, columnKeys, selection, handleSelectionChange, editingRowId, setEditingRowId, handleEditChange  }) => {
-  const isEditing = editingRowId === item.id;
+const AdminTableRow = ({ item, columnKeys, selection, handleSelectionChange, editingRowId, setEditingRowId }) => {
 
-  const nonEditableKeys = ["User_id", "Subcategory_id"]; // 🔹 Liste des clés non éditables
 
   return (
     <Table.Row key={item.id} data-selected={selection.includes(item.id) ? "" : undefined}>
@@ -25,11 +22,8 @@ const AdminTableRow = ({ item, columnKeys, selection, handleSelectionChange, edi
 
       {columnKeys.map((key) => (
         <Table.Cell key={key} w="15%" textAlign="left">
-          {isEditing && !nonEditableKeys.includes(key) ? (
-            <EditableCell keyName={key} value={item[key]} onChange={(val) => handleEditChange(item.id, key, val)} />
-          ) : (
-            <FormattedCell keyName={key} value={item[key]} item={item} />
-          )}
+
+          <FormattedCell keyName={key} value={item[key]} item={item} />
         </Table.Cell>
       ))}
     </Table.Row>
