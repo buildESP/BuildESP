@@ -49,6 +49,7 @@ const allowedOrigins = [
 app.use(
   cors({
     origin: (origin, callback) => {
+      // Accepter les requêtes provenant de l'EC2 Frontend ou autoriser les connexions sans origine (ex: pour Postman)
       if (!origin || allowedOrigins.includes(origin)) {
         callback(null, true);
       } else {
@@ -56,7 +57,7 @@ app.use(
         callback(new Error('Not allowed by CORS'));
       }
     },
-    credentials: true,
+    credentials: true,  // Pour permettre l'envoi des cookies
     methods: 'GET,POST,PUT,DELETE,OPTIONS',
     allowedHeaders: 'Content-Type,Authorization',
   })
@@ -128,4 +129,3 @@ app.listen(port, '0.0.0.0', () => {
   console.log(chalk.green.bold(`🚀 API en ligne : http://0.0.0.0:${port}`));
   console.log(chalk.blue(`📚 Docs Swagger : http://0.0.0.0:${port}/doc`));
 });
-
