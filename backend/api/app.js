@@ -7,7 +7,6 @@ const cors = require('cors');
 const chalk = require('chalk');
 const helmet = require('helmet');
 const morgan = require('morgan');
-const WebSocket = require('ws');  // Importation de la librairie WebSocket
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -24,7 +23,7 @@ app.use(helmet());
 // 📝 Logger des requêtes avec Morgan
 app.use(morgan('dev'));
 
-// 📦 Middleware pour parser les requêtes JSON
+// 📦 Middleware pour parser les requêtes JSON (body-parser n'est plus nécessaire)
 app.use(express.json());
 
 // 🔍 Middleware pour logger les requêtes et leur origine
@@ -41,10 +40,6 @@ const allowedOrigins = [
   'http://localhost:3000',
   'http://localhost:5173',
   'https://172.31.41.254',
-  'http://neighborrow.hephel.fr',
-  'http://www.neighborrow.hephel.fr',
-  'https://neighborrow.hephel.fr',
-  'https://www.neighborrow.hephel.fr',
 ];
 
 app.use(
@@ -83,21 +78,16 @@ const groupRoutes = require('./routes/groupRoutes');
 
 // 🌍 Proxy vers l'API privée pour l'authentification
 app.post('/api/access-token', async (req, res) => {
-  console.log('🔑 Requête reçue avec les données :', req.body);
   try {
+    console.log('🔑 Requête reçue avec les données :', req.body);
+
     const response = await axios.post('http://172.31.33.98:3000/api/access-token', req.body);
+
     console.log('✅ Réponse API privée :', response.data);
     res.status(response.status).json(response.data);
   } catch (error) {
     console.error('❌ Erreur API privée:', error.message);
-    if (error.response) {
-      console.error('Détails de la réponse de l\'API privée :', error.response.data);
-      return res.status(error.response.status).json({
-        message: 'Erreur lors de la récupération du token',
-        error: error.response.data,
-      });
-    }
-    res.status(500).json({
+    res.status(error.response?.status || 500).json({
       message: 'Erreur lors de la récupération du token',
       error: error.message,
     });
@@ -126,52 +116,4 @@ app.use((err, req, res, next) => {
 app.listen(port, '0.0.0.0', () => {
   console.log(chalk.green.bold(`🚀 API en ligne : http://0.0.0.0:${port}`));
   console.log(chalk.blue(`📚 Docs Swagger : http://0.0.0.0:${port}/doc`));
-});
-
-// WebSocket Server
-const wss = new WebSocket.Server({ port: 5173 });
-
-wss.on('connection', (ws) => {
-  console.log('Client connecté');
-
-  ws.on('message', (message) => {
-    console.log('Message reçu :', message);
-  });
-
-  ws.on('error', (error) => {
-    console.error('Erreur WebSocket :', error);
-  });
-
-  ws.on('close', (code, reason) => {
-    console.log('Connexion fermée :', code, reason);
-  });
-
-  ws.send('Bienvenu sur le WebSocket');
-});
-
-// 🎯 Nouvelle route pour envoyer une requête HTTP au frontend
-app.post('/send-notification', async (req, res) => {
-  try {
-    // Envoie une notification ou une mise à jour vers le frontend
-    const message = req.body.message;
-
-    // Utilise Axios pour envoyer la requête HTTP au frontend
-    const response = await axios.post('http://frontend:5173/api/receive-notification', {
-      message,
-    });
-
-    console.log('✅ Notification envoyée au frontend:', response.data);
-
-    // Répondre à la requête du client
-    res.status(200).json({
-      message: 'Notification envoyée au frontend avec succès',
-      data: response.data,
-    });
-  } catch (error) {
-    console.error('❌ Erreur lors de l\'envoi de la notification au frontend:', error.message);
-    res.status(500).json({
-      message: 'Erreur lors de l\'envoi de la notification au frontend',
-      error: error.message,
-    });
-  }
 });
