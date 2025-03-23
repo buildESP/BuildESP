@@ -148,3 +148,30 @@ wss.on('connection', (ws) => {
 
   ws.send('Bienvenu sur le WebSocket');
 });
+
+// 🎯 Nouvelle route pour envoyer une requête HTTP au frontend
+app.post('/send-notification', async (req, res) => {
+  try {
+    // Envoie une notification ou une mise à jour vers le frontend
+    const message = req.body.message;
+
+    // Utilise Axios pour envoyer la requête HTTP au frontend
+    const response = await axios.post('http://frontend:5173/api/receive-notification', {
+      message,
+    });
+
+    console.log('✅ Notification envoyée au frontend:', response.data);
+
+    // Répondre à la requête du client
+    res.status(200).json({
+      message: 'Notification envoyée au frontend avec succès',
+      data: response.data,
+    });
+  } catch (error) {
+    console.error('❌ Erreur lors de l\'envoi de la notification au frontend:', error.message);
+    res.status(500).json({
+      message: 'Erreur lors de l\'envoi de la notification au frontend',
+      error: error.message,
+    });
+  }
+});
