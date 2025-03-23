@@ -57,3 +57,8 @@ export const userUpdateSchema = z.object({
   is_admin: z.boolean().optional(),
   // groups: z.array(z.number()).optional(), // à activer plus tard si besoin
 });
+
+export const categoryUpdateSchema = z.object({
+  name: z.string().min(2, "Le nom est requis"),
+  image_url: z.string().url("URL d’image invalide").optional(),
+});
