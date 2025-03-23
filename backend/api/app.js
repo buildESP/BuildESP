@@ -40,6 +40,10 @@ const allowedOrigins = [
   'http://localhost:3000',
   'http://localhost:5173',
   'https://172.31.41.254',
+  'http://neighborrow.hephel.fr',    // Ajout de l'URL http://neighborrow.hephel.fr
+  'http://www.neighborrow.hephel.fr', // Ajout de l'URL http://www.neighborrow.hephel.fr
+  'https://neighborrow.hephel.fr',   // Ajout de l'URL https://neighborrow.hephel.fr (si HTTPS est utilisé)
+  'https://www.neighborrow.hephel.fr',// Ajout de l'URL https://www.neighborrow.hephel.fr (si HTTPS est utilisé)
 ];
 
 app.use(
