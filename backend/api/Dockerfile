@@ -8,7 +8,7 @@ WORKDIR /usr/src/app
 COPY package.json ./
 
 # Installer les dépendances
-RUN npm i
+RUN npm install
 
 # Installer AWS CLI et curl
 RUN apk add --no-cache curl unzip python3 py3-pip \

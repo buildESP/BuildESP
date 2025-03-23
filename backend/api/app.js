@@ -50,7 +50,6 @@ const allowedOrigins = [
 app.use(
   cors({
     origin: (origin, callback) => {
-      // Accepter les requêtes provenant de l'EC2 Frontend ou autoriser les connexions sans origine (ex: pour Postman)
       if (!origin || allowedOrigins.includes(origin)) {
         callback(null, true);
       } else {
@@ -58,7 +57,7 @@ app.use(
         callback(new Error('Not allowed by CORS'));
       }
     },
-    credentials: true,  // Pour permettre l'envoi des cookies
+    credentials: true,
     methods: 'GET,POST,PUT,DELETE,OPTIONS',
     allowedHeaders: 'Content-Type,Authorization',
   })
@@ -86,7 +85,6 @@ const groupRoutes = require('./routes/groupRoutes');
 app.post('/api/access-token', async (req, res) => {
   console.log('🔑 Requête reçue avec les données :', req.body);
   try {
-    // Effectuer la requête HTTP vers le backend de l'API privée
     const response = await axios.post('http://172.31.33.98:3000/api/access-token', req.body);
     console.log('✅ Réponse API privée :', response.data);
     res.status(response.status).json(response.data);
@@ -130,14 +128,22 @@ app.listen(port, '0.0.0.0', () => {
   console.log(chalk.blue(`📚 Docs Swagger : http://0.0.0.0:${port}/doc`));
 });
 
-// WebSocket Server (ajouter à la fin de votre fichier)
+// WebSocket Server
 const wss = new WebSocket.Server({ port: 5173 });
 
 wss.on('connection', (ws) => {
   console.log('Client connecté');
-  
+
   ws.on('message', (message) => {
     console.log('Message reçu :', message);
+  });
+
+  ws.on('error', (error) => {
+    console.error('Erreur WebSocket :', error);
+  });
+
+  ws.on('close', (code, reason) => {
+    console.log('Connexion fermée :', code, reason);
   });
 
   ws.send('Bienvenu sur le WebSocket');
