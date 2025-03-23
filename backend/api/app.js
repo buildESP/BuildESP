@@ -40,10 +40,10 @@ const allowedOrigins = [
   'http://localhost:3000',
   'http://localhost:5173',
   'https://172.31.41.254',
-  'http://neighborrow.hephel.fr',    // Ajout de l'URL http://neighborrow.hephel.fr
-  'http://www.neighborrow.hephel.fr', // Ajout de l'URL http://www.neighborrow.hephel.fr
-  'https://neighborrow.hephel.fr',   // Ajout de l'URL https://neighborrow.hephel.fr (si HTTPS est utilisé)
-  'https://www.neighborrow.hephel.fr',// Ajout de l'URL https://www.neighborrow.hephel.fr (si HTTPS est utilisé)
+  'http://neighborrow.hephel.fr',
+  'http://www.neighborrow.hephel.fr',
+  'https://neighborrow.hephel.fr',
+  'https://www.neighborrow.hephel.fr',
 ];
 
 app.use(
@@ -82,15 +82,14 @@ const groupRoutes = require('./routes/groupRoutes');
 
 // 🌍 Proxy vers l'API privée pour l'authentification
 app.post('/api/access-token', async (req, res) => {
+  console.log('🔑 Requête reçue avec les données :', req.body);
   try {
-    console.log('🔑 Requête reçue avec les données :', req.body);
-
     const response = await axios.post('http://172.31.33.98:3000/api/access-token', req.body);
-
     console.log('✅ Réponse API privée :', response.data);
     res.status(response.status).json(response.data);
   } catch (error) {
     console.error('❌ Erreur API privée:', error.message);
+    console.error('Détails de l\'erreur:', error);
     res.status(error.response?.status || 500).json({
       message: 'Erreur lors de la récupération du token',
       error: error.message,
