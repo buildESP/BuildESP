@@ -84,13 +84,15 @@ const groupRoutes = require('./routes/groupRoutes');
 app.post('/api/access-token', async (req, res) => {
   console.log('🔑 Requête reçue avec les données :', req.body);
   try {
+    // Effectuer la requête HTTP vers le backend de l'API privée
     const response = await axios.post('http://172.31.33.98:3000/api/access-token', req.body);
     console.log('✅ Réponse API privée :', response.data);
     res.status(response.status).json(response.data);
   } catch (error) {
     console.error('❌ Erreur API privée:', error.message);
+    // Afficher les détails de l'erreur
     if (error.response) {
-      console.error('Détails de la réponse :', error.response.data);
+      console.error('Détails de la réponse de l\'API privée :', error.response.data);
       return res.status(error.response.status).json({
         message: 'Erreur lors de la récupération du token',
         error: error.response.data,
@@ -116,12 +118,9 @@ app.use('/api', imageRoutes);
 // 🎯 Gestion des erreurs globales
 app.use((err, req, res, next) => {
   console.error('💥 Erreur non gérée :', err.message);
-  const statusCode = err.status || 500;
-  const errorResponse = {
+  res.status(err.status || 500).json({
     message: err.message || 'Erreur serveur interne',
-    ...(process.env.NODE_ENV === 'development' && { stack: err.stack }), // Inclure la stack trace en dev
-  };
-  res.status(statusCode).json(errorResponse);
+  });
 });
 
 // 🚀 Lancement du serveur
@@ -129,3 +128,4 @@ app.listen(port, '0.0.0.0', () => {
   console.log(chalk.green.bold(`🚀 API en ligne : http://0.0.0.0:${port}`));
   console.log(chalk.blue(`📚 Docs Swagger : http://0.0.0.0:${port}/doc`));
 });
+
