@@ -89,8 +89,14 @@ app.post('/api/access-token', async (req, res) => {
     res.status(response.status).json(response.data);
   } catch (error) {
     console.error('❌ Erreur API privée:', error.message);
-    console.error('Détails de l\'erreur:', error);
-    res.status(error.response?.status || 500).json({
+    if (error.response) {
+      console.error('Détails de la réponse :', error.response.data);
+      return res.status(error.response.status).json({
+        message: 'Erreur lors de la récupération du token',
+        error: error.response.data,
+      });
+    }
+    res.status(500).json({
       message: 'Erreur lors de la récupération du token',
       error: error.message,
     });
@@ -110,9 +116,12 @@ app.use('/api', imageRoutes);
 // 🎯 Gestion des erreurs globales
 app.use((err, req, res, next) => {
   console.error('💥 Erreur non gérée :', err.message);
-  res.status(err.status || 500).json({
+  const statusCode = err.status || 500;
+  const errorResponse = {
     message: err.message || 'Erreur serveur interne',
-  });
+    ...(process.env.NODE_ENV === 'development' && { stack: err.stack }), // Inclure la stack trace en dev
+  };
+  res.status(statusCode).json(errorResponse);
 });
 
 // 🚀 Lancement du serveur
