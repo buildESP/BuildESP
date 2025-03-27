@@ -11,10 +11,11 @@ console.log("AWS_BUCKET_NAME:", process.env.AWS_BUCKET_NAME);
 const s3 = new S3Client({
     region: process.env.AWS_REGION,
     credentials: {
-        accessKeyId: process.env.AWS_ACCESS_KEY,
+        accessKeyId: process.env.AWS_ACCESS_KEY_ID, // Bon nom de variable !
         secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
     },
 });
+
 
 /**
  * Uploads an image to S3 with a unique name based on the entity type and its ID.
