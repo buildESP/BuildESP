@@ -24,9 +24,6 @@ COPY . .
 # Changer les permissions pour l'utilisateur node
 RUN chown -R node:node /usr/src/app
 
-# Exécuter en tant qu'utilisateur non root
-USER node
-
 # Exposer le port de l'application
 EXPOSE 3000
 
