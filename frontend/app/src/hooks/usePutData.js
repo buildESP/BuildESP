@@ -13,7 +13,6 @@ const usePutData = (endpoint) => {
     setLoading(true);
     setError(null);
 
-    // Check if any field was modified
     const isModified = Object.entries(updatedData).some(([key, value]) => value !== originalData[key]);
 
     if (!isModified) {
