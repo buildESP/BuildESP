@@ -11,11 +11,10 @@ console.log("AWS_BUCKET_NAME:", process.env.AWS_BUCKET_NAME);
 const s3 = new S3Client({
     region: process.env.AWS_REGION,
     credentials: {
-        accessKeyId: process.env.AWS_ACCESS_KEY_ID, // Bon nom de variable !
+        accessKeyId: process.env.AWS_ACCESS_KEY,
         secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
     },
 });
-
 
 /**
  * Uploads an image to S3 with a unique name based on the entity type and its ID.
@@ -33,6 +32,13 @@ const uploadImageForEntity = async (file, entityType, entityId) => {
         Body: file.buffer,
         ContentType: file.mimetype,
     };
+
+    // Log des paramètres avant l'upload
+    console.log("Uploading image with the following parameters:");
+    console.log("Bucket:", process.env.AWS_BUCKET_NAME);
+    console.log("Key:", key);
+    console.log("Body size:", file.buffer.length);
+    console.log("ContentType:", file.mimetype);
 
     try {
         console.log(`Uploading image: ${key} to bucket: ${process.env.AWS_BUCKET_NAME}`);
@@ -55,8 +61,11 @@ const getImageUrl = async (fileKey) => {
         Bucket: process.env.AWS_BUCKET_NAME,
         Key: fileKey,
     };
+
+    // Log de la génération de l'URL signée
+    console.log(`Generating signed URL for: ${fileKey}`);
+
     try {
-        console.log(`Generating signed URL for: ${fileKey}`);
         const url = await getSignedUrl(s3, new GetObjectCommand(params), { expiresIn: 3600 });
         console.log(`Signed URL generated: ${url}`);
         return url;
@@ -79,8 +88,10 @@ const deleteImage = async (imageUrl) => {
         Key: fileKey,
     };
 
+    // Log de la suppression de l'image
+    console.log(`Deleting image: ${fileKey} from bucket: ${process.env.AWS_BUCKET_NAME}`);
+
     try {
-        console.log(`Deleting image: ${fileKey} from bucket: ${process.env.AWS_BUCKET_NAME}`);
         await s3.send(new DeleteObjectCommand(params));
         console.log("Image deleted successfully!");
     } catch (error) {
