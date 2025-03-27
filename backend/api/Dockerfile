@@ -1,41 +1,25 @@
-# Utilisation d'une image Node.js basée sur Alpine
+# Utilisation de l'image Node.js basée sur Alpine
 FROM node:22-alpine
 
-# Définir le répertoire de travail dans le container
+# Définir le répertoire de travail
 WORKDIR /usr/src/app
 
 # Copier package.json et package-lock.json
 COPY package.json ./
 COPY package-lock.json ./
 
-# Installer les dépendances (y compris axios et autres)
-RUN npm install
-
-# Installer AWS CLI et curl
+# Installer les dépendances (y compris AWS CLI)
 RUN apk add --no-cache curl unzip python3 py3-pip \
     && curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" \
     && unzip awscliv2.zip \
     && ./aws/install \
     && rm -rf aws awscliv2.zip
 
-# Créer le fichier de configuration AWS dans le conteneur
-RUN mkdir -p /root/.aws && \
-    echo "[default]" > /root/.aws/credentials && \
-    echo "aws_access_key_id=${AWS_ACCESS_KEY}" >> /root/.aws/credentials && \
-    echo "aws_secret_access_key=${AWS_SECRET_ACCESS_KEY}" >> /root/.aws/credentials && \
-    echo "region=${AWS_REGION}" >> /root/.aws/credentials
-
-# Copier le reste du code de l'application
+# Copier le reste du code
 COPY . .
-
-# Changer les permissions pour l'utilisateur node
-RUN chown -R node:node /usr/src/app
-
-# Exécuter en tant qu'utilisateur non root
-USER node
 
 # Exposer le port de l'application
 EXPOSE 3000
 
-# Définir la commande pour démarrer l'application
+# Définir la commande d'exécution
 CMD ["node", "app.js"]
