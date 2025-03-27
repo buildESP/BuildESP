@@ -7,7 +7,7 @@ const HeroSection = () => {
 
   return (
     <Box
-    bgGradient="to-br"
+      bgGradient="to-br"
       gradientFrom="green.200"
       gradientTo="yellow.50"
       py={16}
@@ -20,20 +20,17 @@ const HeroSection = () => {
     >
 
       <Heading as="h1" size="xl" color="green.900" mb={4}>
-        Share & Borrow Tools with Your Neighbors
-      </Heading>
+        Partagez et empruntez des outils avec vos voisins      </Heading>
       <Text fontSize="lg" color="green.800" maxW="600px" mb={6}>
-        Neighborrow is a platform where you can lend and borrow tools and devices 
-        from your neighborhood. Save money, reduce waste, and connect with your community!
+        Neighborrow est une plateforme où vous pouvez prêter et emprunter des outils et équipements dans votre quartier. Économisez de l'argent, réduisez les déchets et créez du lien avec votre communauté !
+
       </Text>
       {user ? (
         <Button as={RouterLink} to="/add-item" colorPalette="teal" size="lg">
-          Add an Item
-        </Button>
+          Partager un objet        </Button>
       ) : (
         <Button as={RouterLink} to="/login" colorPalette="teal" size="lg">
-          Get Started
-        </Button>
+          Emprunter un objet        </Button>
       )}
     </Box>
   );
