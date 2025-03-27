@@ -18,11 +18,21 @@ RUN apk add --no-cache curl unzip python3 py3-pip \
     && ./aws/install \
     && rm -rf aws awscliv2.zip
 
+# Créer le fichier de configuration AWS dans le conteneur
+RUN mkdir -p /root/.aws && \
+    echo "[default]" > /root/.aws/credentials && \
+    echo "aws_access_key_id=${AWS_ACCESS_KEY}" >> /root/.aws/credentials && \
+    echo "aws_secret_access_key=${AWS_SECRET_ACCESS_KEY}" >> /root/.aws/credentials && \
+    echo "region=${AWS_REGION}" >> /root/.aws/credentials
+
 # Copier le reste du code de l'application
 COPY . .
 
 # Changer les permissions pour l'utilisateur node
 RUN chown -R node:node /usr/src/app
+
+# Exécuter en tant qu'utilisateur non root
+USER node
 
 # Exposer le port de l'application
 EXPOSE 3000
