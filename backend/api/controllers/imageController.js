@@ -1,7 +1,6 @@
 const express = require('express');
 const multer = require('multer');
-const { uploadImageForEntity, deleteImage } = require('/usr/src/app/services/s3Service');
-
+const { uploadImageForEntity, deleteImage } = require('../services/s3Service');  // Assurez-vous que le chemin est correct
 const app = express();
 
 // Middleware pour gérer les fichiers multipart/form-data
@@ -15,9 +14,11 @@ const upload = multer({
     }
   },
   limits: { fileSize: 5 * 1024 * 1024 } // Limite de taille du fichier à 5MB
-}).single('file');
+}).single('image');  // "image" correspond au nom du champ dans le formulaire
 
-// Contrôleur pour l'upload d'image
+/**
+ * Contrôleur pour l'upload d'image
+ */
 const uploadImageController = async (req, res) => {
   try {
     // Logs pour déboguer
@@ -49,10 +50,9 @@ const uploadImageController = async (req, res) => {
   }
 };
 
-// Route pour l'upload d'image
-app.post('/upload', upload, uploadImageController);
-
-// Route pour supprimer l'image
+/**
+ * Contrôleur pour supprimer une image
+ */
 const deleteImageController = async (req, res) => {
   try {
     const { imageUrl } = req.body;
@@ -72,10 +72,6 @@ const deleteImageController = async (req, res) => {
     return res.status(500).json({ message: 'Erreur lors de la suppression de l’image', error: error.message });
   }
 };
-
-app.delete('/delete', deleteImageController);
-
-module.exports = { uploadImageController, deleteImageController };
 
 // Fonction pour uploader l'image sur S3
 const uploadImageForEntity = async (file, entityType, entityId) => {
@@ -97,3 +93,9 @@ const uploadImageForEntity = async (file, entityType, entityId) => {
     throw error; // Lancer l'erreur pour être capturé dans le contrôleur
   }
 };
+
+// Routes pour l'upload et la suppression d'image
+app.post('/upload', upload, uploadImageController);
+app.delete('/delete', deleteImageController);
+
+module.exports = { uploadImageController, deleteImageController };

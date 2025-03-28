@@ -2,11 +2,11 @@ const { S3Client, PutObjectCommand, GetObjectCommand, DeleteObjectCommand } = re
 const { getSignedUrl } = require('@aws-sdk/s3-request-presigner');
 require('dotenv').config();
 
-// Ajout de logs pour vérifier les variables d'environnement
-console.log("AWS_ACCESS_KEY:", process.env.AWS_ACCESS_KEY);
-console.log("AWS_SECRET_ACCESS_KEY:", process.env.AWS_SECRET_ACCESS_KEY ? "LOADED" : "MISSING");
-console.log("AWS_REGION:", process.env.AWS_REGION);
-console.log("AWS_BUCKET_NAME:", process.env.AWS_BUCKET_NAME);
+// Vérification des variables d'environnement et ajout de logs
+if (!process.env.AWS_ACCESS_KEY || !process.env.AWS_SECRET_ACCESS_KEY || !process.env.AWS_REGION || !process.env.AWS_BUCKET_NAME) {
+    console.error("⛔ Erreur: Les variables d'environnement AWS ne sont pas définies correctement !");
+    process.exit(1);  // Arrêter l'application si une variable d'environnement est manquante
+}
 
 const s3 = new S3Client({
     region: process.env.AWS_REGION,
@@ -24,7 +24,8 @@ const s3 = new S3Client({
  * @returns {string} Public URL of the image on S3
  */
 const uploadImageForEntity = async (file, entityType, entityId) => {
-    const key = `${entityType}-${entityId}.${file.mimetype.split('/')[1]}`;
+    const fileExtension = file.mimetype.split('/')[1];
+    const key = `${entityType}-${entityId}.${fileExtension}`;
 
     const params = {
         Bucket: process.env.AWS_BUCKET_NAME,
@@ -33,28 +34,28 @@ const uploadImageForEntity = async (file, entityType, entityId) => {
         ContentType: file.mimetype,
     };
 
-    // Log des paramètres avant l'upload
-    console.log("Uploading image with the following parameters:");
-    console.log("Bucket:", process.env.AWS_BUCKET_NAME);
-    console.log("Key:", key);
-    console.log("Body size:", file.buffer.length);
-    console.log("ContentType:", file.mimetype);
+    // Logs avant l'upload
+    console.log(`Préparation de l'upload pour l'image avec les paramètres suivants :`);
+    console.log(`Bucket: ${process.env.AWS_BUCKET_NAME}`);
+    console.log(`Key: ${key}`);
+    console.log(`Body size: ${file.buffer.length} bytes`);
+    console.log(`ContentType: ${file.mimetype}`);
 
     try {
-        console.log(`Uploading image: ${key} to bucket: ${process.env.AWS_BUCKET_NAME}`);
+        console.log(`Upload de l'image: ${key} vers le bucket: ${process.env.AWS_BUCKET_NAME}`);
         await s3.send(new PutObjectCommand(params));
-        console.log("Upload successful!");
+        console.log("Upload réussi !");
         return `https://${process.env.AWS_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${key}`;
     } catch (error) {
-        console.error("Erreur lors de l’upload de l’image:", error);
-        throw error;
+        console.error("Erreur lors de l'upload de l'image:", error);
+        throw new Error('Échec de l’upload de l’image sur S3');
     }
 };
 
 /**
- * Generates a signed URL to temporarily access a private image.
- * @param {string} fileKey - File key on S3
- * @returns {string} Temporary signed URL
+ * Génère une URL signée pour accéder temporairement à une image privée.
+ * @param {string} fileKey - Clé du fichier sur S3
+ * @returns {string} URL signée temporaire
  */
 const getImageUrl = async (fileKey) => {
     const params = {
@@ -62,25 +63,27 @@ const getImageUrl = async (fileKey) => {
         Key: fileKey,
     };
 
-    // Log de la génération de l'URL signée
-    console.log(`Generating signed URL for: ${fileKey}`);
+    // Log pour la génération de l'URL signée
+    console.log(`Génération de l'URL signée pour le fichier: ${fileKey}`);
 
     try {
         const url = await getSignedUrl(s3, new GetObjectCommand(params), { expiresIn: 3600 });
-        console.log(`Signed URL generated: ${url}`);
+        console.log(`URL signée générée: ${url}`);
         return url;
     } catch (error) {
         console.error("Erreur lors de la génération de l’URL signée:", error);
-        throw error;
+        throw new Error('Échec de la génération de l’URL signée');
     }
 };
 
 /**
- * Deletes an image from S3.
- * @param {string} imageUrl - Full URL of the image to be deleted
+ * Supprime une image de S3.
+ * @param {string} imageUrl - URL complète de l'image à supprimer
  */
 const deleteImage = async (imageUrl) => {
-    if (!imageUrl) return;
+    if (!imageUrl) {
+        throw new Error("L'URL de l'image est requise pour la suppression");
+    }
 
     const fileKey = imageUrl.split('.amazonaws.com/')[1];
     const params = {
@@ -88,15 +91,15 @@ const deleteImage = async (imageUrl) => {
         Key: fileKey,
     };
 
-    // Log de la suppression de l'image 
-    console.log(`Deleting image: ${fileKey} from bucket: ${process.env.AWS_BUCKET_NAME}`);
+    // Log avant la suppression de l'image
+    console.log(`Suppression de l'image: ${fileKey} du bucket: ${process.env.AWS_BUCKET_NAME}`);
 
     try {
         await s3.send(new DeleteObjectCommand(params));
-        console.log("Image deleted successfully!");
+        console.log("Suppression réussie !");
     } catch (error) {
-        console.error("Erreur lors de la suppression de l’image:", error);
-        throw error;
+        console.error("Erreur lors de la suppression de l'image:", error);
+        throw new Error('Échec de la suppression de l’image sur S3');
     }
 };
 

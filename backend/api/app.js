@@ -48,7 +48,6 @@ app.use(
       if (!origin || allowedOrigins.includes(origin)) {
         callback(null, true);
       } else {
-        console.error(`❌ CORS ERROR: Origine non autorisée - ${origin}`);
         callback(new Error('Not allowed by CORS'));
       }
     },
@@ -73,8 +72,8 @@ const categoryRoutes = require('./routes/categoryRoutes');
 const subcategoryRoutes = require('./routes/subcategoryRoutes');
 const itemRoutes = require('./routes/itemRoutes');
 const exchangeRoutes = require('./routes/exchangeRoutes');
-const imageRoutes = require('./routes/imageRoutes');
 const groupRoutes = require('./routes/groupRoutes');
+const imageRoutes = require('./routes/imageRoutes');
 
 // 🌍 Proxy vers l'API privée pour l'authentification
 app.post('/api/access-token', async (req, res) => {
@@ -114,6 +113,6 @@ app.use((err, req, res, next) => {
 
 // 🚀 Lancement du serveur
 app.listen(port, '0.0.0.0', () => {
-  console.log(chalk.green.bold(`🚀 API en ligne : http://0.0.0.0:${port}`));
+  console.log(chalk.green.bold(`🚀 Serveur lancé sur le port ${port}`));
   console.log(chalk.blue(`📚 Docs Swagger : http://0.0.0.0:${port}/doc`));
 });
