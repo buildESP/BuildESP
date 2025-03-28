@@ -7,6 +7,9 @@ WORKDIR /usr/src/app
 # Installer AWS CLI directement via `apk`
 RUN apk add --no-cache aws-cli curl unzip python3 py3-pip
 
+# Vérifier l'installation d'AWS CLI
+RUN aws --version
+
 # Copier package.json et package-lock.json avant d'installer les dépendances
 COPY package.json package-lock.json ./
 
