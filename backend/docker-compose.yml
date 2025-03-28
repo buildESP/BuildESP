@@ -50,7 +50,6 @@ services:
       - /home/admuser/Repo810/back_student/promtail-config.yml:/etc/promtail/promtail-config.yml
       - /var/log:/var/log  # Ajout pour récupérer les logs systèmes (optionnel)
     command: -config.file=/etc/promtail/promtail-config.yml -config.expand-env=true
-    restart: always
     networks:
       - buildesp_network
       
