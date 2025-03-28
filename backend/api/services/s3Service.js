@@ -88,7 +88,7 @@ const deleteImage = async (imageUrl) => {
         Key: fileKey,
     };
 
-    // Log de la suppression de l'image
+    // Log de la suppression de l'image 
     console.log(`Deleting image: ${fileKey} from bucket: ${process.env.AWS_BUCKET_NAME}`);
 
     try {
