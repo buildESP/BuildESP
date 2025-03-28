@@ -6,6 +6,8 @@ services:
       dockerfile: Dockerfile
     ports:
       - "3000:3000"
+    env_file:
+      - .env  # Charge les variables du fichier .env
     environment:
       - DB_HOST=${DB_HOST}
       - DB_USER=${DB_USER}
@@ -13,7 +15,7 @@ services:
       - DB_NAME=${DB_NAME}
       - JWT_SECRET=${JWT_SECRET}
       - ALLOWED_ORIGINS=http://${REACT_APP_FRONTEND_IP}:80
-      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY}
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
       - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
       - AWS_REGION=${AWS_REGION}
       - AWS_BUCKET_NAME=${AWS_BUCKET_NAME}
