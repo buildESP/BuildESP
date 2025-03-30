@@ -27,7 +27,9 @@ const CategoriesGallery = () => {
         overflowY="visible" 
 
         css={{
-          '&::-webkit-scrollbar': { display: 'none' },
+          '&::-webkit-scrollbar': { display: 'none' }, // Chrome/Safari
+          scrollbarWidth: 'none',                     // Firefox
+          msOverflowStyle: 'none',                    // IE/Edge
           scrollSnapType: 'x mandatory',
         }}
       >
@@ -68,6 +70,7 @@ const CategoriesGallery = () => {
             >
               <Image
                 src={category.image_url}
+                fallbackSrc="https://via.placeholder.com/300x200?text=Catégorie"
                 alt={category.name}
                 objectFit="cover"
                 w="100%"
@@ -80,8 +83,9 @@ const CategoriesGallery = () => {
                 w="100%"
                 px={4}
                 py={3}
-                bgGradient="linear(to-t, rgba(0,0,0,0.6), transparent)"
-              >
+                gradientVia="gray.800"
+                gradientTo="green.900"
+                backdropFilter="blur(8px)"              >
                 <Text color="white" fontSize="lg" fontWeight="bold">
                   {category.name}
                 </Text>
