@@ -38,8 +38,8 @@ const AddItemPage = () => {
 
     const response = await postData(
       { ...formData, user_id: user.id },
-      "✅ Item added successfully!",
-      "❌ Failed to add item."
+      " Item added successfully!",
+      " Failed to add item."
     );
   
     if (response) {
