@@ -15,7 +15,7 @@ const ItemCard = ({ item }) => {
     if (window.confirm("Voulez-vous vraiment supprimer cet item ?")) {
       const success = await deleteData(item.id);
       if (success) {
-        refetch(); 
+        refetch();
         navigate("/my-items");
       }
     }
@@ -43,9 +43,10 @@ const ItemCard = ({ item }) => {
       />
       <VStack align="start" mt={2} spacing={2}>
         <Text fontWeight="bold">{item.name}</Text>
-        <Text fontSize="sm" color="gray.600">
+        <Text fontSize="sm" color="gray.600" lineclamp="1">
           {item.description || "No description available."}
         </Text>
+
         <HStack justify="space-between" w="full">
           <Badge colorPalette={item.status === "Available" ? "green" : "red"}>
             {item.status}
