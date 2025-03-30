@@ -28,6 +28,10 @@ const FormattedCell = ({ keyName, value, item }) => {
     return <Text>{value?.name || "—"}</Text>;
   }
 
+  if (keyName === "category") {
+    return <Text>{value?.name || "—"}</Text>;
+  }
+
   if (keyName === "subcategories") {
     return <Text>
       {Array.isArray(value) && value.length > 0 ? value.map((sub) => sub.name).join(", ") : "—"}

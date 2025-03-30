@@ -62,3 +62,9 @@ export const categoryUpdateSchema = z.object({
   name: z.string().min(2, "Le nom est requis"),
   image_url: z.string().url().optional().nullable().or(z.literal("")),
 });
+
+
+export const subcategoryUpdateSchema = z.object({
+  name: z.string().min(2, "Le nom est requis"),
+  image_url: z.string().url().optional().nullable().or(z.literal("")),
+});
