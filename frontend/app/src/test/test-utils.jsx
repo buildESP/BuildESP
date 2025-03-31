@@ -13,4 +13,4 @@ export function renderWithRouter(ui, options) {
   })
 }
 
-export { screen } // 👈 ajoute ça !
+export { screen } 
