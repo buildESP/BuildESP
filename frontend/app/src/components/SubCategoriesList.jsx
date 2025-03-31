@@ -13,9 +13,10 @@ const SubcategoriesList = ({ subcategories, categoryName }) => {
       <Grid
         templateColumns={{ base: "1fr", sm: "repeat(2, 1fr)", md: "repeat(3, 1fr)", lg: "repeat(4, 1fr)" }}
         gap={6}
-        justifyItems="center"
+        justifyContent="center" 
+        alignItems="start"
       >
-          {subcategories.map((sub) => (
+        {subcategories.map((sub) => (
           <Box
             key={sub.id}
             as={Link}
