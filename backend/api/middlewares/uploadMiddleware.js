@@ -1,7 +1,7 @@
 const multer = require('multer');
 
-const storage = multer.memoryStorage(); // Stockage en mémoire avant envoi vers S3
+const storage = multer.memoryStorage();
 
-const upload = multer({ storage });
+const upload = multer({ storage: storage });
 
 module.exports = upload;

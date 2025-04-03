@@ -1,9 +1,10 @@
 const express = require('express');
-const { uploadImageController, deleteImageController } = require('../controllers/imageController');
+const router = express.Router();
 const upload = require('../middlewares/uploadMiddleware');
 const authenticateToken = require('../middlewares/authMiddleware');
+const s3Service = require('../api/services/s3Service'); // Importez s3Service
 
-const router = express.Router();
+const { Readable } = require('stream');
 
 /**
  * @swagger
@@ -50,7 +51,29 @@ const router = express.Router();
  *       500:
  *         description: Erreur interne du serveur lors de l'upload
  */
-router.post('/images/upload', authenticateToken, upload.single('image'), uploadImageController);
+router.post('/images/upload', authenticateToken, upload.single('image'), async (req, res) => {
+    try {
+        const { entityType, entityId } = req.body;
+        const file = req.file;
+
+        if (!file) {
+            return res.status(400).json({ message: "Aucun fichier n'a été uploadé." });
+        }
+
+        // Convertir le buffer en flux
+        const bufferStream = new Readable();
+        bufferStream.push(file.buffer);
+        bufferStream.push(null);
+
+        file.stream = bufferStream; // Ajouter le flux à l'objet file
+
+        const imageUrl = await s3Service.uploadImageForEntity(file, entityType, entityId);
+        res.status(201).json({ message: 'Image uploadée avec succès', imageUrl });
+    } catch (error) {
+        console.error('Erreur lors de l\'upload:', error);
+        res.status(500).json({ message: 'Erreur lors de l\'upload de l\'image', error: error.message });
+    }
+});
 
 /**
  * @swagger
@@ -78,6 +101,8 @@ router.post('/images/upload', authenticateToken, upload.single('image'), uploadI
  *       500:
  *         description: Erreur interne du serveur lors de la suppression
  */
-router.delete('/images/delete', authenticateToken, deleteImageController);
+router.delete('/images/delete', authenticateToken, (req, res) => {
+    // Logique pour supprimer une image
+});
 
 module.exports = router;
