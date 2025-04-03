@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Box, Button, VStack, Input, Textarea, NativeSelect, HStack } from '@chakra-ui/react';
+import { Box, Button, VStack, Input, Textarea, NativeSelect, HStack, Image } from '@chakra-ui/react';
 import { Fieldset, FieldsetLegend } from '@chakra-ui/react/fieldset';
 import { Field } from './ui/field';
 import { FileUploadList, FileUploadRoot, FileUploadTrigger } from './ui/file-upload';
@@ -31,70 +31,100 @@ const FormComponent = ({ schema, fields, onSubmit, submitLabel = 'Submit', loadi
   const {
     register,
     handleSubmit,
-    setValue,
     formState: { errors },
     reset,
   } = useForm({ resolver: zodResolver(schema), defaultValues });
 
-  // ✅ Effet pour réinitialiser le formulaire quand les valeurs par défaut changent
-  useEffect(() => {
-    reset(defaultValues);
-  }, [defaultValues, reset]);
 
-  /**
-   * 🔹 Soumission du formulaire avec gestion de l'image uploadée.
-   * @param {Object} data - Données du formulaire.
-   */
-  const handleFormSubmit = async (data) => {
-    console.log("Form Data before submit:", data);
 
-    // ✅ Si une image a été uploadée, on met à jour le champ `picture`
-    if (uploadedImageUrl) {
-      data.picture = uploadedImageUrl;
-    }
-
-    await onSubmit(data);
-    reset();
-  };
 
   const { uploadImage, uploading } = useUploadImage();
   const [selectedFile, setSelectedFile] = useState(null);
   const [uploadedImageUrl, setUploadedImageUrl] = useState(null);
 
+
   /**
-   * 📸 Gestion de l'upload d'image : dès qu'un fichier est sélectionné, on l'upload.
+   * 🧠 Réinitialise le formulaire quand les valeurs par défaut changent (cas édition)
    */
   useEffect(() => {
-    console.log("📸 Selected File:", selectedFile);
-    const uploadSelectedFile = async () => {
-      if (selectedFile) {
-        const imageUrl = await uploadImage(selectedFile);
-        console.log("✅ Uploaded Image URL:", imageUrl);
-        if (imageUrl) {
-          setUploadedImageUrl(imageUrl);
-          const imageField = fields.some((f) => f.name === "picture")
-            ? "picture"
-            : "image_url";
-          setValue(imageField, imageUrl);
-        }
-      }
-    };
-    uploadSelectedFile();
-  }, [selectedFile, setValue, fields, uploadImage]);
+    reset(defaultValues);
+  }, [defaultValues, reset]);
 
   /**
-   * 🔹 Fonction appelée lorsque l'utilisateur upload un fichier.
-   * @param {File} file - Fichier sélectionné par l'utilisateur.
+   * 🖼️ Initialise l'image déjà existante dans les valeurs par défaut (édition)
    */
-  const handleFileUpload = async (file) => {
-    const imageUrl = await uploadImage(file);
-    console.log("Uploaded Image URL:", imageUrl);
-
-    if (imageUrl) {
-      const imageField = fields.some((f) => f.name === "picture") ? "picture" : "image_url";
-      setValue(imageField, imageUrl);
+  useEffect(() => {
+    const fieldName = fields.some((f) => f.name === "picture") ? "picture" : "image_url";
+    const defaultImage = defaultValues?.[fieldName];
+    if (defaultImage) {
+      setUploadedImageUrl(defaultImage);
     }
+  }, [defaultValues, fields]);
+
+  /**
+   * 🧼 Libère les URL blob créées localement pour éviter les fuites mémoire
+   */
+  useEffect(() => {
+    return () => {
+      if (uploadedImageUrl?.startsWith("blob:")) {
+        URL.revokeObjectURL(uploadedImageUrl);
+      }
+    };
+  }, [uploadedImageUrl]);
+
+  /**
+   * ✅ Soumission du formulaire :
+   * - Upload l'image si un fichier est sélectionné
+   * - Injecte l'URL de l'image au bon champ dans les données
+   * - Appelle `onSubmit` avec les données complètes
+   */
+  const handleFormSubmit = async (data) => {
+    console.log("Form Data before submit:", data);
+
+    // 🔍 Détermine dynamiquement le nom du champ image attendu
+    const imageField = fields.some((f) => f.name === "picture") ? "picture" : "image_url";
+
+    let imageUrl = null;
+
+    // 📤 Upload du fichier si sélectionné
+    if (selectedFile) {
+      const uploaded = await uploadImage(selectedFile);
+      if (uploaded) {
+        imageUrl = uploaded;
+        setUploadedImageUrl(uploaded);
+      }
+    }
+
+    // 🔁 Sinon, on récupère l'image déjà présente en édition
+    if (!imageUrl) {
+      imageUrl = defaultValues?.[imageField] || null;
+    }
+
+    // ✅ Injecte l'URL dans les données, ou supprime le champ si aucune image
+    if (imageUrl) {
+      data[imageField] = imageUrl;
+    } else {
+      delete data[imageField]; // évite erreur Zod sur `null`
+    }
+
+    console.log("✅ Data sent to onSubmit:", {
+      ...data,
+      debug_imageField: imageField,
+      debug_imageValue: data[imageField],
+      debug_selectedFile: selectedFile,
+      debug_uploadedImageUrl: uploadedImageUrl,
+      debug_defaultImage: defaultValues?.[imageField],
+    });
+    
+    // 🚀 Envoie final des données
+    await onSubmit(data);
+
+    // 🔄 Réinitialisation du formulaire
+    reset();
+    setUploadedImageUrl(null);
+    setSelectedFile(null);
   };
+
 
   return (
     <Box p={6} maxW="md" mx="auto">
@@ -106,6 +136,7 @@ const FormComponent = ({ schema, fields, onSubmit, submitLabel = 'Submit', loadi
         )}
 
         {/* 🔹 Formulaire dynamique */}
+        
         <VStack spacing={4} as="form" onSubmit={handleSubmit(handleFormSubmit)}>
           {fields.map(({ name, label, type = 'text', options, helperText }) => (
             <Field
@@ -129,12 +160,41 @@ const FormComponent = ({ schema, fields, onSubmit, submitLabel = 'Submit', loadi
               ) : type === 'textarea' ? (
                 <Textarea bg="green.contrast" {...register(name)} placeholder={label} />
               ) : type === "file" ? (
-                <FileUploadRoot onFileSelect={(file) => { setSelectedFile(file); handleFileUpload(file); }}>
-                  <FileUploadTrigger>
-                    <Button colorPalette="orange" isLoading={uploading}>Upload Image</Button>
-                  </FileUploadTrigger>
-                  <FileUploadList />
-                </FileUploadRoot>
+                <>
+                  <FileUploadRoot
+                     inputProps={{
+                      onChange: (e) => {
+                        const file = e.target.files?.[0];
+                        if (file) {
+                          setSelectedFile(file);
+                          const preview = URL.createObjectURL(file);
+                          setUploadedImageUrl(preview);
+                        }
+                      },
+                    }}
+                  >
+                    <FileUploadTrigger>
+                      <Button colorPalette="orange" isLoading={uploading}>
+                        Upload Image
+                      </Button>
+                    </FileUploadTrigger>
+                    <FileUploadList />
+                  </FileUploadRoot>
+
+                  {/* 🖼️ Aperçu de l’image uploadée */}
+                  {uploadedImageUrl && (
+                    <Box mt={2} borderRadius="md" display="flex" justifyContent="center" overflow="hidden" border="1px solid" borderColor="gray.200">
+                      <Image
+                        src={uploadedImageUrl}
+                        alt="Preview"
+                        objectFit="contain"
+                        maxH="200px"
+                        mx="auto"
+                        borderRadius="md"
+                      />
+                    </Box>
+                  )}
+                </>
               ) : (
                 <Input bg="green.contrast" {...register(name)} type={type} placeholder={label} />
               )}

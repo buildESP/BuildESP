@@ -25,7 +25,7 @@ const LoginPage = () => {
       // ✅ Notification de succès
       toast.success(" Connexion réussie !", { position: "top-right" });
 
-      navigate("/my-items");
+      navigate("/");
     } catch (err) {
       console.error("Erreur de connexion :", err);
 
