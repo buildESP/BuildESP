@@ -35,13 +35,18 @@ const s3 = new S3Client({
 const uploadImageForEntity = async (file, entityType, entityId) => {
     if (!file) throw new Error("⛔ Erreur: Aucun fichier fourni pour l'upload !");
 
+    // Vérification du fichier stream
+    if (!file.stream) {
+        throw new Error("⛔ Erreur: Flux de fichier manquant");
+    }
+
     const fileExtension = file.mimetype.split('/')[1] || 'jpg';
     const key = `${entityType}-${entityId}.${fileExtension}`;
 
     const params = {
         Bucket: process.env.AWS_BUCKET_NAME,
         Key: key,
-        Body: file.stream,  // Utilisation de stream pour éviter les problèmes de mémoire
+        Body: file.stream,  // Utilisation du flux du fichier
         ContentType: file.mimetype,
         ACL: 'public-read'  // Permettre l'accès public aux images (ajuste si nécessaire)
     };
@@ -54,7 +59,9 @@ const uploadImageForEntity = async (file, entityType, entityId) => {
         return `https://${process.env.AWS_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${key}`;
     } catch (error) {
         console.error("❌ Erreur lors de l'upload sur S3:", error);
-        throw new Error('Échec de l’upload de l’image sur S3');
+        // Affiche les détails de l'erreur AWS
+        console.error("Détails de l'erreur AWS:", error.$metadata);
+        throw new Error(`Échec de l’upload de l’image sur S3: ${error.message}`);
     }
 };
 

@@ -2,9 +2,9 @@ const AWS = require('aws-sdk');
 require('dotenv').config();
 
 const s3 = new AWS.S3({
-    accessKeyId: "AKIA4VDBMD2P7ITQDPPJ",
-    secretAccessKey: "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",
-    region: "eu-west-3",
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+    region: process.env.AWS_REGION,
 });
 
 module.exports = s3;
