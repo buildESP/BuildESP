@@ -35,8 +35,8 @@ app.use((req, res, next) => {
 // 🎛 Configuration CORS
 const allowedOrigins = [
   'http://172.31.41.254',
-  'http://15.237.77.97',
-  'https://15.237.77.97',
+  'http://13.37.220.85',
+  'https://13.37.220.85',
   'http://localhost:3000',
   'http://localhost:5173',
   'https://172.31.41.254',
