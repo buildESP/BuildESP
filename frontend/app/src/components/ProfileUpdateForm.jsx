@@ -6,12 +6,15 @@ const ProfileUpdateForm = ({ userData, onSuccess, onCancel }) => {
   const { putData, loading } = usePutData(`/users/${userData.id}`);
 
   const fields = [
-    { name: "firstname", label: "First Name" },
-    { name: "lastname", label: "Last Name" },
-    { name: "email", label: "Email", type: "email", disabled: true },
-    { name: "address", label: "Address" },
-    { name: "phone", label: "Phone", type: "tel" },
-    { name: "picture", label: "Profile Picture URL" },
+    { name: "firstname", label: "Prénom" },
+    { name: "lastname", label: "Nom" },
+    { name: "email", label: "Email", type: "Email", disabled: true },
+    { name: "address", label: "Addresse" },
+    { name: "password", label: "Password" },
+    { name: "phone", label: "Téléphone", type: "tel" },
+    { name: "picture", label: "Photo", type: "file" },
+
+
   ];
 
   const handleSubmit = async (updatedData) => {
