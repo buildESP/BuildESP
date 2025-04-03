@@ -3,7 +3,7 @@ name: Deploy Backend
 on:
   push:
     branches:
-      - DevOps_ESP-174
+      - DevOps_ESP-185
     paths:
       - 'backend/**'
 
@@ -40,7 +40,7 @@ jobs:
             cd /opt/bitnami/apps/back/backend/api
 
             echo "📥 Pulling latest changes..."
-            git pull origin DevOps_ESP-174
+            git pull origin DevOps_ESP-185
 
             echo "📦 Installing dependencies..."
             npm install
