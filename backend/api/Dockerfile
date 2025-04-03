@@ -16,6 +16,9 @@ COPY package.json package-lock.json ./
 # Installer les dépendances Node.js
 RUN npm install --omit=dev
 
+# Ajouter explicitement les dépendances nécessaires si elles ne sont pas dans package.json
+RUN npm install multer multer-s3 @aws-sdk/client-s3 dotenv
+
 # Copier le reste du code source
 COPY . .
 

@@ -7,6 +7,10 @@ const cors = require('cors');
 const chalk = require('chalk');
 const helmet = require('helmet');
 const morgan = require('morgan');
+const multer = require('multer');
+const multerS3 = require('multer-s3');
+const { S3Client } = require('@aws-sdk/client-s3');
+const { upload } = require('./s3Service');
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -102,6 +106,21 @@ app.use('/api', itemRoutes);
 app.use('/api', exchangeRoutes);
 app.use('/api', groupRoutes);
 app.use('/api', imageRoutes);
+
+// Route pour l'upload d'images
+app.post('/api/images/upload', upload.single('image'), async (req, res) => {
+    try {
+        const entityType = req.body.entityType;
+        const entityId = req.body.entityId;
+        const file = req.file;
+
+        const imageUrl = `https://${process.env.AWS_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${file.key}`;
+        res.send({ message: 'Image uploadée avec succès', imageUrl });
+    } catch (error) {
+        console.error("❌ Erreur lors de l'upload sur S3:", error);
+        res.status(500).send({ message: 'Échec de l’upload de l’image sur S3' });
+    }
+});
 
 // 🎯 Gestion des erreurs globales
 app.use((err, req, res, next) => {
