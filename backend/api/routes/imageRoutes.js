@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const upload = require('../middlewares/uploadMiddleware');
 const authenticateToken = require('../middlewares/authMiddleware');
-const s3Service = require('../api/services/s3Service'); // Importez s3Service
+const s3Service = require('../api/services/s3Service'); // Import du service S3
 
 const { Readable } = require('stream');
 
@@ -101,8 +101,20 @@ router.post('/images/upload', authenticateToken, upload.single('image'), async (
  *       500:
  *         description: Erreur interne du serveur lors de la suppression
  */
-router.delete('/images/delete', authenticateToken, (req, res) => {
-    // Logique pour supprimer une image
+router.delete('/images/delete', authenticateToken, async (req, res) => {
+    try {
+        const { imageUrl } = req.body;
+
+        if (!imageUrl) {
+            return res.status(400).json({ message: 'URL de l’image requise' });
+        }
+
+        await s3Service.deleteImage(imageUrl);
+        return res.status(200).json({ message: 'Image supprimée avec succès' });
+    } catch (error) {
+        console.error('Erreur lors de la suppression:', error);
+        return res.status(500).json({ message: 'Erreur lors de la suppression de l’image', error: error.message });
+    }
 });
 
 module.exports = router;
