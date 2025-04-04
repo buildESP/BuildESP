@@ -13,6 +13,8 @@ RUN aws --version
 # Copier package.json et package-lock.json avant d'installer les dépendances
 COPY package.json ./
 
+COPY .env .env
+
 # Installer les dépendances Node.js (y compris celles de production)
 RUN npm install --omit=dev
 
