@@ -16,8 +16,8 @@ COPY package.json ./
 # Installer les dépendances Node.js (y compris celles de production)
 RUN npm install --omit=dev
 
-# Ajouter explicitement les dépendances nécessaires si elles ne sont pas dans package.json
-RUN npm install multer multer-s3 @aws-sdk/client-s3 dotenv helmet  # Ajouter helmet ici
+# Installer explicitement les dépendances nécessaires qui ne sont pas dans package.json
+RUN npm install multer multer-s3 @aws-sdk/client-s3 dotenv helmet
 
 # Copier le reste du code source
 COPY . .
