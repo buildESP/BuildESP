@@ -55,26 +55,6 @@ const Navbar = () => {
           <HStack as="nav" spacing={4}>
             <SearchInput value={searchTerm} onChange={handleSearchChange} />
             <div>
-              
-              {/* <div>
-              {searchTerm && filteredItems && filteredItems.length > 0 && (
-              <div>
-              {filteredItems.map((item) => (
-              // <div key={item.id} style={{ color: "white", backgroundColor: "green" }}>
-              // {item.name}
-              // </div>
-              <List.Root key={item.id} >
-              <List.Item></List.Item>
-              <Link href="...">{item.name}</Link>
-              </List.Root>
-
-              
-            ))}
-           </div>
-        )}
-
-
-              </div> */}
                       {searchTerm && filteredItems && filteredItems.length > 0 && (
                         <div>
                           {filteredItems.map((item) => (
