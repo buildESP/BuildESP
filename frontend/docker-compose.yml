@@ -30,7 +30,7 @@ services:
     container_name: redis_exporter
     image: oliver006/redis_exporter:latest
     environment:
-      - REDIS_ADDR=redis:6379
+      - REDIS_ADDR=10.0.0.1:6379
     networks:
       - buildesp_network  # Utilisez le même réseau ici
     ports:
