@@ -4,6 +4,9 @@ FROM node:22-alpine
 # Définir le répertoire de travail
 WORKDIR /usr/src/app
 
+# Afficher le répertoire courant
+RUN pwd
+
 # Installer AWS CLI directement via `apk`
 RUN apk add --no-cache aws-cli curl unzip python3 py3-pip
 
@@ -12,7 +15,7 @@ RUN aws --version
 
 # Copier package.json et package-lock.json depuis le dossier api/
 COPY api/package.json ./package.json
-#COPY api/package-lock.json ./package-lock.json
+COPY api/package-lock.json ./package-lock.json
 
 # Copier le fichier .env depuis la racine du projet
 COPY .env .env
@@ -25,6 +28,9 @@ RUN npm install multer multer-s3 @aws-sdk/client-s3 dotenv helmet
 
 # Copier le reste du code source depuis api/
 COPY api/ ./
+
+# Afficher le répertoire après avoir copié les fichiers
+RUN pwd
 
 # Définir les variables d'environnement
 ENV NODE_ENV=production
