@@ -1,32 +1,26 @@
-# Utiliser une image Node.js basée sur Alpine pour un conteneur léger
+# Utiliser une image Node.js basée sur Alpine
 FROM node:22-alpine
 
 # Définir le répertoire de travail
 WORKDIR /usr/src/app
 
-# Installer AWS CLI directement via `apk`
+# Installer AWS CLI et autres outils
 RUN apk add --no-cache aws-cli curl unzip python3 py3-pip
 
-# Vérifier l'installation d'AWS CLI
-RUN aws --version
-
-# Copier package.json et package-lock.json avant d'installer les dépendances
+# Copier les fichiers nécessaires à l'installation
 COPY package.json ./
 
-# Installer les dépendances Node.js
+# Installer les dépendances de production
 RUN npm install --omit=dev
 
-# Ajouter explicitement les dépendances nécessaires si elles ne sont pas dans package.json
-RUN npm install multer multer-s3 @aws-sdk/client-s3 dotenv
-
-# Copier le reste du code source
+# Copier le reste de l'application
 COPY . .
 
-# Définir les variables d'environnement
+# Définir l'environnement
 ENV NODE_ENV=production
 
 # Exposer le port de l'application
 EXPOSE 3000
 
-# Démarrer l'application
+# Lancer l'application
 CMD ["node", "app.js"]
