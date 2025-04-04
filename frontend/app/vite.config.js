@@ -17,6 +17,9 @@ export default defineConfig(({ mode }) => {
       globals: true,
       environment: "jsdom",
       setupFiles: "./setup-test.js",
+      coverage: {
+        provider: 'istanbul',
+      },
     },
     define: {
       'process.env': process.env,
