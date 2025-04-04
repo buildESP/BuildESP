@@ -11,8 +11,10 @@ RUN apk add --no-cache aws-cli curl unzip python3 py3-pip
 RUN aws --version
 
 # Copier package.json et package-lock.json avant d'installer les dépendances
-COPY package.json ./
+COPY api/package.json ./package.json
+#COPY api/package-lock.json ./package-lock.json
 
+# Copier le fichier .env depuis la racine du projet
 COPY .env .env
 
 # Installer les dépendances Node.js (y compris celles de production)
@@ -22,7 +24,7 @@ RUN npm install --omit=dev
 RUN npm install multer multer-s3 @aws-sdk/client-s3 dotenv helmet
 
 # Copier le reste du code source
-COPY . .
+COPY api/ ./
 
 # Définir les variables d'environnement
 ENV NODE_ENV=production
