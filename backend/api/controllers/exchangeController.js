@@ -1,29 +1,25 @@
 const { Exchange, Item, User } = require('../models/associations');
 
-// create an exchange
+// Create an exchange
 exports.createExchange = async (req, res) => {
   try {
     const { item_id, lender_user_id, borrow_user_id, start_date, end_date, status } = req.body;
 
-    // Ensure the item exists
     const item = await Item.findByPk(item_id);
     if (!item) {
       return res.status(404).json({ message: 'Item not found' });
     }
 
-    // Ensure the lender user exists
     const lender = await User.findByPk(lender_user_id);
     if (!lender) {
       return res.status(404).json({ message: 'Lender user not found' });
     }
 
-    // Ensure the borrow user exists
     const borrower = await User.findByPk(borrow_user_id);
     if (!borrower) {
       return res.status(404).json({ message: 'Borrower user not found' });
     }
 
-    // Create the exchange
     const newExchange = await Exchange.create({
       item_id,
       lender_user_id,
@@ -40,7 +36,7 @@ exports.createExchange = async (req, res) => {
   }
 };
 
-// get all exchanges
+// Get all exchanges
 exports.getExchanges = async (req, res) => {
   try {
     const exchanges = await Exchange.findAll({
@@ -57,7 +53,7 @@ exports.getExchanges = async (req, res) => {
   }
 };
 
-// get exchange by ID
+// Get exchange by ID
 exports.getExchangeById = async (req, res) => {
   try {
     const exchangeId = req.params.exchange_id;
@@ -81,7 +77,7 @@ exports.getExchangeById = async (req, res) => {
   }
 };
 
-// update exchange
+// Update exchange + Met à jour automatiquement le statut de l'item
 exports.updateExchange = async (req, res) => {
   try {
     const exchangeId = req.params.exchange_id;
@@ -93,19 +89,16 @@ exports.updateExchange = async (req, res) => {
       return res.status(404).json({ message: 'Exchange not found' });
     }
 
-    // Ensure the item exists
     const item = await Item.findByPk(item_id);
     if (!item) {
       return res.status(404).json({ message: 'Item not found' });
     }
 
-    // Ensure the lender user exists
     const lender = await User.findByPk(lender_user_id);
     if (!lender) {
       return res.status(404).json({ message: 'Lender user not found' });
     }
 
-    // Ensure the borrower user exists
     const borrower = await User.findByPk(borrow_user_id);
     if (!borrower) {
       return res.status(404).json({ message: 'Borrower user not found' });
@@ -120,6 +113,12 @@ exports.updateExchange = async (req, res) => {
       status,
     });
 
+    // ⚡️ NOUVELLE FONCTIONNALITÉ :
+    // Change automatiquement le statut de l'item associé quand l'échange est accepté
+    if (status === "Accepted") {
+      await item.update({ status: "Rented" });
+    }
+
     res.status(200).json({ message: 'Exchange updated successfully', exchange });
   } catch (error) {
     console.error(error);
@@ -127,7 +126,7 @@ exports.updateExchange = async (req, res) => {
   }
 };
 
-// delete exchange
+// Delete exchange
 exports.deleteExchange = async (req, res) => {
   try {
     const exchangeId = req.params.exchange_id;
