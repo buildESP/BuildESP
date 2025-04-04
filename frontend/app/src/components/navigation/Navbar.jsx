@@ -9,6 +9,7 @@ import {
   useDisclosure,
   VStack,
   useBreakpointValue,
+  List
 } from "@chakra-ui/react";
 import { CiMenuBurger } from "react-icons/ci";
 import {
@@ -27,13 +28,18 @@ import { useColorMode } from "../ui/color-mode";
 import { APP_NAME } from "@/config";
 import useSearch from "@/hooks/useSearch"; // Import the search hook
 import SearchInput  from "../SearchInput";
+import useItems from "../../hooks/useItems";
 const Navbar = () => {
-  const { user, logout, isAdmin } = useAuth();
+  const { user, logout } = useAuth();
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [ _ ,setOpen] = useState(false);
+  const [open, setOpen] = useState(false);
   const { toggleColorMode, colorMode } = useColorMode()
   const { searchTerm, handleSearchChange } = useSearch();
-
+  const { items } = useItems();
+  const filteredItems = items?.filter((item) =>
+    item.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+  
 
   const isDesktop = useBreakpointValue({ base: false, md: true });
   return (
@@ -47,7 +53,53 @@ const Navbar = () => {
 
         {isDesktop ? (
           <HStack as="nav" spacing={4}>
-            <div><SearchInput value={searchTerm} onChange={handleSearchChange} />
+            <SearchInput value={searchTerm} onChange={handleSearchChange} />
+            <div>
+              
+              {/* <div>
+              {searchTerm && filteredItems && filteredItems.length > 0 && (
+              <div>
+              {filteredItems.map((item) => (
+              // <div key={item.id} style={{ color: "white", backgroundColor: "green" }}>
+              // {item.name}
+              // </div>
+              <List.Root key={item.id} >
+              <List.Item></List.Item>
+              <Link href="...">{item.name}</Link>
+              </List.Root>
+
+              
+            ))}
+           </div>
+        )}
+
+
+              </div> */}
+                      {searchTerm && filteredItems && filteredItems.length > 0 && (
+                        <div>
+                          {filteredItems.map((item) => (
+                            <Box
+                              key={item.id}
+                              as={RouterLink}
+                              to={`/items/${item.id}`}
+                              onClick={() => handleSearchChange({ target: { value: "" } })} // 🔹 Clears input
+                              style={{
+                                display: "block",
+                                color: "white",
+                                backgroundColor: "green",
+                                padding: "8px",
+                                marginBottom: "4px",
+                                textDecoration: "none",
+                                borderRadius: "4px",
+                              }}
+                            >
+                              {item.name}
+                            </Box>
+                          ))}
+                        </div>
+                      )}
+
+
             </div>
             
            
@@ -66,16 +118,6 @@ const Navbar = () => {
                 <Button as={RouterLink} to="/profile" variant="ghost" color="yellow.900">
                   Profil
                 </Button>
-                {isAdmin && (
-                  <Button
-                    as={RouterLink}
-                    to="/admin"
-                    variant="ghost"
-                    color="yellow.900"
-                  >
-                    Admin
-                  </Button>
-                )}
                 <Button onClick={logout} variant="ghost" color="red.600">
                   Déconnexion
                 </Button>
@@ -123,17 +165,6 @@ const Navbar = () => {
                       <Button as={RouterLink} to="/profile" variant="ghost" color="yellow.900">
                         Profil
                       </Button>
-                      {isAdmin && (
-                        <Button
-                          as={RouterLink}
-                          to="/admin"
-                          variant="ghost"
-                          color="yellow.900"
-                          onClick={onClose}
-                        >
-                          Admin
-                        </Button>
-                      )}
                       <Button onClick={logout} variant="ghost" color="red.600">
                         Déconnexion
                       </Button>
