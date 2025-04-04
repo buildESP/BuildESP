@@ -1,16 +1,15 @@
 import { Box, Text, Image, Badge, Button, VStack, HStack } from "@chakra-ui/react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import useAuth from "../../hooks/useAuth";
 import useDeleteData from "../../hooks/useDeleteData";
-import { useNavigate } from "react-router-dom";
 import useItems from "../../hooks/useItems";
-const ItemCard = ({ item }) => {
 
+const ItemCard = ({ item }) => {
   const { user } = useAuth();
   const { deleteData, loading } = useDeleteData(`/items`);
   const navigate = useNavigate();
-
   const { refetch } = useItems();
+
   const handleDelete = async () => {
     if (window.confirm("Voulez-vous vraiment supprimer cet item ?")) {
       const success = await deleteData(item.id);
@@ -23,14 +22,17 @@ const ItemCard = ({ item }) => {
 
   const isOwner = user && item.user_id === user.id;
 
+  const handleNavigate = () => {
+    navigate(`/items/${item.id}`);
+  };
 
   return (
     <Box
       p={4}
       bg="green.50"
       borderRadius="md"
-      as={Link}
-      to={`/items/${item.id}`}
+      cursor="pointer"
+      onClick={handleNavigate}
       _hover={{ transform: "scale(1.03)", transition: "0.2s ease-in-out" }}
     >
       <Image
@@ -43,25 +45,32 @@ const ItemCard = ({ item }) => {
       />
       <VStack align="start" mt={2} spacing={2}>
         <Text fontWeight="bold">{item.name}</Text>
-        <Text fontSize="sm" color="gray.600" lineclamp="1">
+        <Text fontSize="sm" color="gray.600">
           {item.description || "No description available."}
         </Text>
 
         <HStack justify="space-between" w="full">
-          <Badge colorPalette={item.status === "Available" ? "green" : "red"}>
+          <Badge colorScheme={item.status === "Available" ? "green" : "red"}>
             {item.status}
           </Badge>
           {isOwner ? (
             <HStack>
-              <Button size="xs" colorPalette="red" onClick={handleDelete} isLoading={loading}>
+              <Button size="xs" colorScheme="red" onClick={handleDelete} isLoading={loading}>
                 Supprimer
               </Button>
-              <Button size="xs" colorPalette="orange">
+              <Button size="xs" colorScheme="orange">
                 Indisponible
               </Button>
             </HStack>
           ) : (
-            <Button size="xs" colorPalette="blue" as={Link} to={`/items/${item.id}`}>
+            <Button
+              size="xs"
+              colorScheme="blue"
+              onClick={(e) => {
+                e.stopPropagation();
+                navigate(`/items/${item.id}`);
+              }}
+            >
               Emprunter
             </Button>
           )}

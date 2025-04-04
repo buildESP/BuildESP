@@ -1,38 +1,31 @@
 require('dotenv').config();
 const express = require('express');
-const axios = require('axios');
-const swaggerJsdoc = require('swagger-jsdoc');
-const swaggerUi = require('swagger-ui-express');
 const cors = require('cors');
-const chalk = require('chalk');
 const helmet = require('helmet');
 const morgan = require('morgan');
+const chalk = require('chalk');
+const swaggerJsdoc = require('swagger-jsdoc');
+const swaggerUi = require('swagger-ui-express');
+const axios = require('axios');
 
 const app = express();
 const port = process.env.PORT || 3000;
 
-// Vérification des variables d'environnement essentielles
+// Vérif clé secrète
 if (!process.env.SECRET_KEY) {
   console.error(chalk.red.bold('⛔ SECRET_KEY non défini dans .env !'));
   process.exit(1);
 }
 
-// 🛡 Sécurité avec Helmet
 app.use(helmet());
-
-// 📝 Logger des requêtes avec Morgan
 app.use(morgan('dev'));
-
-// 📦 Middleware pour parser les requêtes JSON (body-parser n'est plus nécessaire)
 app.use(express.json());
 
-// 🔍 Middleware pour logger les requêtes et leur origine
 app.use((req, res, next) => {
   console.log(`🌍 Requête : ${req.method} ${req.url} - Origine : ${req.headers.origin}`);
   next();
 });
 
-// 🎛 Configuration CORS
 const allowedOrigins = [
   'http://172.31.41.254',
   'http://13.37.220.85',
@@ -52,20 +45,17 @@ app.use(
       }
     },
     credentials: true,
-    methods: 'GET,POST,PUT,DELETE,OPTIONS',
-    allowedHeaders: 'Content-Type,Authorization',
   })
 );
 
-// Autoriser les requêtes OPTIONS globalement
 app.options('*', cors());
 
-// 📖 Configuration Swagger
+// Swagger
 const swaggerOptions = require('./swaggerOptions');
 const swaggerSpec = swaggerJsdoc(swaggerOptions);
 app.use('/doc', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
-// 🚀 Importation des routes
+// Routes
 const authRoutes = require('./routes/authRoutes');
 const userRoutes = require('./routes/userRoutes');
 const categoryRoutes = require('./routes/categoryRoutes');
@@ -75,17 +65,11 @@ const exchangeRoutes = require('./routes/exchangeRoutes');
 const groupRoutes = require('./routes/groupRoutes');
 const imageRoutes = require('./routes/imageRoutes');
 
-// 🌍 Proxy vers l'API privée pour l'authentification
 app.post('/api/access-token', async (req, res) => {
   try {
-    console.log('🔑 Requête reçue avec les données :', req.body);
-
     const response = await axios.post('http://172.31.33.98:3000/api/access-token', req.body);
-
-    console.log('✅ Réponse API privée :', response.data);
     res.status(response.status).json(response.data);
   } catch (error) {
-    console.error('❌ Erreur API privée:', error.message);
     res.status(error.response?.status || 500).json({
       message: 'Erreur lors de la récupération du token',
       error: error.message,
@@ -93,7 +77,7 @@ app.post('/api/access-token', async (req, res) => {
   }
 });
 
-// 📌 Définition des routes API
+// API
 app.use('/api', authRoutes);
 app.use('/api', userRoutes);
 app.use('/api', categoryRoutes);
@@ -103,16 +87,14 @@ app.use('/api', exchangeRoutes);
 app.use('/api', groupRoutes);
 app.use('/api', imageRoutes);
 
-// 🎯 Gestion des erreurs globales
+// Gestion globale erreurs
 app.use((err, req, res, next) => {
   console.error('💥 Erreur non gérée :', err.message);
-  res.status(err.status || 500).json({
-    message: err.message || 'Erreur serveur interne',
-  });
+  res.status(err.status || 500).json({ message: err.message });
 });
 
-// 🚀 Lancement du serveur
+// Démarrage serveur
 app.listen(port, '0.0.0.0', () => {
   console.log(chalk.green.bold(`🚀 Serveur lancé sur le port ${port}`));
-  console.log(chalk.blue(`📚 Docs Swagger : http://0.0.0.0:${port}/doc`));
+  console.log(chalk.blue(`📚 Docs Swagger : http://localhost:${port}/doc`));
 });
