@@ -1,20 +1,5 @@
-const express = require('express');
-const multer = require('multer');
-const s3Service = require('../services/s3Service');  // Import du service S3
-const app = express();
-
-// Middleware pour gérer les fichiers multipart/form-data
-const upload = multer({
-  fileFilter: (req, file, cb) => {
-    // Autoriser uniquement les fichiers image
-    if (file.mimetype.startsWith('image/')) {
-      cb(null, true);
-    } else {
-      cb(new Error('Seuls les fichiers image sont autorisés'), false);
-    }
-  },
-  limits: { fileSize: 5 * 1024 * 1024 } // Limite de taille du fichier à 5MB
-}).single('image');  // "image" correspond au nom du champ dans le formulaire
+// api/controllers/imageController.js
+const s3Service = require('../services/s3Service'); // Import du service S3
 
 /**
  * Contrôleur pour l'upload d'image

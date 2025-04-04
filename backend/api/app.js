@@ -68,7 +68,7 @@ const subcategoryRoutes = require('./routes/subcategoryRoutes');
 const itemRoutes = require('./routes/itemRoutes');
 const exchangeRoutes = require('./routes/exchangeRoutes');
 const groupRoutes = require('./routes/groupRoutes');
-const imageRoutes = require('./routes/imageRoutes');
+const imageRoutes = require('./routes/imageRoutes');  // Ajout des routes d'images
 
 app.post('/api/access-token', async (req, res) => {
   try {
@@ -89,7 +89,7 @@ app.use('/api', subcategoryRoutes);
 app.use('/api', itemRoutes);
 app.use('/api', exchangeRoutes);
 app.use('/api', groupRoutes);
-app.use('/api', imageRoutes);
+app.use('/api', imageRoutes);  // Utilisation des routes d'images
 
 app.use((err, req, res, next) => {
   console.error('💥 Erreur non gérée :', err.message);
