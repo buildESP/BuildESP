@@ -1,8 +1,10 @@
 import { useState } from "react";
 import { API_BASE_URL } from "@/config";
+import useAuth from "./useAuth";
 
 
 const useUploadImage = () => {
+  const { token } = useAuth();
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState(null);
 
@@ -21,8 +23,11 @@ const useUploadImage = () => {
     setError(null);
 
     try {
-      const response = await fetch(`${API_BASE_URL}/upload`, {
+      const response = await fetch(`${API_BASE_URL}/images/upload`, {
         method: "POST",
+        headers: {
+          Authorization: token ? `Bearer ${token}` : "",
+        },
         body: formData,
       });
 

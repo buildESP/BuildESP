@@ -16,7 +16,7 @@ import AddItemPage from "../pages/items/AddItemsPages";
 import ItemDetailsPage from "../pages/items/ItemsDetailsPages";
 import MyNeighborsItemsPages from "../pages/items/MyNeighborsItemsPage";
 import AdminPage from "@/pages/AdminPage";
-
+import ConditionOfUs from "@/pages/ConditionOfUs";
 /**
  * @component AppRoutes
  * @description Gère la configuration des routes de l'application avec React Router.
@@ -31,6 +31,10 @@ const AppRoutes = () => {
 
           {/* 🏠 Page d'accueil */}
           <Route index element={<HomePage />} />
+          
+           {/* ⚖️Pages légales */}
+          <Route path="condition-of-us" element={<ConditionOfUs />} />
+           
 
           {/* 📂 Pages de catégories et sous-catégories */}
           <Route path="categories" element={<CategoriesPage />} />

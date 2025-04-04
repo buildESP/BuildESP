@@ -1,7 +1,6 @@
 name: CD-Pipeline
 
-on:
-  workflow_dispatch:
+on: workflow_dispatch
 
 env:
   NODE_VERSION: '20.x'

@@ -25,12 +25,14 @@ import useAuth from "../../hooks/useAuth"; // 🔹 Import du hook d'authentifica
 import { LuMoon, LuSun } from "react-icons/lu"
 import { useColorMode } from "../ui/color-mode";
 import { APP_NAME } from "@/config";
-
+import useSearch from "@/hooks/useSearch"; // Import the search hook
+import SearchInput  from "../SearchInput";
 const Navbar = () => {
   const { user, logout, isAdmin } = useAuth();
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [ setOpen] = useState(false);
+  const [ _ ,setOpen] = useState(false);
   const { toggleColorMode, colorMode } = useColorMode()
+  const { searchTerm, handleSearchChange } = useSearch();
 
 
   const isDesktop = useBreakpointValue({ base: false, md: true });
@@ -45,9 +47,14 @@ const Navbar = () => {
 
         {isDesktop ? (
           <HStack as="nav" spacing={4}>
+            <div><SearchInput value={searchTerm} onChange={handleSearchChange} />
+            </div>
+            
+           
             <Button as={RouterLink} to="/" variant="ghost" color="yellow.900">
               Accueil
             </Button>
+            
             {user ? (
               <>
                 <Button as={RouterLink} to="/my-items" variant="ghost" color="yellow.900">
