@@ -19,7 +19,6 @@ services:
     depends_on:
       db:
         condition: service_healthy
-    image: stephb421/backend:latest
     restart: always
     networks:
       - buildesp_network
@@ -48,7 +47,7 @@ services:
     container_name: promtail
     volumes:
       - /home/admuser/Repo810/back_student/promtail-config.yml:/etc/promtail/promtail-config.yml
-      - /var/log:/var/log  # Ajout pour récupérer les logs systèmes (optionnel)
+      - /var/log:/var/log
     command: -config.file=/etc/promtail/promtail-config.yml -config.expand-env=true
     networks:
       - buildesp_network

@@ -11,7 +11,7 @@ RUN apk add --no-cache aws-cli curl unzip python3 py3-pip
 RUN aws --version
 
 # Copier package.json et package-lock.json avant d'installer les dépendances
-COPY package.json package-lock.json ./
+COPY package.json ./
 
 # Installer les dépendances Node.js
 RUN npm install --omit=dev
