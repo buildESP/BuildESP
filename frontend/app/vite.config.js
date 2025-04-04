@@ -18,11 +18,7 @@ export default defineConfig(({ mode }) => {
       environment: "jsdom",
       setupFiles: "./setup-test.js",
       coverage: {
-        provider: 'istanbul', // Use @vitest/coverage-v8
-        // reporter: ['text', 'html'], // Output formats: text summary and HTML report
-        // reportsDirectory: './coverage', // Directory for coverage reports
-        // include: ['src/**/*.{js,ts,jsx,tsx}'], // Files to include in coverage
-        // exclude: ['node_modules', 'test'], // Files to exclude from coverage
+        provider: 'istanbul',
       },
     },
     define: {
