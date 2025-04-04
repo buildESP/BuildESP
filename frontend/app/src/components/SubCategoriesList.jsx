@@ -1,7 +1,7 @@
 import { Box, Text, Grid, GridItem, Image, VStack } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 
-const SubcategoriesList = ({ subcategories, categoryName }) => {
+const SubcategoriesList = ({ subcategories }) => {
   if (!subcategories || subcategories.length === 0) {
     return <Text color="gray.500">Aucune sous-catégorie disponible.</Text>;
   }
