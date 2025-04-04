@@ -42,15 +42,8 @@ try {
  * @param {string} entityId - ID de l'entité
  * @returns {string} URL de l'image sur S3
  */
-const uploadImageForEntity = async (file, entityType, entityId) => {
-    if (!file) throw new Error("⛔ Erreur: Aucun fichier fourni pour l'upload !");
-    
-    console.log(`📤 Upload d'une image pour ${entityType} avec l'ID: ${entityId}`);
-    console.log(`  ➤ Type MIME: ${file.mimetype}`);
-    console.log(`  ➤ Taille: ${file.size} octets`);
-
-    const fileExtension = file.mimetype.split('/')[1] || 'jpg';
-    const key = `${entityType}-${entityId}.${fileExtension}`;
+const uploadImageForEntity = async (file) => {
+    const key = `${file.mimetype.split('/')[1]}`;
 
     const params = {
         Bucket: process.env.AWS_BUCKET_NAME,

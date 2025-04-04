@@ -29,7 +29,7 @@ import { APP_NAME } from "@/config";
 const Navbar = () => {
   const { user, logout, isAdmin } = useAuth();
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [ setOpen] = useState(false);
+  const [ _ ,setOpen] = useState(false);
   const { toggleColorMode, colorMode } = useColorMode()
 
 

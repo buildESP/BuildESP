@@ -46,7 +46,7 @@ const ItemsGallery = ({ items, title = "Items" }) => {
         gap={6}
       >
         {visibleItems.map((item) => (
-          <ItemCard key={item.id} item={item} />
+          <ItemCard  key={item.id} item={item} />
         ))}
       </Grid>
 
