@@ -116,5 +116,42 @@ router.delete('/images/delete', authenticateToken, async (req, res) => {
         return res.status(500).json({ message: 'Erreur lors de la suppression de l’image', error: error.message });
     }
 });
+/**
+ * @swagger
+ * /api/images/list:
+ *   get:
+ *     summary: Liste les objets/images dans le bucket S3
+ *     description: Retourne la liste des fichiers stockés dans le bucket AWS S3.
+ *     tags: [Images]
+ *     responses:
+ *       200:
+ *         description: Liste des fichiers récupérée avec succès
+ *       500:
+ *         description: Erreur lors de la récupération des fichiers
+ */
+ router.get('/images/list', authenticateToken, async (req, res) => {
+    try {
+        const { S3Client, ListObjectsV2Command } = require('@aws-sdk/client-s3');
+
+        const s3 = new S3Client({
+            region: process.env.AWS_REGION,
+            credentials: {
+                accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+                secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
+            }
+        });
+
+        const params = {
+            Bucket: process.env.AWS_BUCKET_NAME,
+        };
+
+        const data = await s3.send(new ListObjectsV2Command(params));
+        res.status(200).json(data.Contents || []);
+    } catch (err) {
+        console.error('❌ Erreur lors de la récupération des objets S3 :', err);
+        res.status(500).json({ message: 'Erreur lors de la récupération des fichiers S3', error: err });
+    }
+});
+
 
 module.exports = router;
