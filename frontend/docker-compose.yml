@@ -88,7 +88,7 @@ services:
     restart: unless-stopped
     volumes:
       - grafana-data:/var/lib/grafana
-      - grafana-conf:/etc/grafana
+      - ./monitoring/grafana.ini:/etc/grafana/grafana.ini
     networks:
       - buildesp_network
 

@@ -16,7 +16,7 @@ scrape_configs:
     static_configs:
       - targets:
           - prometheus:9090
-          
+
   - job_name: node
     static_configs:
       - targets:
@@ -39,18 +39,27 @@ scrape_configs:
   - job_name: 'blackbox'
     metrics_path: /probe
     params:
-      module: [http_2xx]  # Nom du module à utiliser
+      module: [http_2xx]
     static_configs:
       - targets:
+<<<<<<< Updated upstream:frontend/monitoring/prometheus.yml
           - http://15.237.77.97/  # Remplacez par l'URL de votre site web
+=======
+          - http://neigborrow.heiferl.fr   # Replace with your target URL
+>>>>>>> Stashed changes:monitoring/prometheus.yml
     relabel_configs:
       - source_labels: [__address__]
         target_label: __param_target
       - source_labels: [__param_target]
         target_label: instance  
       - target_label: __address__
+<<<<<<< Updated upstream:frontend/monitoring/prometheus.yml
         replacement: blackbox_exporter:9115  # Adresse de Blackbox Exporter
 
+=======
+        replacement: blackbox_exporter:9115
+        
+>>>>>>> Stashed changes:monitoring/prometheus.yml
   - job_name: 'redis'
     static_configs:
       - targets: ['redis_exporter:9121']

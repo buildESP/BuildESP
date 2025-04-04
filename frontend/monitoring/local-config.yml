@@ -51,7 +51,7 @@ table_manager:
   retention_deletes_enabled: false
   retention_period: 0
 
-# Nouvelle section de scrape pour collecter les logs
+# Log scraping for Docker and system logs
 scrape_configs:
   - job_name: 'docker-logs'
     static_configs:
