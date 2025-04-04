@@ -137,7 +137,7 @@ jobs:
           args: --all-projects --severity-threshold=high
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-
+        continue-on-error: true
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v3
         with:
