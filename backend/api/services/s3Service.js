@@ -5,32 +5,24 @@ const {
     DeleteObjectCommand
   } = require('@aws-sdk/client-s3');
   const { getSignedUrl } = require('@aws-sdk/s3-request-presigner');
-  const path = require('path');
-  const dotenv = require('dotenv');
   
-  // Charger .env général puis celui de /api
-  dotenv.config({ path: path.resolve(__dirname, '../.env') });
-  dotenv.config({ path: path.resolve(__dirname, './.env') });
-  
-  const requiredEnvVars = ["AWS_ACCESS_KEY_ID", "AWS_SECRET_ACCESS_KEY", "AWS_REGION", "AWS_BUCKET_NAME"];
-  requiredEnvVars.forEach(varName => {
-    if (!process.env[varName]) {
-      console.error(`⛔ Erreur: La variable ${varName} n'est pas définie !`);
-      process.exit(1);
-    }
-  });
+  // ✅ Infos AWS en dur (attention : à ne faire que temporairement pour tests !)
+  const AWS_ACCESS_KEY_ID = 'AKIA4VDBMD2P7ITQDPPJ';
+  const AWS_SECRET_ACCESS_KEY = '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';
+  const AWS_REGION = 'eu-west-3';
+  const AWS_BUCKET_NAME = 's3esppitctures';
   
   console.log("🔍 Initialisation du client S3 avec :");
-  console.log(`  ➤ AWS_REGION: ${process.env.AWS_REGION}`);
-  console.log(`  ➤ AWS_BUCKET_NAME: ${process.env.AWS_BUCKET_NAME}`);
+  console.log(`  ➤ AWS_REGION: ${AWS_REGION}`);
+  console.log(`  ➤ AWS_BUCKET_NAME: ${AWS_BUCKET_NAME}`);
   
   let s3;
   try {
     s3 = new S3Client({
-      region: process.env.AWS_REGION,
+      region: AWS_REGION,
       credentials: {
-        accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
+        accessKeyId: AWS_ACCESS_KEY_ID,
+        secretAccessKey: AWS_SECRET_ACCESS_KEY
       }
     });
     console.log("✅ Client S3 initialisé !");
@@ -43,7 +35,7 @@ const {
     const key = `${file.mimetype.split('/')[1]}`;
   
     const params = {
-      Bucket: process.env.AWS_BUCKET_NAME,
+      Bucket: AWS_BUCKET_NAME,
       Key: key,
       Body: file.buffer,
       ContentType: file.mimetype,
@@ -55,7 +47,7 @@ const {
     try {
       await s3.send(new PutObjectCommand(params));
       console.log("✅ Upload réussi !");
-      return `https://${process.env.AWS_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${key}`;
+      return `https://${AWS_BUCKET_NAME}.s3.${AWS_REGION}.amazonaws.com/${key}`;
     } catch (error) {
       console.error("❌ Upload échoué:", error);
       throw new Error('Échec upload S3');
@@ -66,7 +58,7 @@ const {
     if (!fileKey) throw new Error("⛔ Clé du fichier manquante");
   
     const params = {
-      Bucket: process.env.AWS_BUCKET_NAME,
+      Bucket: AWS_BUCKET_NAME,
       Key: fileKey
     };
   
@@ -83,7 +75,7 @@ const {
     if (!fileKey) throw new Error("⛔ Clé introuvable dans l'URL");
   
     const params = {
-      Bucket: process.env.AWS_BUCKET_NAME,
+      Bucket: AWS_BUCKET_NAME,
       Key: fileKey
     };
   
