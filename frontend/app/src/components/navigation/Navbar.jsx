@@ -28,9 +28,9 @@ import { APP_NAME } from "@/config";
 import useSearch from "@/hooks/useSearch"; // Import the search hook
 import SearchInput  from "../SearchInput";
 const Navbar = () => {
-  const { user, logout } = useAuth();
+  const { user, logout, isAdmin } = useAuth();
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [open, setOpen] = useState(false);
+  const [ _ ,setOpen] = useState(false);
   const { toggleColorMode, colorMode } = useColorMode()
   const { searchTerm, handleSearchChange } = useSearch();
 
@@ -66,6 +66,16 @@ const Navbar = () => {
                 <Button as={RouterLink} to="/profile" variant="ghost" color="yellow.900">
                   Profil
                 </Button>
+                {isAdmin && (
+                  <Button
+                    as={RouterLink}
+                    to="/admin"
+                    variant="ghost"
+                    color="yellow.900"
+                  >
+                    Admin
+                  </Button>
+                )}
                 <Button onClick={logout} variant="ghost" color="red.600">
                   Déconnexion
                 </Button>
@@ -113,6 +123,17 @@ const Navbar = () => {
                       <Button as={RouterLink} to="/profile" variant="ghost" color="yellow.900">
                         Profil
                       </Button>
+                      {isAdmin && (
+                        <Button
+                          as={RouterLink}
+                          to="/admin"
+                          variant="ghost"
+                          color="yellow.900"
+                          onClick={onClose}
+                        >
+                          Admin
+                        </Button>
+                      )}
                       <Button onClick={logout} variant="ghost" color="red.600">
                         Déconnexion
                       </Button>

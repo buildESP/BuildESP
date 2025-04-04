@@ -40,9 +40,11 @@ const ItemCard = ({ item }) => {
       </Link>
 
       <VStack align="start" mt={2} spacing={2}>
-        <Text fontSize="sm" color="gray.600">
+        <Text fontWeight="bold">{item.name}</Text>
+        <Text fontSize="sm" color="gray.600" lineclamp="1">
           {item.description || "No description available."}
         </Text>
+
         <HStack justify="space-between" w="full">
           <Badge colorPalette={item.status === "Available" ? "green" : "red"}>
             {item.status}

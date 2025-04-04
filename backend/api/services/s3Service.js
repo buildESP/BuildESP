@@ -17,8 +17,8 @@ const s3 = new S3Client({
  * @param {string} entityId - ID of the entity
  * @returns {string} Public URL of the image on S3
  */
-const uploadImageForEntity = async (file, entityType, entityId) => {
-    const key = `${entityType}-${entityId}.${file.mimetype.split('/')[1]}`;
+const uploadImageForEntity = async (file) => {
+    const key = `${file.mimetype.split('/')[1]}`;
 
     const params = {
         Bucket: process.env.AWS_BUCKET_NAME,

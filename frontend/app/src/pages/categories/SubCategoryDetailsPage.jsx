@@ -28,8 +28,8 @@ const SubcategoryDetailsPage = () => {
       </Box>
 
       {/* ✅ Display items from this subcategory using reusable component */}
-      <ItemsGallery items={subcategory.items} title="Items in this Subcategory" />
-    </VStack>
+      <ItemsGallery items={subcategory.items} title={`À emprunter dans la catégorie “${subcategory.name}”`} />
+      </VStack>
   );
 };
 

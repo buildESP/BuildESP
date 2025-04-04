@@ -1,0 +1,27 @@
+name: CD-Pipeline
+
+on: workflow_dispatch
+
+env:
+  NODE_VERSION: '20.x'
+  DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@90de1764ccae5b916cb2c0a1a2dfe57f319fa15a
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and push Docker images
+        uses: docker/build-push-action@23c657a01f105567f668c7596ce8e5a038da2555
+        with:
+          context: frontend/app
+          push: true
+          tags: ${{ env.DOCKER_USERNAME }}/frontend:latest

@@ -41,8 +41,8 @@ const useDeleteData = (basePath) => {
           throw new Error(errorData.message || `Erreur ${response.status} lors de la suppression de l'élément ${id}`);
         }
 
-        console.log(`✅ Élément ${id} supprimé avec succès`);
-        toast.success(`Élément ${id} supprimé`);
+        console.log(`✅ ${basePath} supprimé avec succès`);
+        toast.success(`${basePath}  supprimé avec succès`);
       }
 
       return true;
