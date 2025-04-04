@@ -1,10 +1,9 @@
 const express = require('express');
-const router = express.Router();
+const { uploadImageController, deleteImageController } = require('../controllers/imageController');
 const upload = require('../middlewares/uploadMiddleware');
 const authenticateToken = require('../middlewares/authMiddleware');
-const s3Service = require('../api/services/s3Service'); // Import du service S3
 
-const { Readable } = require('stream');
+const router = express.Router();
 
 /**
  * @swagger
@@ -51,29 +50,7 @@ const { Readable } = require('stream');
  *       500:
  *         description: Erreur interne du serveur lors de l'upload
  */
-router.post('/images/upload', authenticateToken, upload.single('image'), async (req, res) => {
-    try {
-        const { entityType, entityId } = req.body;
-        const file = req.file;
-
-        if (!file) {
-            return res.status(400).json({ message: "Aucun fichier n'a été uploadé." });
-        }
-
-        // Convertir le buffer en flux
-        const bufferStream = new Readable();
-        bufferStream.push(file.buffer);
-        bufferStream.push(null);
-
-        file.stream = bufferStream; // Ajouter le flux à l'objet file
-
-        const imageUrl = await s3Service.uploadImageForEntity(file, entityType, entityId);
-        res.status(201).json({ message: 'Image uploadée avec succès', imageUrl });
-    } catch (error) {
-        console.error('Erreur lors de l\'upload:', error);
-        res.status(500).json({ message: 'Erreur lors de l\'upload de l\'image', error: error.message });
-    }
-});
+router.post('/images/upload', authenticateToken, upload.single('image'), uploadImageController);
 
 /**
  * @swagger
@@ -101,57 +78,6 @@ router.post('/images/upload', authenticateToken, upload.single('image'), async (
  *       500:
  *         description: Erreur interne du serveur lors de la suppression
  */
-router.delete('/images/delete', authenticateToken, async (req, res) => {
-    try {
-        const { imageUrl } = req.body;
-
-        if (!imageUrl) {
-            return res.status(400).json({ message: 'URL de l’image requise' });
-        }
-
-        await s3Service.deleteImage(imageUrl);
-        return res.status(200).json({ message: 'Image supprimée avec succès' });
-    } catch (error) {
-        console.error('Erreur lors de la suppression:', error);
-        return res.status(500).json({ message: 'Erreur lors de la suppression de l’image', error: error.message });
-    }
-});
-/**
- * @swagger
- * /api/images/list:
- *   get:
- *     summary: Liste les objets/images dans le bucket S3
- *     description: Retourne la liste des fichiers stockés dans le bucket AWS S3.
- *     tags: [Images]
- *     responses:
- *       200:
- *         description: Liste des fichiers récupérée avec succès
- *       500:
- *         description: Erreur lors de la récupération des fichiers
- */
- router.get('/images/list', authenticateToken, async (req, res) => {
-    try {
-        const { S3Client, ListObjectsV2Command } = require('@aws-sdk/client-s3');
-
-        const s3 = new S3Client({
-            region: process.env.AWS_REGION,
-            credentials: {
-                accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-                secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
-            }
-        });
-
-        const params = {
-            Bucket: process.env.AWS_BUCKET_NAME,
-        };
-
-        const data = await s3.send(new ListObjectsV2Command(params));
-        res.status(200).json(data.Contents || []);
-    } catch (err) {
-        console.error('❌ Erreur lors de la récupération des objets S3 :', err);
-        res.status(500).json({ message: 'Erreur lors de la récupération des fichiers S3', error: err });
-    }
-});
-
+router.delete('/images/delete', authenticateToken, deleteImageController);
 
 module.exports = router;
