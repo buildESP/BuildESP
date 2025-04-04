@@ -104,7 +104,7 @@ const FormComponent = ({ schema, fields, onSubmit, submitLabel = 'Submit', loadi
     if (imageUrl) {
       data[imageField] = imageUrl;
     } else {
-      delete data[imageField]; // évite erreur Zod sur `null`
+      delete data[imageField]; 
     }
 
     console.log("✅ Data sent to onSubmit:", {
