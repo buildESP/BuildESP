@@ -1,10 +1,10 @@
 // src/hooks/useUploadImage.js
 import { useState } from "react";
-import { API_BASE_URL } from "@/config";
+import { API_BASE_URL } from "@/config";  // Assurez-vous que API_BASE_URL est défini correctement
 import useAuth from "./useAuth";
 
 const useUploadImage = () => {
-  const { token } = useAuth();
+  const { token } = useAuth();  // Vous récupérez le token d'authentification
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState(null);
 
