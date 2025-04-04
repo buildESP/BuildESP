@@ -19,7 +19,7 @@ services:
     depends_on:
       db:
         condition: service_healthy
-    image: antoine232/monapp:dev
+    image: stephb421/backend:latest
     restart: always
     networks:
       - buildesp_network
