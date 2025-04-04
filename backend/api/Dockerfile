@@ -12,7 +12,7 @@ RUN aws --version
 
 # Copier package.json et package-lock.json depuis le dossier api/
 COPY api/package.json ./package.json
-COPY api/package-lock.json ./package-lock.json
+#COPY api/package-lock.json ./package-lock.json
 
 # Copier le fichier .env depuis la racine du projet
 COPY .env .env
