@@ -2,7 +2,7 @@ import { Input, Kbd } from "@chakra-ui/react";
 import { LuSearch } from "react-icons/lu";
 import { InputGroup } from "./ui/input-group";
 
-export const SearchInput = ({ value, onChange }) => (
+const SearchInput = ({ value, onChange }) => (
   <InputGroup flex="1" startElement={<LuSearch />} >
     <Input
       placeholder="Search contacts"
@@ -11,3 +11,5 @@ export const SearchInput = ({ value, onChange }) => (
     />
   </InputGroup>
 );
+
+export default SearchInput;

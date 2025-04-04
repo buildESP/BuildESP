@@ -4,7 +4,7 @@ import { Box, Skeleton, Text } from "@chakra-ui/react";
 import ItemsGallery from "@/components/items/ItemsGallery";
 import useFetchData from "@/hooks/useFetchData";
 import useSearch from "@/hooks/useSearch";
-import { SearchInput } from "@/components/SearchInput";
+
 
 const HomePage = () => {
   const { data: items, loading, error } = useFetchData("/items");
@@ -22,7 +22,7 @@ const HomePage = () => {
     <Box>
       <HeroSection />
       {/* Using SearchInput component with useSearch */}
-      <SearchInput value={searchTerm} onChange={handleSearchChange} />
+      {/* <SearchInput value={searchTerm} onChange={handleSearchChange} /> */}
       <CategoriesGallery />
       <ItemsGallery items={filteredItems} title="Objets du Voisinage" />
     </Box>
