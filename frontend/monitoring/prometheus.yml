@@ -32,7 +32,7 @@ scrape_configs:
       module: [http_2xx]
     static_configs:
       - targets:
-          - http://neighborrow.hephel.fr//  # Remplacez par l'URL de votre site web
+          - http://10.0.0.1//  # Remplacez par l'URL de votre site web
     relabel_configs:
       - source_labels: [__address__]
         target_label: __param_target
