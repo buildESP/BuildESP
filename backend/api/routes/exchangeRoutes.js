@@ -2,6 +2,7 @@
 const express = require('express');
 const router = express.Router();
 const exchangeController = require('../controllers/exchangeController');
+const chatSocket = require('../sockets/chatSocket');
 const authenticateToken = require('../middlewares/authMiddleware');
 
 /**
@@ -222,5 +223,8 @@ router.put('/exchanges/:exchange_id', authenticateToken, exchangeController.upda
  *         description: Error during exchange deletion
  */
 router.delete('/exchanges/:exchange_id', authenticateToken, exchangeController.deleteExchange);
+
+//TODO SWAGGER
+router.get('/exchanges/:exchange_id/chat', authenticateToken, chatSocket.connectSocket);
 
 module.exports = router;

@@ -6,6 +6,7 @@ const Item = require('./Item');
 const User = require('./User');
 const Exchange = require('./Exchange');
 const Group = require('./Group');
+const ChatMessage = require('./ChatMessage');
 
 // Associations between Category and Subcategory
 Category.hasMany(Subcategory, { foreignKey: 'category_id', as: 'subcategories' });
@@ -38,4 +39,10 @@ Group.belongsTo(User, { foreignKey: 'group_admin', as: 'admin' });
 User.belongsToMany(Group, { through: 'UserGroups', foreignKey: 'user_id', otherKey: 'group_id', as: 'groups' });
 Group.belongsToMany(User, { through: 'UserGroups', foreignKey: 'group_id', otherKey: 'user_id', as: 'users' });
 
-module.exports = { Category, Subcategory, Item, User, Exchange, Group };
+// Associations for ChatMessage with Exchange and User
+Exchange.hasMany(ChatMessage, { foreignKey: 'exchange_id', as: 'messages' });
+ChatMessage.belongsTo(Exchange, { foreignKey: 'exchange_id', as: 'exchange' });
+User.hasMany(ChatMessage, { foreignKey: 'sender_id', as: 'sent_messages' });
+ChatMessage.belongsTo(User, { foreignKey: 'sender_id', as: 'sender' });
+
+module.exports = { Category, Subcategory, Item, User, Exchange, Group, ChatMessage };
