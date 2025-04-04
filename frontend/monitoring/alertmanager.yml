@@ -11,14 +11,7 @@ route:
   group_interval: 5m
   repeat_interval: 10m
 receivers:
-<<<<<<< Updated upstream:frontend/monitoring/alertmanager.yml
- - name: example-email
-   email_configs:
-    - to: 'email@example.com'
-    
-=======
   - name: 'gmail-alerts'
     email_configs:
       - to: 'paulin.rebours@epitech.eu'
         send_resolved: true
->>>>>>> Stashed changes:monitoring/alertmanager.yml
