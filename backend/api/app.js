@@ -1,4 +1,10 @@
-require('dotenv').config();
+const path = require('path');
+const dotenv = require('dotenv');
+
+// Charger .env général puis celui de /api
+dotenv.config({ path: path.resolve(__dirname, '../.env') });
+dotenv.config({ path: path.resolve(__dirname, './.env') });
+
 const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
@@ -11,9 +17,9 @@ const axios = require('axios');
 const app = express();
 const port = process.env.PORT || 3000;
 
-// Vérif clé secrète
+// Vérification
 if (!process.env.SECRET_KEY) {
-  console.error(chalk.red.bold('⛔ SECRET_KEY non défini dans .env !'));
+  console.error(chalk.red.bold('⛔ SECRET_KEY non défini !'));
   process.exit(1);
 }
 
@@ -22,7 +28,7 @@ app.use(morgan('dev'));
 app.use(express.json());
 
 app.use((req, res, next) => {
-  console.log(`🌍 Requête : ${req.method} ${req.url} - Origine : ${req.headers.origin}`);
+  console.log(`🌍 ${req.method} ${req.url} - Origine : ${req.headers.origin}`);
   next();
 });
 
@@ -41,7 +47,7 @@ app.use(
       if (!origin || allowedOrigins.includes(origin)) {
         callback(null, true);
       } else {
-        callback(new Error('Not allowed by CORS'));
+        callback(new Error('CORS refusé'));
       }
     },
     credentials: true,
@@ -50,7 +56,6 @@ app.use(
 
 app.options('*', cors());
 
-// Swagger
 const swaggerOptions = require('./swaggerOptions');
 const swaggerSpec = swaggerJsdoc(swaggerOptions);
 app.use('/doc', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
@@ -71,13 +76,12 @@ app.post('/api/access-token', async (req, res) => {
     res.status(response.status).json(response.data);
   } catch (error) {
     res.status(error.response?.status || 500).json({
-      message: 'Erreur lors de la récupération du token',
+      message: 'Erreur récupération token',
       error: error.message,
     });
   }
 });
 
-// API
 app.use('/api', authRoutes);
 app.use('/api', userRoutes);
 app.use('/api', categoryRoutes);
@@ -87,14 +91,12 @@ app.use('/api', exchangeRoutes);
 app.use('/api', groupRoutes);
 app.use('/api', imageRoutes);
 
-// Gestion globale erreurs
 app.use((err, req, res, next) => {
   console.error('💥 Erreur non gérée :', err.message);
   res.status(err.status || 500).json({ message: err.message });
 });
 
-// Démarrage serveur
 app.listen(port, '0.0.0.0', () => {
   console.log(chalk.green.bold(`🚀 Serveur lancé sur le port ${port}`));
-  console.log(chalk.blue(`📚 Docs Swagger : http://localhost:${port}/doc`));
+  console.log(chalk.blue(`📚 Swagger dispo : http://localhost:${port}/doc`));
 });
