@@ -23,7 +23,7 @@ app.use(helmet());
 // 📝 Logger des requêtes avec Morgan
 app.use(morgan('dev'));
 
-// 📦 Middleware pour parser les requêtes JSON (body-parser n'est plus nécessaire)
+// 📦 Middleware pour parser les requêtes JSON
 app.use(express.json());
 
 // 🔍 Middleware pour logger les requêtes et leur origine
@@ -34,12 +34,12 @@ app.use((req, res, next) => {
 
 // 🎛 Configuration CORS
 const allowedOrigins = [
-  'http://172.31.41.254',
   'http://15.237.77.97',
   'https://15.237.77.97',
+  'http://neighborrow.hephel.fr',
+  'https://neighborrow.hephel.fr',
   'http://localhost:3000',
   'http://localhost:5173',
-  'https://172.31.41.254',
 ];
 
 app.use(
