@@ -1,3 +1,4 @@
+
 import { Box, Text, Image, Badge, Button, VStack, HStack } from "@chakra-ui/react";
 import { Link, useNavigate } from "react-router-dom";
 import useAuth from "../../hooks/useAuth";
@@ -22,27 +23,21 @@ const ItemCard = ({ item }) => {
 
   const isOwner = user && item.user_id === user.id;
 
-  const handleNavigate = () => {
-    navigate(`/items/${item.id}`);
-  };
-
   return (
-    <Box
-      p={4}
-      bg="green.50"
-      borderRadius="md"
-      cursor="pointer"
-      onClick={handleNavigate}
-      _hover={{ transform: "scale(1.03)", transition: "0.2s ease-in-out" }}
-    >
-      <Image
-        src={item.picture || "https://via.placeholder.com/150"}
-        alt={item.name}
-        w="100%"
-        h="150px"
-        objectFit="cover"
-        borderRadius="md"
-      />
+    <Box p={4} bg="green.50" borderRadius="md" _hover={{ transform: "scale(1.03)", transition: "0.2s ease-in-out" }}>
+      {/* ✅ Wrap only the image and title in a Link */}
+      <Link to={`/items/${item.id}`}>
+        <Image
+          src={item.picture || "https://via.placeholder.com/150"}
+          alt={item.name}
+          w="100%"
+          h="150px"
+          objectFit="cover"
+          borderRadius="md"
+        />
+        <Text fontWeight="bold" mt={2}>{item.name}</Text>
+      </Link>
+
       <VStack align="start" mt={2} spacing={2}>
         <Text fontWeight="bold">{item.name}</Text>
         <Text fontSize="sm" color="gray.600">
@@ -63,16 +58,11 @@ const ItemCard = ({ item }) => {
               </Button>
             </HStack>
           ) : (
-            <Button
-              size="xs"
-              colorScheme="blue"
-              onClick={(e) => {
-                e.stopPropagation();
-                navigate(`/items/${item.id}`);
-              }}
-            >
-              Emprunter
-            </Button>
+            <Link to={`/items/${item.id}`}>
+              <Button size="xs" colorPalette="blue">
+                Emprunter
+              </Button>
+            </Link>
           )}
         </HStack>
       </VStack>
