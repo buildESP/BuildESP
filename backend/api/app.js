@@ -39,8 +39,6 @@ const allowedOrigins = [
   'http://localhost:3000',
   'http://localhost:5173',
   'https://172.31.41.254',
-  'http://neighborrow.hephel.fr',
-  'http://www.neighborrow.hephel.fr',
 ];
 
 app.use(
