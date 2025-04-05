@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const upload = require('../middlewares/uploadMiddleware');
 const authenticateToken = require('../middlewares/authMiddleware');
-const s3Service = require('../api/services/s3Service'); // Importez s3Service
+const s3Service = require('../services/s3Service'); // Mise à jour de l'import
 const { Readable } = require('stream');
 
 /**
