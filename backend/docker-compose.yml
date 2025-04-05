@@ -1,5 +1,3 @@
-version: "3.9"
-
 services:
   backend:
     build:
@@ -14,7 +12,7 @@ services:
       - DB_NAME=${DB_NAME}
       - JWT_SECRET=${JWT_SECRET}
       - SECRET_KEY=${SECRET_KEY}
-      - ALLOWED_ORIGINS=http://${REACT_APP_FRONTEND_IP}:80
+      - ALLOWED_ORIGINS=http://neighborrow.hephel.fr
       - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
       - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
       - AWS_REGION=${AWS_REGION}
@@ -24,11 +22,10 @@ services:
       - MAIL_SECURE=${MAIL_SECURE}
       - MAIL_USER=${MAIL_USER}
       - MAIL_PASS=${MAIL_PASS}
-      - FRONTEND_URL=${FRONTEND_URL}
+      - FRONTEND_URL=http://neighborrow.hephel.fr  # URL du frontend
     depends_on:
       db:
         condition: service_healthy
-    #restart: always
     networks:
       - buildesp_network
 

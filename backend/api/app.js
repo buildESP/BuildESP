@@ -34,6 +34,7 @@ const allowedOrigins = [
   'https://neighborrow.hephel.fr',
   'http://localhost:3000',
   'http://localhost:5173',
+  process.env.FRONTEND_URL // ajout dynamique de l'URL du frontend
 ];
 
 app.use(
