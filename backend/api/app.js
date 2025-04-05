@@ -26,12 +26,6 @@ app.use(morgan('dev'));
 // 📦 Middleware pour parser les requêtes JSON
 app.use(express.json());
 
-// 🔍 Middleware pour logger les requêtes et leur origine
-app.use((req, res, next) => {
-  console.log(`🌍 Requête : ${req.method} ${req.url} - Origine : ${req.headers.origin}`);
-  next();
-});
-
 // 🎛 Configuration CORS
 const allowedOrigins = [
   'http://15.237.77.97',
