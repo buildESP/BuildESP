@@ -40,7 +40,7 @@ const uploadImageForEntity = async (file, entityType, entityId) => {
     throw new Error("⛔ Erreur: Flux de fichier manquant");
   }
 
-  const fileExtension = file.mimetype.split('/')[1] || 'jpg';
+  const fileExtension = file.mimetype.split('/')[1] || 'txt';
   const key = `${entityType}-${entityId}.${fileExtension}`;
 
   const params = {
@@ -53,6 +53,19 @@ const uploadImageForEntity = async (file, entityType, entityId) => {
 
   console.log(`🚀 Tentative d'upload sur S3: ${key} (${file.mimetype})`);
   console.log("En-têtes de la requête:", params);
+
+  // Ajouter des logs pour vérifier le flux de fichier
+  file.stream.on('data', (chunk) => {
+    console.log(`Chunk reçu: ${chunk.length} octets`);
+  });
+
+  file.stream.on('end', () => {
+    console.log('Fin de la lecture du flux de fichier.');
+  });
+
+  file.stream.on('error', (err) => {
+    console.error('Erreur lors de la lecture du flux de fichier:', err);
+  });
 
   try {
     await s3.send(new PutObjectCommand(params));
