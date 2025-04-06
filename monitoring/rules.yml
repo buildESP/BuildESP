@@ -1,0 +1,46 @@
+groups:
+  - name: logs_alerts
+    rules:
+      - alert: WebLogsMissing
+        expr: absent(web_logging)
+        for: 1m
+        labels:
+          severity: warning
+          receiver: gmail-alerts
+        annotations:
+          summary: "Absence de logs web"
+          description: "Aucun log web détecté durant la dernière minute."
+
+      - alert: DatabaseLogsMissing
+        expr: absent(database_logs)
+        for: 1m
+        labels:
+          severity: warning
+          receiver: gmail-alerts
+        annotations:
+          summary: "Absence de logs base de données"
+          description: "Aucun log de la base de données détecté durant la dernière minute."
+
+  - name: cpu_usage_alerts
+    rules:
+      - alert: HighCpuUsage
+        expr: (sum(rate(container_cpu_usage_seconds_total{job="cadvisor"}[5m])) by (instance)) * 100 > 80
+        for: 1m
+        labels:
+          severity: critical
+          receiver: gmail-alerts
+        annotations:
+          summary: "Usage CPU élevé"
+          description: "L'utilisation CPU sur l'instance {{ $labels.instance }} dépasse 80 % depuis plus d'une minute."
+
+  - name: blackbox_alerts
+    rules:
+      - alert: ProbeFailure
+        expr: probe_success{job="blackbox"} == 0
+        for: 1m
+        labels:
+          severity: critical
+          receiver: gmail-alerts
+        annotations:
+          summary: "Echec du sondage HTTP"
+          description: "Le sondage HTTP pour la cible {{ $labels.instance }} a échoué pendant au moins une minute."

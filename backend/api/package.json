@@ -14,6 +14,7 @@
   "author": "neighborrow team",
   "license": "ISC",
   "dependencies": {
+    "morgan": "^1.10.0",
     "@aws-sdk/client-s3": "^3.750.0",
     "@aws-sdk/s3-request-presigner": "^3.750.0",
     "axios": "^1.4.0", 
@@ -28,7 +29,9 @@
     "nodemailer": "^6.10.0",
     "sequelize": "^6.37.4",
     "swagger-jsdoc": "^6.2.8",
-    "swagger-ui-express": "^5.0.1"
+    "swagger-ui-express": "^5.0.1",
+    "multer-s3": "^3.0.1",
+    "helmet": "^5.0.0" 
   },
   "devDependencies": {
     "@eslint/js": "^9.22.0",

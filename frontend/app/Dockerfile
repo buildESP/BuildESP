@@ -1,4 +1,4 @@
-# Use Node.js 18 with Alpine for a lightweight base image
+# Use Node.js 22 with Alpine for a lightweight base image
 FROM node:22-alpine
 
 # Set the working directory inside the container
@@ -21,4 +21,3 @@ EXPOSE 5173
 
 # Command to run the application (adapté pour Vite)
 CMD ["npm", "run", "dev", "--", "--host"]
-

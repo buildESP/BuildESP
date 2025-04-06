@@ -1,9 +1,8 @@
 const express = require('express');
-const { uploadImageController, deleteImageController } = require('../controllers/imageController');
+const router = express.Router();
 const upload = require('../middlewares/uploadMiddleware');
 const authenticateToken = require('../middlewares/authMiddleware');
-
-const router = express.Router();
+const s3Service = require('../services/s3Service');
 
 /**
  * @swagger
@@ -50,7 +49,22 @@ const router = express.Router();
  *       500:
  *         description: Erreur interne du serveur lors de l'upload
  */
-router.post('/images/upload', authenticateToken, upload.single('image'), uploadImageController);
+router.post('/images/upload', authenticateToken, upload.single('image'), async (req, res) => {
+    try {
+        const { entityType, entityId } = req.body;
+        const file = req.file;
+
+        if (!file) {
+            return res.status(400).json({ message: "Aucun fichier n'a été uploadé." });
+        }
+
+        const imageUrl = await s3Service.uploadImageForEntity(file, entityType, entityId);
+        res.status(201).json({ message: 'Image uploadée avec succès', imageUrl });
+    } catch (error) {
+        console.error('Erreur lors de l\'upload:', error);
+        res.status(500).json({ message: 'Erreur lors de l\'upload de l\'image', error: error.message });
+    }
+});
 
 /**
  * @swagger
@@ -78,6 +92,20 @@ router.post('/images/upload', authenticateToken, upload.single('image'), uploadI
  *       500:
  *         description: Erreur interne du serveur lors de la suppression
  */
-router.delete('/images/delete', authenticateToken, deleteImageController);
+router.delete('/images/delete', authenticateToken, async (req, res) => {
+    try {
+        const { imageUrl } = req.body;
+
+        if (!imageUrl) {
+            return res.status(400).json({ message: "L'URL de l'image est requise pour la suppression." });
+        }
+
+        await s3Service.deleteImage(imageUrl);
+        res.status(200).json({ message: 'Image supprimée avec succès' });
+    } catch (error) {
+        console.error('Erreur lors de la suppression de l’image:', error);
+        res.status(500).json({ message: 'Erreur lors de la suppression de l’image', error: error.message });
+    }
+});
 
 module.exports = router;

@@ -11,16 +11,21 @@ services:
       - DB_PASSWORD=${DB_PASSWORD}
       - DB_NAME=${DB_NAME}
       - JWT_SECRET=${JWT_SECRET}
-      - ALLOWED_ORIGINS=http://${REACT_APP_FRONTEND_IP}:80
-      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY}
+      - SECRET_KEY=${SECRET_KEY}
+      - ALLOWED_ORIGINS=http://neighborrow.hephel.fr
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
       - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
       - AWS_REGION=${AWS_REGION}
       - AWS_BUCKET_NAME=${AWS_BUCKET_NAME}
+      - MAIL_HOST=${MAIL_HOST}
+      - MAIL_PORT=${MAIL_PORT}
+      - MAIL_SECURE=${MAIL_SECURE}
+      - MAIL_USER=${MAIL_USER}
+      - MAIL_PASS=${MAIL_PASS}
+      - FRONTEND_URL=http://neighborrow.hephel.fr  # URL du frontend
     depends_on:
       db:
         condition: service_healthy
-    image: stephb421/backend:latest
-    restart: always
     networks:
       - buildesp_network
 
@@ -48,11 +53,11 @@ services:
     container_name: promtail
     volumes:
       - /home/admuser/Repo810/back_student/promtail-config.yml:/etc/promtail/promtail-config.yml
-      - /var/log:/var/log  # Ajout pour récupérer les logs systèmes (optionnel)
+      - /var/log:/var/log
     command: -config.file=/etc/promtail/promtail-config.yml -config.expand-env=true
     networks:
       - buildesp_network
-      
+
 volumes:
   mysql-data:
 

@@ -1,4 +1,6 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 import {
     DialogRoot,
     DialogTrigger,
@@ -19,6 +21,22 @@ const DialogComponents = ({ item }) => {
     const { postData, loading } = usePostData("/exchanges");
     const { user } = useAuth();
 
+    const [startDate, setStartDate] = useState(new Date());
+    const [endDate, setEndDate] = useState(() => {
+        const date = new Date();
+        date.setDate(date.getDate() + 7);
+        return date;
+    });
+
+    useEffect(() => {
+        const maxEndDate = new Date(startDate);
+        maxEndDate.setDate(startDate.getDate() + 7);
+
+        if (endDate > maxEndDate || endDate < startDate) {
+            setEndDate(maxEndDate);
+        }
+    }, [startDate]);
+
     const handleConfirm = async () => {
         if (!user) {
             toast.error("Vous devez être connecté pour emprunter un objet");
@@ -27,11 +45,11 @@ const DialogComponents = ({ item }) => {
 
         const exchangeData = {
             item_id: item.id,
-            lender_user_id: item.user_id, // ID du propriétaire de l'objet
-            borrow_user_id: user.id, // ID de l'utilisateur qui emprunte
-            start_date: new Date().toISOString(), // Date actuelle
-            end_date: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(), // Date dans 7 jours
-            status: "Pending" // Statut initial
+            lender_user_id: item.user_id,
+            borrow_user_id: user.id,
+            start_date: startDate.toISOString(),
+            end_date: endDate.toISOString(),
+            status: "Pending"
         };
 
         const response = await postData(
@@ -41,40 +59,44 @@ const DialogComponents = ({ item }) => {
         );
 
         if (response) {
+            toast.success("Emprunt confirmé !");
         }
     };
 
     return (
         <DialogRoot>
-            {/* Bouton pour ouvrir la boîte de dialogue */}
             <DialogTrigger asChild>
                 <Button colorScheme="blue">Emprunter</Button>
             </DialogTrigger>
 
-            {/* Contenu de la boîte de dialogue */}
             <DialogContent>
                 <DialogHeader>
-                    {/* Titre de la boîte de dialogue */}
                     <DialogTitle>Emprunter {item.name}</DialogTitle>
                 </DialogHeader>
                 <DialogBody>
-                    {/* Message de confirmation */}
-                    <Text>Voulez-vous notifier le propriétaire pour emprunter cet objet ?</Text>
+                    <Text>Sélectionnez les dates d'emprunt :</Text>
+                    <DatePicker
+                        selected={startDate}
+                        onChange={(date) => setStartDate(date)}
+                        minDate={new Date()}
+                    />
+                    <DatePicker
+                        selected={endDate}
+                        onChange={(date) => setEndDate(date)}
+                        minDate={startDate}
+                        maxDate={(() => {
+                            const date = new Date(startDate);
+                            date.setDate(date.getDate() + 7);
+                            return date;
+                        })()}
+                    />
                 </DialogBody>
                 <DialogFooter>
-                    {/* Bouton pour annuler */}
                     <DialogCloseTrigger asChild>
                         <Button variant="outline">Annuler</Button>
                     </DialogCloseTrigger>
-
-                    {/* Bouton pour confirmer l'emprunt */}
                     <DialogActionTrigger asChild>
-                        <Button
-                            colorScheme="blue"
-                            onClick={handleConfirm}
-                            isLoading={loading}
-                            loadingText="Envoi en cours..."
-                        >
+                        <Button colorScheme="blue" onClick={handleConfirm} isLoading={loading} loadingText="Envoi en cours...">
                             Confirmer
                         </Button>
                     </DialogActionTrigger>

@@ -8,7 +8,7 @@ import {
   Text,
 } from "@chakra-ui/react"
 import { useState } from "react"
-import { Link } from "react-router"
+import { Link } from "react-router-dom" // ✅ correction ici
 import { HiChevronLeft, HiChevronRight } from "react-icons/hi"
 import ItemCard from "./ItemCard"
 
@@ -36,7 +36,7 @@ const ItemsGallery = ({ items, title = "Items" }) => {
         <Text fontSize="2xl" fontWeight="bold">
           {title}
         </Text>
-        <Button colorPalette="green" as={Link} to="/add-item" size="sm">
+        <Button colorScheme="green" as={Link} to="/add-item" size="sm">
           Ajouter un item
         </Button>
       </HStack>
@@ -46,7 +46,7 @@ const ItemsGallery = ({ items, title = "Items" }) => {
         gap={6}
       >
         {visibleItems.map((item) => (
-          <ItemCard key={item.id} item={item} />
+          <ItemCard  key={item.id} item={item} />
         ))}
       </Grid>
 
@@ -56,16 +56,15 @@ const ItemsGallery = ({ items, title = "Items" }) => {
           aria-label="Page précédente"
           onClick={() => goToPage(page - 1)}
           isDisabled={page === 1}
-        >
-          <HiChevronLeft />
-        </IconButton>
+          icon={<HiChevronLeft />}
+        />
 
         <ButtonGroup isAttached variant="outline">
           {Array.from({ length: pageCount }).map((_, i) => (
             <Button
               key={i + 1}
               onClick={() => goToPage(i + 1)}
-              colorPalette={page === i + 1 ? "green" : "gray"}
+              colorScheme={page === i + 1 ? "green" : "gray"}
               variant={page === i + 1 ? "solid" : "outline"}
             >
               {i + 1}
@@ -77,11 +76,9 @@ const ItemsGallery = ({ items, title = "Items" }) => {
           aria-label="Page suivante"
           onClick={() => goToPage(page + 1)}
           variant="outline"
-
           isDisabled={page === pageCount}
-        >
-          <HiChevronRight />
-        </IconButton>
+          icon={<HiChevronRight />}
+        />
       </HStack>
     </Box>
   )

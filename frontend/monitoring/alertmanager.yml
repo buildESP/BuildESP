@@ -1,11 +1,17 @@
 global:
-  smtp_smarthost: 'smtp:25'
-  smtp_from: 'email@example.com'
+  smtp_smarthost: 'smtp.gmail.com:587'
+  smtp_from: 'neighborrow20@gmail.com'
+  smtp_auth_username: 'neighborrow20@gmail.com'
+  smtp_auth_password: 'Neighborrow2025.'
+  smtp_require_tls: true
 route:
-  receiver: example-email
+  receiver: 'gmail-alerts'
   group_by: [alertname]
+  group_wait: 30s
+  group_interval: 5m
+  repeat_interval: 10m
 receivers:
- - name: example-email
-   email_configs:
-    - to: 'email@example.com'
-    
+  - name: 'gmail-alerts'
+    email_configs:
+      - to: 'paulin.rebours@epitech.eu'
+        send_resolved: true

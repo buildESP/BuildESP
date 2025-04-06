@@ -20,7 +20,6 @@ const ItemDetails = ({ item, isOwner, onEdit }) => {
     const { refetch } = useItems();
     const { user } = useAuth();
 
-
     const handleDelete = async () => {
         if (window.confirm("Voulez-vous vraiment supprimer cet item ?")) {
             const success = await deleteData(item.id);
@@ -56,9 +55,6 @@ const ItemDetails = ({ item, isOwner, onEdit }) => {
                         isLoading={loading}
                     >
                         Supprimer
-                    </Button>
-                    <Button colorPalette="orange">
-                        Modifier le statut
                     </Button>
                 </HStack>
             ) : (
