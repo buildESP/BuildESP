@@ -42,10 +42,11 @@ const uploadImageForEntity = async (file, entityType, entityId) => {
   const params = {
     Bucket: process.env.AWS_BUCKET_NAME,
     Key: key,
-    Body: file.buffer, // Utilisation directe du buffer
-    ContentType: file.mimetype,
-    ACL: 'public-read'
+    Body: file.buffer,
+    ContentType: file.mimetype
+    // ✅ Pas de ACL
   };
+  
 
   console.log(`🚀 Tentative d'upload sur S3: ${key} (${file.mimetype})`);
   console.log("En-têtes de la requête:", params);
