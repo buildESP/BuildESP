@@ -52,6 +52,7 @@ const uploadImageForEntity = async (file, entityType, entityId) => {
   };
 
   console.log(`🚀 Tentative d'upload sur S3: ${key} (${file.mimetype})`);
+  console.log("En-têtes de la requête:", params);
 
   try {
     await s3.send(new PutObjectCommand(params));
