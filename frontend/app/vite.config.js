@@ -26,9 +26,9 @@ export default defineConfig(({ mode }) => {
       host: '0.0.0.0', // Écouter sur toutes les interfaces réseau
       port: 5173,
       hmr: {
-        host: 'neighborrow.hephel.fr', // Remplacez par votre domaine ou adresse IP publique
-        protocol: 'ws',
-        clientPort: 5173 // Assurez-vous que ce port est ouvert et accessible
+        host: 'neighborrow.hephel.fr', // Nom de domaine pour WebSocket
+        protocol: 'ws',  // Utiliser WebSocket pour HMR
+        clientPort: 5173 // Port sur lequel le client se connecte
       },
       allowedHosts: [
         'neighborrow.hephel.fr',
