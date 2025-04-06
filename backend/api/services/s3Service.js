@@ -34,38 +34,21 @@ const s3 = new S3Client({
  */
 const uploadImageForEntity = async (file, entityType, entityId) => {
   if (!file) throw new Error("⛔ Erreur: Aucun fichier fourni pour l'upload !");
+  if (!file.buffer) throw new Error("⛔ Erreur: Le fichier ne contient pas de buffer valide.");
 
-  // Vérification du fichier stream
-  if (!file.stream) {
-    throw new Error("⛔ Erreur: Flux de fichier manquant");
-  }
-
-  const fileExtension = file.mimetype.split('/')[1] || 'txt';
+  const fileExtension = file.mimetype.split('/')[1] || 'bin';
   const key = `${entityType}-${entityId}.${fileExtension}`;
 
   const params = {
     Bucket: process.env.AWS_BUCKET_NAME,
     Key: key,
-    Body: file.stream,  // Utilisation du flux du fichier
+    Body: file.buffer, // Utilisation directe du buffer
     ContentType: file.mimetype,
-    ACL: 'public-read'  // Permettre l'accès public aux images (ajustez si nécessaire)
+    ACL: 'public-read'
   };
 
   console.log(`🚀 Tentative d'upload sur S3: ${key} (${file.mimetype})`);
   console.log("En-têtes de la requête:", params);
-
-  // Ajouter des logs pour vérifier le flux de fichier
-  file.stream.on('data', (chunk) => {
-    console.log(`Chunk reçu: ${chunk.length} octets`);
-  });
-
-  file.stream.on('end', () => {
-    console.log('Fin de la lecture du flux de fichier.');
-  });
-
-  file.stream.on('error', (err) => {
-    console.error('Erreur lors de la lecture du flux de fichier:', err);
-  });
 
   try {
     await s3.send(new PutObjectCommand(params));
@@ -73,7 +56,6 @@ const uploadImageForEntity = async (file, entityType, entityId) => {
     return `https://${process.env.AWS_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${key}`;
   } catch (error) {
     console.error("❌ Erreur lors de l'upload sur S3:", error);
-    // Affiche les détails de l'erreur AWS
     console.error("Détails de l'erreur AWS:", error.$metadata);
     throw new Error(`Échec de l’upload de l’image sur S3: ${error.message}`);
   }

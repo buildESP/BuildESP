@@ -2,8 +2,7 @@ const express = require('express');
 const router = express.Router();
 const upload = require('../middlewares/uploadMiddleware');
 const authenticateToken = require('../middlewares/authMiddleware');
-const s3Service = require('../services/s3Service'); // Mise à jour de l'import
-const { Readable } = require('stream');
+const s3Service = require('../services/s3Service');
 
 /**
  * @swagger
@@ -58,13 +57,6 @@ router.post('/images/upload', authenticateToken, upload.single('image'), async (
         if (!file) {
             return res.status(400).json({ message: "Aucun fichier n'a été uploadé." });
         }
-
-        // Convertir le buffer en flux
-        const bufferStream = new Readable();
-        bufferStream.push(file.buffer);
-        bufferStream.push(null);
-
-        file.stream = bufferStream; // Ajouter le flux à l'objet file
 
         const imageUrl = await s3Service.uploadImageForEntity(file, entityType, entityId);
         res.status(201).json({ message: 'Image uploadée avec succès', imageUrl });
