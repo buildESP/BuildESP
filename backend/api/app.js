@@ -46,7 +46,7 @@ app.use(
         callback(new Error('Not allowed by CORS'));
       }
     },
-    credentials: true, // Assurez-vous que credentials sont autorisés pour les cookies et sessions
+    credentials: true,
     methods: 'GET,POST,PUT,DELETE,OPTIONS',
     allowedHeaders: 'Content-Type,Authorization',
   })
@@ -80,10 +80,10 @@ app.post('/api/access-token', async (req, res) => {
     console.log('✅ Réponse API privée :', response.data);
     res.status(response.status).json(response.data);
   } catch (error) {
-    console.error('❌ Erreur API privée:', error.message);
+    console.error('❌ Erreur API privée:', error.response ? error.response.data : error.message);
     res.status(error.response?.status || 500).json({
       message: 'Erreur lors de la récupération du token',
-      error: error.message,
+      error: error.response ? error.response.data : error.message,
     });
   }
 });
