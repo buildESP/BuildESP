@@ -11,6 +11,9 @@ import { useState } from "react"
 import { Link } from "react-router"
 import { HiChevronLeft, HiChevronRight } from "react-icons/hi"
 import ItemCard from "./ItemCard"
+import TourStep from "../TourStep"
+import { useTourStep } from '@/hooks/useTourStep'
+
 
 const pageSize = 6
 
@@ -21,6 +24,7 @@ const ItemsGallery = ({ items, title = "Items" }) => {
   const start = (page - 1) * pageSize
   const end = start + pageSize
   const visibleItems = items.slice(start, end)
+  const { isCurrent: isItemStep } = useTourStep("items-gallery")
 
   const goToPage = (p) => {
     if (p >= 1 && p <= pageCount) setPage(p)
@@ -33,6 +37,8 @@ const ItemsGallery = ({ items, title = "Items" }) => {
   return (
     <Box w="full">
       <HStack justify="space-between" py={4}>
+      <TourStep id="items-gallery" />
+
         <Text fontSize="2xl" fontWeight="bold">
           {title}
         </Text>
@@ -44,6 +50,11 @@ const ItemsGallery = ({ items, title = "Items" }) => {
       <Grid
         templateColumns={{ base: "1fr", sm: "1fr 1fr", md: "1fr 1fr 1fr" }}
         gap={6}
+        position="relative"
+  zIndex={isItemStep ? "popover" : "auto"}
+  boxShadow={isItemStep ? "0 0 0 4px rgba(66, 153, 225, 0.4)" : "none"}
+  animation={isItemStep ? "pulse-glow 1.5s infinite" : undefined}
+  transition="box-shadow 0.3s ease"
       >
         {visibleItems.map((item) => (
           <ItemCard  key={item.id} item={item} />
