@@ -9,6 +9,7 @@ const TourOverlay = () => {
 
   return (
     <Box
+      data-testid="tour-overlay"
       position="fixed"
       inset="0"
       bg="blackAlpha.600"
