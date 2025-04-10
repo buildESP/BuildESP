@@ -1,6 +1,6 @@
 import { screen, fireEvent } from "@testing-library/react"
 import { describe, it, vi, beforeEach, expect } from "vitest"
-import TourStep from "@/components/TourStep"
+import TourStep from "@/components/tour/TourStep"
 
 // 📌 Mock de useTourStep
 vi.mock("@/hooks/useTourStep", () => ({

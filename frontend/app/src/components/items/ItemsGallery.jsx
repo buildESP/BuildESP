@@ -11,7 +11,7 @@ import { useState } from "react"
 import { Link } from "react-router"
 import { HiChevronLeft, HiChevronRight } from "react-icons/hi"
 import ItemCard from "./ItemCard"
-import TourStep from "../TourStep"
+import TourStep from "../tour/TourStep"
 import { useTourStep } from '@/hooks/useTourStep'
 
 

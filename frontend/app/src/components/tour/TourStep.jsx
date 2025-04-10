@@ -48,7 +48,7 @@ const TourStep = ({ id, children }) => {
           </PopoverTrigger>
 
           <PopoverContent>
-            <PopoverCloseTrigger />
+            <PopoverCloseTrigger onClick={stop} />
             <PopoverArrow />
             <PopoverBody>
               <PopoverTitle mb={2}>{title}</PopoverTitle>

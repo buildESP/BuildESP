@@ -5,7 +5,11 @@ import { TourContext } from './useTourContext'
 export const TourProvider = ({ steps, children }) => {
   const [currentStepIndex, setCurrentStepIndex] = useState(null)
 
-  const start = () => setCurrentStepIndex(0)
+  const start = () => {
+    localStorage.setItem("hasSeenTour", "true")
+    setCurrentStepIndex(0)
+  }
+
   const stop = () => setCurrentStepIndex(null)
   const next = () => setCurrentStepIndex((i) => (i < steps.length - 1 ? i + 1 : null))
   const prev = () => setCurrentStepIndex((i) => (i > 0 ? i - 1 : 0))

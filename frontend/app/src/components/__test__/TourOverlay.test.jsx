@@ -1,7 +1,7 @@
 import { describe, it, vi, expect } from "vitest"
 import { screen } from "@testing-library/react"
 import { renderWithTourProvider } from "@/test/renderWithTourProvider"
-import TourOverlay from "@/components/TourOverlay"
+import TourOverlay from "@/components/tour/TourOverlay"
 
 vi.mock("@/context/useTourContext", async (importOriginal) => {
   const actual = await importOriginal()

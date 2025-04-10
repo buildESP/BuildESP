@@ -44,17 +44,19 @@ describe("HeroSection", () => {
     ).toBeInTheDocument()
   })
 
-  it("met en surbrillance le bouton 'Emprunter un objet' si c’est le step actif", () => {
-    mockUseAuth.mockReturnValue({ user: null })
+  it("met en surbrillance le bouton 'Partager un objet' si l'utilisateur est connecté et que c’est le step actif", () => {
+    mockUseAuth.mockReturnValue({ user: { name: "Alice" } })
     mockUseTourStep.mockReturnValue({ isCurrent: true })
-
+  
     renderWithTourProvider(<HeroSection />)
-
+  
     const startBtn = screen.getByRole("link", {
-      name: "Emprunter un objet",
+      name: "Partager un objet",
     })
-
+  
+    expect(startBtn).toBeInTheDocument()
     expect(startBtn).toHaveStyle("z-index: var(--chakra-z-index-popover)")
     expect(startBtn).toHaveStyle("box-shadow: 0 0 0 4px rgba(66, 153, 225, 0.4)")
   })
+  
 })

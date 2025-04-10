@@ -9,7 +9,7 @@ import {
 } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 import { FaFire } from "react-icons/fa";
-import TourStep from "./TourStep";
+import TourStep from "./tour/TourStep";
 import { useTourStep } from '@/hooks/useTourStep'
 
 
