@@ -38,7 +38,7 @@ const ItemsGallery = ({ items }) => {
     <Box w="full">
       <HStack justify="space-between" py={4}>
         <TourStep id="items-gallery" />
-        <Button colorPalette="green" as={Link} to="/add-item" size="sm">
+        <Button colorPalette="green" variant="surface" as={Link} to="/add-item" size="sm">
           Ajouter un item
         </Button>
       </HStack>
@@ -89,7 +89,7 @@ const ItemsGallery = ({ items }) => {
         key={i + 1}
         onClick={() => goToPage(i + 1)}
         colorPalette={page === i + 1 ? "green" : "gray"}
-        variant={page === i + 1 ? "solid" : "outline"}
+        variant={page === i + 1 ? "surface" : "outline"}
         size="sm"
         minW="36px"
       >
