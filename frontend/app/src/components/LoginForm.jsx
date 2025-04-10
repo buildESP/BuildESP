@@ -31,10 +31,6 @@ const LoginForm = ({ onSubmit, error }) => {
   type="submit"
   colorPalette="blue"
   isLoading={isSubmitting}
-  onClick={() => {
-    console.log("Button clicked!"); // ✅ Vérifier si le bouton fonctionne
-    handleSubmit(handleFormSubmit)(); // ✅ Exécuter handleSubmit manuellement
-  }}
 >
   Se connecter
 </Button>
