@@ -2,9 +2,10 @@
 import FormComponent from "../FormComponent";
 import usePutData from "@/hooks/usePutData";
 import { userUpdateSchema } from "@/validation/schemas";
-
+import { useRef } from "react";
 const AdminUserForm = ({ user, endpoint, onSuccess, refetch }) => {
   const { putData, loading } = usePutData(endpoint);
+    const generatedId = useRef(`${Date.now()}`).current;
 
   const fields = [
     { name: "firstname", label: "Prénom" },
@@ -56,6 +57,8 @@ const AdminUserForm = ({ user, endpoint, onSuccess, refetch }) => {
       defaultValues={user}
       onSubmit={handleSubmit}
       submitLabel="Mettre à jour l’utilisateur"
+      entityType = "item"
+      entityId= {user.id || generatedId}
       loading={loading}
     />
   );

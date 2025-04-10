@@ -36,7 +36,6 @@ const ItemCard = ({ item }) => {
           objectFit="cover"
           borderRadius="md"
         />
-        <Text fontWeight="bold" mt={2}>{item.name}</Text>
       </Link>
 
       <VStack align="start" mt={2} spacing={2}>

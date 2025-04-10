@@ -17,7 +17,7 @@ import { useTourStep } from '@/hooks/useTourStep'
 
 const pageSize = 6
 
-const ItemsGallery = ({ items, title = "Items" }) => {
+const ItemsGallery = ({ items }) => {
   const [page, setPage] = useState(1)
   const pageCount = Math.ceil(items.length / pageSize)
 
@@ -38,10 +38,6 @@ const ItemsGallery = ({ items, title = "Items" }) => {
     <Box w="full">
       <HStack justify="space-between" py={4}>
       <TourStep id="items-gallery" />
-
-        <Text fontSize="2xl" fontWeight="bold">
-          {title}
-        </Text>
         <Button colorPalette="green" as={Link} to="/add-item" size="sm">
           Ajouter un item
         </Button>
