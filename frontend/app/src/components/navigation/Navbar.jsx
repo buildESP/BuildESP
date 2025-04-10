@@ -53,35 +53,50 @@ const Navbar = () => {
 
         {isDesktop ? (
           <HStack as="nav" spacing={4}>
-            <SearchInput value={searchTerm} onChange={handleSearchChange} />
-            <div>
-                      {searchTerm && filteredItems && filteredItems.length > 0 && (
-                        <div>
-                          {filteredItems.map((item) => (
-                            <Box
-                              key={item.id}
-                              as={RouterLink}
-                              to={`/items/${item.id}`}
-                              onClick={() => handleSearchChange({ target: { value: "" } })} // 🔹 Clears input
-                              style={{
-                                display: "block",
-                                color: "white",
-                                backgroundColor: "green",
-                                padding: "8px",
-                                marginBottom: "4px",
-                                textDecoration: "none",
-                                borderRadius: "4px",
-                              }}
-                            >
-                              {item.name}
-                            </Box>
-                          ))}
-                        </div>
-                      )}
-
-
-            </div>
-            
+            <VStack position="relative">
+              <SearchInput value={searchTerm} onChange={handleSearchChange} />
+              
+              {searchTerm && filteredItems && filteredItems.length > 0 && (
+                <div>
+                  <Box
+                    position="absolute"
+                    top="100%"
+                    left="0"
+                    right="0"
+                    zIndex="10"
+                    bg="white"
+                    boxShadow="md"
+                    borderRadius="md"
+                    p={4}
+                    mt={1}
+                    maxHeight="200px" // Set a max height
+                    overflowY="auto" // Enable vertical scrolling
+                  >
+                    {filteredItems.slice(0, 5).map((item) => ( // Limit to 5 items
+                      <Box
+                        key={item.id}
+                        overflow={"hidden"}
+                        _hover={ { bg: "gray.100" }}
+                        as={RouterLink}
+                        to={`/items/${item.id}`}
+                        onClick={() => handleSearchChange({ target: { value: "" } })} // 🔹 Clears input
+                        style={{
+                          display: "block",
+                          // color: "white",
+                          // backgroundColor: "black",
+                          padding: "8px",
+                          marginBottom: "4px",
+                          textDecoration: "none",
+                          borderRadius: "4px",
+                        }}
+                      >
+                        {item.name}
+                      </Box>
+                    ))}
+                  </Box>
+                </div>
+              )}
+            </VStack>
            
             <Button as={RouterLink} to="/" variant="ghost" color="yellow.900">
               Accueil
@@ -123,7 +138,6 @@ const Navbar = () => {
               <IconButton
                 aria-label="Open Menu"
                 onClick={onOpen}
-
               >
                 <CiMenuBurger size={24} color="white" /></IconButton>
             </DrawerTrigger>
