@@ -33,6 +33,8 @@ const s3 = new S3Client({
  * @returns {string} URL de l'image sur S3
  */
 const uploadImageForEntity = async (file, entityType, entityId) => {
+    const key = `${entityType}-${entityId}.${file.mimetype.split('/')[1]}`;
+
   const fileExtension = file.mimetype.split('/')[1] || 'bin';
   const key = `${entityType}-${entityId}.${fileExtension}`;
 
@@ -40,9 +42,10 @@ const uploadImageForEntity = async (file, entityType, entityId) => {
     Bucket: process.env.AWS_BUCKET_NAME,
     Key: key,
     Body: file.buffer,
-    ContentType: file.mimetype,
-    ACL: 'public-read'
+    ContentType: file.mimetype
+    // ✅ Pas de ACL
   };
+  
 
   console.log(`🚀 Tentative d'upload sur S3: ${key} (${file.mimetype})`);
   console.log("En-têtes de la requête:", params);
