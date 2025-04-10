@@ -8,7 +8,7 @@ import {
   Text,
 } from "@chakra-ui/react"
 import { useState } from "react"
-import { Link } from "react-router-dom" // ✅ correction ici
+import { Link } from "react-router"
 import { HiChevronLeft, HiChevronRight } from "react-icons/hi"
 import ItemCard from "./ItemCard"
 import TourStep from "../tour/TourStep"
@@ -67,8 +67,9 @@ const ItemsGallery = ({ items, title = "Items" }) => {
           aria-label="Page précédente"
           onClick={() => goToPage(page - 1)}
           isDisabled={page === 1}
-          icon={<HiChevronLeft />}
-        />
+        >
+          <HiChevronLeft />
+        </IconButton>
 
         <ButtonGroup isAttached variant="outline">
           {Array.from({ length: pageCount }).map((_, i) => (
@@ -87,9 +88,11 @@ const ItemsGallery = ({ items, title = "Items" }) => {
           aria-label="Page suivante"
           onClick={() => goToPage(page + 1)}
           variant="outline"
+
           isDisabled={page === pageCount}
-          icon={<HiChevronRight />}
-        />
+        >
+          <HiChevronRight />
+        </IconButton>
       </HStack>
     </Box>
   )
