@@ -1,7 +1,7 @@
 services:
   backend:
     volumes:
-      - ./backend:/app
+      - ./backend/api:/usr/src/app
     extends:
       file: ./backend/docker-compose.yml
       service: backend

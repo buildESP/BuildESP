@@ -1,7 +1,9 @@
-const { DataTypes } = require('sequelize');
-const sequelize = require('../config/database');
+// models/ChatMessages.js
 
-const ChatMessage = sequelize.define('ChatMessage', {
+const { DataTypes } = require('sequelize');
+const { sequelize } = require('../config/db');
+
+const ChatMessages = sequelize.define('ChatMessage', {
 	id: {
 		type: DataTypes.INTEGER,
 		primaryKey: true,
@@ -32,9 +34,9 @@ const ChatMessage = sequelize.define('ChatMessage', {
 	timestamps: false
 });
 
-ChatMessage.prototype.markAsRead = async function () {
+ChatMessages.prototype.markAsRead = async function () {
     this.is_read = true;
     await this.save();
 };
 
-module.exports = ChatMessage;
+module.exports = ChatMessages;

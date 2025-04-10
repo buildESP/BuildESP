@@ -6,7 +6,7 @@ const Item = require('./Item');
 const User = require('./User');
 const Exchange = require('./Exchange');
 const Group = require('./Group');
-const ChatMessage = require('./ChatMessage');
+const ChatMessage = require('./ChatMessages');
 
 // Associations between Category and Subcategory
 Category.hasMany(Subcategory, { foreignKey: 'category_id', as: 'subcategories' });
