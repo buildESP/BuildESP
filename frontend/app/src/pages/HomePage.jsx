@@ -44,7 +44,7 @@ const HomePage = () => {
 
       {user && !hasSeenTour && (
         <Flex justify="flex-end" p={4}>
-          <Button onClick={handleStartTour} colorScheme="teal" variant="outline">
+          <Button onClick={handleStartTour} colorPalette="teal" variant="outline">
             Démarrer la visite 👋
           </Button>
         </Flex>

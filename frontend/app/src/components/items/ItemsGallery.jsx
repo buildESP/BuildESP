@@ -42,7 +42,7 @@ const ItemsGallery = ({ items, title = "Items" }) => {
         <Text fontSize="2xl" fontWeight="bold">
           {title}
         </Text>
-        <Button colorScheme="green" as={Link} to="/add-item" size="sm">
+        <Button colorPalette="green" as={Link} to="/add-item" size="sm">
           Ajouter un item
         </Button>
       </HStack>
@@ -75,7 +75,7 @@ const ItemsGallery = ({ items, title = "Items" }) => {
             <Button
               key={i + 1}
               onClick={() => goToPage(i + 1)}
-              colorScheme={page === i + 1 ? "green" : "gray"}
+              colorPalette={page === i + 1 ? "green" : "gray"}
               variant={page === i + 1 ? "solid" : "outline"}
             >
               {i + 1}

@@ -45,15 +45,15 @@ const ItemCard = ({ item }) => {
         </Text>
 
         <HStack justify="space-between" w="full">
-          <Badge colorScheme={item.status === "Available" ? "green" : "red"}>
+          <Badge colorPalette={item.status === "Available" ? "green" : "red"}>
             {item.status}
           </Badge>
           {isOwner ? (
             <HStack>
-              <Button size="xs" colorScheme="red" onClick={handleDelete} isLoading={loading}>
+              <Button size="xs" colorPalette="red" onClick={handleDelete} isLoading={loading}>
                 Supprimer
               </Button>
-              <Button size="xs" colorScheme="orange">
+              <Button size="xs" colorPalette="orange">
                 Indisponible
               </Button>
             </HStack>
