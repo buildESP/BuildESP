@@ -1,7 +1,7 @@
 import { describe, it, vi, expect } from 'vitest'
 import { screen } from '@/test/test-utils'
-import { renderWithProvider } from '@/test/renderWithProvider'
 import CategoriesGallery from '@/components/CategoriesGallery'
+import { renderWithTourProvider } from '@/test/renderWithTourProvider'
 
 // 👇 Mock du hook custom
 vi.mock('@/hooks/useFetchData', () => ({
@@ -16,7 +16,7 @@ describe('CategoriesGallery', () => {
   it('affiche un message d’erreur si échec', () => {
     useFetchData.mockReturnValue({ data: [], loading: false, error: 'Erreur serveur' })
 
-    renderWithProvider(<CategoriesGallery />)
+    renderWithTourProvider(<CategoriesGallery />)
     expect(screen.getByText(/erreur serveur/i)).toBeInTheDocument()
   })
 
@@ -28,7 +28,7 @@ describe('CategoriesGallery', () => {
 
     useFetchData.mockReturnValue({ data: mockCategories, loading: false, error: null })
 
-    renderWithProvider(<CategoriesGallery />)
+    renderWithTourProvider(<CategoriesGallery />)
 
     // Carte statique
     expect(screen.getByText(/ça circule/i)).toBeInTheDocument()
