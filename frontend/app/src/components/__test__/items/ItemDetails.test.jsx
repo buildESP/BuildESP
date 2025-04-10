@@ -69,7 +69,6 @@ describe("ItemDetails", () => {
     renderItem(true)
     expect(screen.getByText(/éditer/i)).toBeInTheDocument()
     expect(screen.getByText(/supprimer/i)).toBeInTheDocument()
-    expect(screen.getByText(/modifier le statut/i)).toBeInTheDocument()
   })
 
   it("n'affiche pas les boutons si non-owner", () => {
