@@ -4,10 +4,12 @@ import usePutData from "@/hooks/usePutData";
 import useFetchData from "@/hooks/useFetchData";
 import { itemUpdateSchema } from "@/validation/schemas";
 import useItems from "@/hooks/useItems";
+import { useRef } from "react";
 
 const AdminItemForm = ({ item, endpoint, onSuccess }) => {
     const { putData, loading } = usePutData(endpoint);
     const { refetch } = useItems();
+    const generatedId = useRef(`${Date.now()}`).current;
 
     const {
         data: users,
@@ -72,6 +74,8 @@ const AdminItemForm = ({ item, endpoint, onSuccess }) => {
                 user_id: item.user_id,
                 subcategory_id: item.subcategory_id,
             }} onSubmit={handleSubmit}
+            entityType="item"
+            entityId={item.id || generatedId}
             submitLabel="Mettre à jour"
             loading={loading}
         />

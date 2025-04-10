@@ -8,20 +8,29 @@ const useUploadImage = () => {
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState(null);
 
-  const uploadImage = async (file) => {
-    if (!file) {
-      console.error("Aucun fichier sélectionné");
+  /**
+   * Uploads an image file to the backend
+   * @param {File} file - Image file to upload
+   * @returns {Promise<string|null>} - URL of the uploaded image or null if failed
+   */
+  const uploadImage = async (file, entityType, entityId) => {
+    if (!file || !entityType || !entityId) {
+      console.warn("🚨 Missing file, entityType, or entityId");
       return null;
     }
 
-    const formData = new FormData();
+    const formData = new FormData(); 
     formData.append("image", file);
 
-    // Vérification du fichier dans le FormData
-    console.log("FormData avant envoi:", formData);
+    if (entityType) formData.append("entityType", entityType);
+    if (entityId) formData.append("entityId", entityId);
 
     setUploading(true);
     setError(null);
+    for (let [key, value] of formData.entries()) {
+      console.log(`🧪 ${key}:`, value);
+    }
+    
 
     try {
       // Vérification du token avant envoi

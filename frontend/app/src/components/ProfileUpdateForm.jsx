@@ -1,16 +1,17 @@
 import usePutData from "../hooks/usePutData";
 import FormComponent from "./FormComponent";
 import { updateProfileSchema } from "../validation/schemas"
-
+import { useRef } from "react";
 const ProfileUpdateForm = ({ userData, onSuccess, onCancel }) => {
   const { putData, loading } = usePutData(`/users/${userData.id}`);
+    const generatedId = useRef(`${Date.now()}`).current;
 
   const fields = [
     { name: "firstname", label: "Prénom" },
     { name: "lastname", label: "Nom" },
-    { name: "email", label: "Email", type: "Email", disabled: true },
-    { name: "address", label: "Addresse" },
-    { name: "password", label: "Password" },
+    { name: "email", label: "Email", type: "email", disabled: true },
+    { name: "address", label: "Addresse",  },
+    { name: "password", label: "Password", type: 'password' },
     { name: "phone", label: "Téléphone", type: "tel" },
     { name: "picture", label: "Photo", type: "file" },
 
@@ -18,7 +19,7 @@ const ProfileUpdateForm = ({ userData, onSuccess, onCancel }) => {
   ];
 
   const handleSubmit = async (updatedData) => {
-    const response = await putData(updatedData, userData, "🎉 Profile updated!", "❌ Update failed.");
+    const response = await putData(updatedData, userData, "Profil mis à jour!", "La mise à jour à échoué.");
     if (response) onSuccess(); 
   };
 
@@ -28,9 +29,11 @@ const ProfileUpdateForm = ({ userData, onSuccess, onCancel }) => {
       schema={updateProfileSchema}
       fields={fields}
       onSubmit={handleSubmit}
-      submitLabel="Update Profile"
+      submitLabel="Mise à jour du profil"
       loading={loading}
-      title="Edit Your Profile"
+      entityType = "avatar"
+      entityId= {userData.id.id || generatedId}
+      title="Mets à jour ton profil"
       defaultValues={userData} 
       onCancel={onCancel}
     />

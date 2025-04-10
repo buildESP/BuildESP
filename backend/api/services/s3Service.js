@@ -33,8 +33,7 @@ const s3 = new S3Client({
  * @returns {string} URL de l'image sur S3
  */
 const uploadImageForEntity = async (file, entityType, entityId) => {
-  if (!file) throw new Error("⛔ Erreur: Aucun fichier fourni pour l'upload !");
-  if (!file.buffer) throw new Error("⛔ Erreur: Le fichier ne contient pas de buffer valide.");
+    const key = `${entityType}-${entityId}.${file.mimetype.split('/')[1]}`;
 
   const fileExtension = file.mimetype.split('/')[1] || 'bin';
   const key = `${entityType}-${entityId}.${fileExtension}`;
