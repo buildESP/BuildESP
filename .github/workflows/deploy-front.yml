@@ -57,6 +57,9 @@ jobs:
 
             # Vérifier si package.json existe avant de lancer le build
             if [ -f package.json ]; then
+              echo "📦 Installation des dépendances..."
+              npm install
+
               echo "⚙️ Building frontend..."
               npm run build
             else
