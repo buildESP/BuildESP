@@ -47,7 +47,18 @@ exports.initSockets = async (io) =>{
             
         });
 
+        let lastMessageTimestamp = 0;
         socket.on('sendMessage', (message) => {
+
+            const now = Date.now();
+
+        if (now - lastMessageTimestamp < 1000) {
+            console.warn(`User ${userId} is sending messages too fast`);
+            socket.emit('error', 'You can only send one message per second.');
+            return;
+        }
+
+        lastMessageTimestamp = now;
             const chatMessage = {
                 exchange_id: exchangeId,
                 sender_id: userId,
