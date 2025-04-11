@@ -5,7 +5,6 @@ import { login } from "../services/authServices";
 import { Box, Button, Input, VStack, Heading, Text } from "@chakra-ui/react";
 import { toast, ToastContainer } from "react-toastify";
 
-
 const LoginPage = () => {
   const [loginData, setLoginData] = useState({ login: "", password: "" });
   const [error, setError] = useState(null);
@@ -35,6 +34,10 @@ const LoginPage = () => {
     }
   };
 
+  const handleResetPassword = () => {
+    navigate("/forgot-password");
+  };
+
   return (
     <Box p={8} maxW="md" mx="auto">
       <Heading mb={6}>Connexion</Heading>
@@ -42,8 +45,12 @@ const LoginPage = () => {
       <VStack spacing={4} as="form" onSubmit={handleSubmit}>
         <Input bg="green.contrast" placeholder="Email" name="login" onChange={handleChange} />
         <Input bg="green.contrast" placeholder="Mot de passe" type="password" name="password" onChange={handleChange} />
-        <Button type="submit" colorPalette="teal">Se connecter</Button>
+        <Button type="submit" colorScheme="teal">Se connecter</Button>
       </VStack>
+
+      <Button variant="link" colorScheme="blue" onClick={handleResetPassword} mt={4}>
+        Mot de passe oublié ?
+      </Button>
     </Box>
   );
 };
