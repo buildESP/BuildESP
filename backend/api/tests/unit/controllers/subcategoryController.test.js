@@ -6,6 +6,7 @@ const {
   deleteSubcategory
 } = require('../../../controllers/subcategoryController');
 const { Category, Subcategory } = require('../../../models/associations');
+//const { updateEntityImage } = require('../../../utils/imageUtils');
 
 jest.mock('../../../models/associations');
 
@@ -65,12 +66,13 @@ describe('SubcategoryController', () => {
     test('should update subcategory', async () => {
       req.params.subcategory_id = 1;
       req.body = { name: 'Updated Name' };
-      const subcategory = { id: 1, update: jest.fn().mockResolvedValue({ id: 1 }) };
+      const subcategory = { id: 1, update: jest.fn().mockResolvedValue({}), save : jest.fn() };
       Subcategory.findByPk.mockResolvedValue(subcategory);
       await updateSubcategory(req, res);
       expect(res.status).toHaveBeenCalledWith(200);
       expect(res.json).toHaveBeenCalledWith({ message: 'Subcategory updated successfully', subcategory });
     });
+    
     test('should return 404 if subcategory not found', async () => {
       req.params.subcategory_id = 1;
       Subcategory.findByPk.mockResolvedValue(null);
