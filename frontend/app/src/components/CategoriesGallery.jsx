@@ -29,8 +29,8 @@ const CategoriesGallery = () => {
 
       <Box
         overflowX="auto"
-        overflowY="visible" 
-
+        overflowY="visible"
+p="5"
         css={{
           '&::-webkit-scrollbar': { display: 'none' }, // Chrome/Safari
           scrollbarWidth: 'none',                     // Firefox
@@ -41,8 +41,10 @@ const CategoriesGallery = () => {
         <HStack spacing={4} minW="max-content" px={2}>
           {/* Card "Tendance en ce moment" */}
           <Box
-            minW="200px"
-            h="280px"
+            minW={{ base: "180px", md: "200px" }}
+            maxW="280px"
+            h={{ base: "200px", md: "280px" }}
+            mx="auto"
             borderRadius="xl"
             bgGradient="to-br"
             gradientFrom="yellow.100"
@@ -51,7 +53,7 @@ const CategoriesGallery = () => {
             scrollSnapAlign="start"
             flexShrink={0}
             boxShadow="md"
-            
+
           >
             <Text fontSize="xl" fontWeight="bold" color="gray.800" mb={2}>
               Ça circule en ce moment            </Text>
@@ -65,12 +67,15 @@ const CategoriesGallery = () => {
               as={Link}
               to={`/categories/${category.id}`}
               position="relative"
-              minW="200px"
-              h="280px"
+              minW={{ base: "180px", md: "200px" }}
+              maxW="280px"
+              h={{ base: "200px", md: "280px" }}
+              mx="auto"
               borderRadius="xl"
               overflow="hidden"
               flexShrink={0}
               scrollSnapAlign="start"
+
               boxShadow={
                 isHighlighting
                   ? "0 0 0 4px rgba(66, 153, 225, 0.4)"

@@ -6,8 +6,12 @@ const {
   deleteCategory
 } = require('../../../controllers/categoryController');
 const { Category, Subcategory } = require('../../../models/associations');
+const { updateEntityImage } = require('../../../utils/imageUtils');
 
 jest.mock('../../../models/associations');
+jest.mock('../../../utils/imageUtils', () => ({
+  updateEntityImage: jest.fn().mockResolvedValue()
+}));
 
 describe('CategoryController', () => {
   let req, res;
@@ -65,15 +69,37 @@ describe('CategoryController', () => {
       
       const mockCategory = { 
         id: 1, 
-        update: jest.fn().mockResolvedValue({}),
-        save: jest.fn().mockResolvedValue({})
+        name: 'Old Category',
+        update: jest.fn().mockResolvedValue({ id: 1, name: 'Updated Category' }),
+        image_url: 'old_image_url'
       };
-      
-      Category.findByPk.mockResolvedValue(mockCategory);
+      Category.findByPk.mockResolvedValue(category);
+      updateEntityImage.mockResolvedValue();
       
       await updateCategory(req, res);
-      
-      expect(mockCategory.update).toHaveBeenCalled();
+      expect(Category.findByPk).toHaveBeenCalledWith(1);
+      expect(updateEntityImage).toHaveBeenCalledWith(category, undefined); // As no image_url is passed
+      expect(category.update).toHaveBeenCalledWith({ name: 'Updated Category', image_url: 'old_image_url' });
+      expect(res.status).toHaveBeenCalledWith(200);
+      expect(res.json).toHaveBeenCalledWith({ message: 'Category updated successfully', category });
+    });
+
+    test('should update category when image_url is provided', async () => {
+      req.params.category_id = 1;
+      req.body = { name: 'Updated Category', image_url: 'new_image_url' };
+      const category = { 
+        id: 1, 
+        name: 'Old Category',
+        update: jest.fn().mockResolvedValue({ id: 1, name: 'Updated Category' }),
+        image_url: 'old_image_url'
+      };
+      Category.findByPk.mockResolvedValue(category);
+      updateEntityImage.mockResolvedValue();
+
+      await updateCategory(req, res);
+      expect(Category.findByPk).toHaveBeenCalledWith(1);
+      expect(updateEntityImage).toHaveBeenCalledWith(category, 'new_image_url');
+      expect(category.update).toHaveBeenCalledWith({ name: 'Updated Category', image_url: 'old_image_url' });
       expect(res.status).toHaveBeenCalledWith(200);
       expect(res.json).toHaveBeenCalledWith({ 
         message: 'Category updated successfully', 

@@ -223,4 +223,5 @@ router.put('/exchanges/:exchange_id', authenticateToken, exchangeController.upda
  */
 router.delete('/exchanges/:exchange_id', authenticateToken, exchangeController.deleteExchange);
 
+
 module.exports = router;

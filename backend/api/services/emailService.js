@@ -1,4 +1,5 @@
-// utils/emailService.js
+// services/emailService.js:
+
 const nodemailer = require('nodemailer');
 const chalk = require('chalk');
 
@@ -22,7 +23,57 @@ const transporter = nodemailer.createTransport({
     },
 });
 
-// Fonction pour envoyer l'email de réinitialisation de mot de passe
+exports.sendWelcomeEmail = async (email, firstname) => {
+    const mailOptions = {
+        from: process.env.MAIL_USER,
+        to: email,
+        bcc: process.env.MAIL_USER,
+        subject: 'Welcome to Neighborrow!',
+        html: `
+            <html>
+                <body style="font-family: Arial, sans-serif; background-color: #f4f4f4; margin: 0; padding: 0;">
+                    <table role="presentation" style="width: 100%; background-color: #f4f4f4; padding: 20px;">
+                        <tr>
+                            <td>
+                                <table role="presentation" style="width: 600px; margin: auto; background-color: #fff; border-radius: 10px; overflow: hidden;">
+                                    <tr>
+                                        <td style="background-color: #86efac; padding: 20px; text-align: center;">
+                                            <h1 style="color: #fff; margin: 0;">Welcome to Neighborrow!</h1>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 20px; text-align: center;">
+                                            <p style="font-size: 16px; line-height: 1.6;">Hi ${firstname},</p>
+                                            <p style="font-size: 16px; line-height: 1.6;">We're excited to have you on board. Your registration has been successfully completed.</p>
+                                            <p style="font-size: 16px; line-height: 1.6;">You can now start exploring our platform and enjoy all the features we offer.</p>
+                                            <p style="margin-top: 20px;">
+                                                <a href="${process.env.FRONTEND_URL}" style="background-color: #86efac; color: #fff; padding: 15px 30px; text-decoration: none; font-size: 16px; border-radius: 5px; display: inline-block;">Go to Neighborrow</a>
+                                            </p>
+                                            <p style="font-size: 14px; color: #555; margin-top: 20px;">See you soon!</p>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="background-color: #f1f1f1; padding: 10px; text-align: center; font-size: 12px; color: #888;">
+                                            <p>&copy; ${new Date().getFullYear()} Neighborrow. All rights reserved.</p>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                </body>
+            </html>
+        `,
+    };
+
+    try {
+        await transporter.sendMail(mailOptions);
+    } catch (error) {
+        console.error('Error sending welcome email:', error);
+        throw new Error('Failed to send welcome email');
+    }
+};
+
 exports.sendResetEmail = async (email, token, firstname) => {
     const resetLink = `${process.env.FRONTEND_URL}/reset-password/${token}`;
 

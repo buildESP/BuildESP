@@ -1,41 +1,106 @@
 import { z } from "zod";
 
 export const registerSchema = z.object({
-    firstname: z.string().min(2, "Firstname must be at least 2 characters"),
-    lastname: z.string().min(2, "Lastname must be at least 2 characters"),
-    email: z.string().email("Invalid email address"),
-    password: z.string().min(6, "Password must be at least 6 characters"),
-    address: z.string().optional(), // Address is optional
-    postcode: z.string().optional(), // Postcode is optional
-    phone: z.string().min(10, "Phone number must be at least 10 digits").optional().or(z.literal("")),
-    picture: z.string().url("Invalid picture URL").optional().or(z.literal("")),
-  });
+  firstname: z
+    .string()
+    .min(2, "Le prénom doit contenir au moins 2 caractères"),
+  lastname: z
+    .string()
+    .min(2, "Le nom doit contenir au moins 2 caractères"),
+  email: z
+    .string()
+    .email("Adresse e-mail invalide"),
+  password: z
+    .string()
+    .min(6, "Le mot de passe doit contenir au moins 6 caractères"),
+  address: z
+    .string()
+    .optional(), // Adresse est optionnelle
+  postcode: z
+    .string()
+    .optional(), // Code postal est optionnel
+  phone: z
+    .string()
+    .min(10, "Le numéro de téléphone doit contenir au moins 10 chiffres")
+    .optional()
+    .or(z.literal("")),
+  picture: z
+    .string()
+    .url("URL de l'image invalide")
+    .optional()
+    .or(z.literal("")),
+});
+
 
 export const loginSchema = z.object({
-  email: z.string().email("Invalid email"),
-  password: z.string().min(6, "Password must be at least 6 characters"),
+  login: z
+    .string({ required_error: "L’e-mail est requis" })
+    .nonempty("L’e-mail est requis")
+    .email("Email invalide"),
+  password: z
+    .string({ required_error: "Le mot de passe est requis" })
+    .min(6, "Le mot de passe doit contenir au moins 6 caractères"),
 });
 
+
 export const addItemSchema = z.object({
-  name: z.string().min(2, "Item name is required"),
-  description: z.string().min(10, "Description must be at least 10 characters").optional().or(z.literal("")),
-  picture: z.string().url("Invalid image URL").optional().or(z.literal("")),
-  status: z.enum(["Available", "Unavailable"], { message: "Invalid status" }),
-  subcategory_id: z.preprocess((val) => Number(val), z.number().positive("Subcategory is required")),
+  name: z
+    .string()
+    .min(2, "Le nom de l’objet est requis"),
+  description: z
+    .string()
+    .min(10, "La description doit contenir au moins 10 caractères")
+    .optional()
+    .or(z.literal("")),
+  picture: z
+    .string()
+    .url("URL de l’image invalide")
+    .optional()
+    .or(z.literal("")),
+  status: z.enum(["Available", "Unavailable"], {
+    message: "Statut invalide",
+  }),
+  subcategory_id: z.preprocess(
+    (val) => Number(val),
+    z.number().positive("Une sous-catégorie est requise")
+  ),
 });
+
 
 
 export const updateProfileSchema = z.object({
-  firstname: z.string().min(2, "Firstname must be at least 2 characters"),
-  lastname: z.string().min(2, "Lastname must be at least 2 characters"),
-  email: z.string().email("Invalid email address"), // ✅ Email must be valid but not editable
-  address: z.string().optional().or(z.literal("")), // ✅ Optional, allows empty string
-  postcode: z.string().optional().or(z.literal("")), // ✅ Optional, allows empty string
-  phone: z.string().min(10, "Phone number must be at least 10 digits").optional().or(z.literal("")), // ✅ Allow empty or valid number
-  picture: z.string().url("Invalid picture URL").optional().or(z.literal("")), // ✅ Allow empty or valid URL
-  password: z.string().min(6, "Password must be at least 6 characters"),
-
+  firstname: z
+    .string()
+    .min(2, "Le prénom doit contenir au moins 2 caractères"),
+  lastname: z
+    .string()
+    .min(2, "Le nom doit contenir au moins 2 caractères"),
+  email: z
+    .string()
+    .email("Adresse e-mail invalide"), // ✅ L’e-mail doit être valide (non modifiable côté UI)
+  address: z
+    .string()
+    .optional()
+    .or(z.literal("")), // ✅ Optionnel, vide accepté
+  postcode: z
+    .string()
+    .optional()
+    .or(z.literal("")), // ✅ Optionnel, vide accepté
+  phone: z
+    .string()
+    .min(10, "Le numéro de téléphone doit contenir au moins 10 chiffres")
+    .optional()
+    .or(z.literal("")), // ✅ Vide ou numéro valide
+  picture: z
+    .string()
+    .url("URL de la photo invalide")
+    .optional()
+    .or(z.literal("")), // ✅ Vide ou URL valide
+  password: z
+    .string()
+    .min(6, "Le mot de passe doit contenir au moins 6 caractères"),
 });
+
 
 
 export const itemUpdateSchema = z.object({
