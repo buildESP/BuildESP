@@ -1,3 +1,6 @@
+/* global cy */
+/// <reference types="cypress" />
+// This test suite is for testing the login functionality of a web application using Cypress.
 describe('Login Test', () => { 
     it('should login successfully with valid credentials', () => {
       // Visit the login page

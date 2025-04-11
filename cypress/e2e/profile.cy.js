@@ -1,4 +1,8 @@
-describe('Login Test', () => { 
+/* global cy */
+/// <reference types="cypress" />
+// This test suite is for testing the profile functionality of a web application using Cypress.
+// It includes a test case for logging in successfully with valid credentials and navigating to the profile page.
+describe('Profile test', () => { 
   it('should login successfully with valid credentials', () => {
     // Visit the login page
     cy.visit('http://localhost:8080/login'); // Update the URL to match your login page

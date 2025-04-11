@@ -1,3 +1,7 @@
+/* global cy */
+/// <reference types="cypress" />
+// This test suite is for testing the login functionality of a web application using Cypress.
+
 describe('Home Page Test', () => {
   it('should visit the home page and assert elements', () => {
     cy.visit('http://localhost:8080');

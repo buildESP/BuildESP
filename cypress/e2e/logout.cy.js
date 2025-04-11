@@ -1,3 +1,6 @@
+/* global cy */
+/// <reference types="cypress" />
+// The test suite is named "Logout test" and contains a single test case that checks if the user can log out successfully.
 describe('Logout test', () => { 
     it('should logout successfully', () => {
       // Visit the login page

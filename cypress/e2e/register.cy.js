@@ -1,4 +1,7 @@
-describe('template spec', () => {
+/* global cy */
+/// <reference types="cypress" />
+// This test suite is for testing the registration functionality of a web application using Cypress.
+describe('register test', () => {
   it('should register successfully', () => {
     cy.visit('http://localhost:8080/login');
 
