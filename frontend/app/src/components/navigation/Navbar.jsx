@@ -27,19 +27,19 @@ import { LuMoon, LuSun } from "react-icons/lu"
 import { useColorMode } from "../ui/color-mode";
 import { APP_NAME } from "@/config";
 import useSearch from "@/hooks/useSearch"; // Import the search hook
-import SearchInput  from "../SearchInput";
+import SearchInput from "../SearchInput";
 import useItems from "../../hooks/useItems";
 const Navbar = () => {
-  const { user, logout } = useAuth();
+  const { user, logout, isAdmin } = useAuth();
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [open, setOpen] = useState(false);
+  const [_, setOpen] = useState(false);
   const { toggleColorMode, colorMode } = useColorMode()
   const { searchTerm, handleSearchChange } = useSearch();
   const { items } = useItems();
   const filteredItems = items?.filter((item) =>
     item.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
-  
+
 
   const isDesktop = useBreakpointValue({ base: false, md: true });
   return (
@@ -55,7 +55,7 @@ const Navbar = () => {
           <HStack as="nav" spacing={4}>
             <VStack position="relative">
               <SearchInput value={searchTerm} onChange={handleSearchChange} />
-              
+
               {searchTerm && filteredItems && filteredItems.length > 0 && (
                 <div>
                   <Box
@@ -76,14 +76,12 @@ const Navbar = () => {
                       <Box
                         key={item.id}
                         overflow={"hidden"}
-                        _hover={ { bg: "gray.100" }}
+                        _hover={{ bg: "gray.100" }}
                         as={RouterLink}
                         to={`/items/${item.id}`}
                         onClick={() => handleSearchChange({ target: { value: "" } })} // 🔹 Clears input
                         style={{
                           display: "block",
-                          // color: "white",
-                          // backgroundColor: "black",
                           padding: "8px",
                           marginBottom: "4px",
                           textDecoration: "none",
@@ -97,11 +95,11 @@ const Navbar = () => {
                 </div>
               )}
             </VStack>
-           
+
             <Button as={RouterLink} to="/" variant="ghost" color="yellow.900">
               Accueil
             </Button>
-            
+
             {user ? (
               <>
                 <Button as={RouterLink} to="/my-items" variant="ghost" color="yellow.900">
@@ -113,6 +111,16 @@ const Navbar = () => {
                 <Button as={RouterLink} to="/profile" variant="ghost" color="yellow.900">
                   Profil
                 </Button>
+                {isAdmin && (
+                  <Button
+                    as={RouterLink}
+                    to="/admin"
+                    variant="ghost"
+                    color="yellow.900"
+                  >
+                    Admin
+                  </Button>
+                )}
                 <Button onClick={logout} variant="ghost" color="red.600">
                   Déconnexion
                 </Button>
@@ -159,6 +167,16 @@ const Navbar = () => {
                       <Button as={RouterLink} to="/profile" variant="ghost" color="yellow.900">
                         Profil
                       </Button>
+                      {isAdmin && (
+                        <Button
+                          as={RouterLink}
+                          to="/admin"
+                          variant="ghost"
+                          color="yellow.900"
+                        >
+                          Admin
+                        </Button>
+                      )}
                       <Button onClick={logout} variant="ghost" color="red.600">
                         Déconnexion
                       </Button>

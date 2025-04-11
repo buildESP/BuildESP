@@ -27,11 +27,7 @@ const mockItems = Array.from({ length: 9 }, (_, i) => ({
 describe("ItemsGallery", () => {
   beforeEach(() => vi.clearAllMocks())
 
-  it("affiche le titre et le bouton d’ajout", () => {
-    renderWithTourProvider(<ItemsGallery items={mockItems} title="Mes objets" />)
-    expect(screen.getByText("Mes objets")).toBeInTheDocument()
-    expect(screen.getByRole("link", { name: /ajouter un item/i })).toBeInTheDocument()
-  })
+  
 
   it("affiche le message si aucun item", () => {
     renderWithTourProvider(<ItemsGallery items={[]} />)

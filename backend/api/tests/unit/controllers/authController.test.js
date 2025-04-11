@@ -3,9 +3,6 @@ const bcrypt = require('bcrypt');
 const { User } = require('../../../models/associations');
 const { generateAccessToken } = require('../../../controllers/authController');
 
-// filepath: /home/user/epitech/BuildESP/backend/api/tests/unit/controllers/authController.test.js
-
-
 jest.mock('jsonwebtoken');
 jest.mock('bcrypt');
 jest.mock('../../../models/associations');

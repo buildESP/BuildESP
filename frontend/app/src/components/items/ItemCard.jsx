@@ -25,8 +25,19 @@ const ItemCard = ({ item }) => {
   const isOwner = user && item.user_id === user.id;
 
   return (
-    <Box p={4} bg="green.50" borderRadius="md" _hover={{ transform: "scale(1.03)", transition: "0.2s ease-in-out" }}>
-      {/* ✅ Wrap only the image and title in a Link */}
+    <Box
+    p={4}
+    borderRadius="xl"
+    bg="rgba(220, 252, 231, 0.3)" // #dcfce7
+    backdropFilter="blur(10px)"
+    boxShadow="0 8px 24px rgba(18, 74, 40, 0.1)"
+    border="1px solid #bbf7d0" // ✅ nouvelle bordure
+    _hover={{
+      transform: "scale(1.03)",
+      transition: "0.3s ease-in-out",
+      boxShadow: "0 12px 36px rgba(18, 74, 40, 0.2)",
+    }}
+  >  {/* ✅ Wrap only the image and title in a Link */}
       <Link to={`/items/${item.id}`}>
         <Image
           src={item.picture || "https://via.placeholder.com/150"}
@@ -36,7 +47,6 @@ const ItemCard = ({ item }) => {
           objectFit="cover"
           borderRadius="md"
         />
-        <Text fontWeight="bold" mt={2}>{item.name}</Text>
       </Link>
 
       <VStack align="start" mt={2} spacing={2}>
@@ -51,16 +61,16 @@ const ItemCard = ({ item }) => {
           </Badge>
           {isOwner ? (
             <HStack>
-              <Button size="xs" colorPalette="red" onClick={handleDelete} isLoading={loading}>
+              <Button size="xs" variant="surface" colorPalette="red" onClick={handleDelete} isLoading={loading}>
                 Supprimer
               </Button>
-              <Button size="xs" colorPalette="orange">
+              <Button size="xs" variant="surface" colorPalette="orange">
                 Indisponible
               </Button>
             </HStack>
           ) : (
             <Link to={`/items/${item.id}`}>
-              <Button size="xs" colorPalette="blue">
+              <Button size="xs" variant="surface" colorPalette="blue">
                 Emprunter
               </Button>
             </Link>
