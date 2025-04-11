@@ -26,6 +26,7 @@
     "mysql2": "^3.11.3",
     "nodemailer": "^6.10.0",
     "sequelize": "^6.37.4",
+    "socket.io": "^4.8.1",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.1"
   },
