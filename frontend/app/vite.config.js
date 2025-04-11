@@ -16,6 +16,13 @@ export default defineConfig(({ mode }) => {
       globals: true,
       environment: "jsdom",
       setupFiles: "./setup-test.js",
+      coverage: {
+        provider: 'v8', // Use v8 for better performance and compatibility
+        reporter: ['text', 'html', 'lcov'], // Generate text, HTML, and lcov reports
+        reportsDirectory: './coverage', // Directory for coverage reports
+        include: ['src/**/*.{js,ts,jsx,tsx}'], // Include all source files for coverage
+        exclude: ['node_modules', 'test'], // Exclude node_modules and test files
+      },
     },
     define: {
       'process.env': process.env,
