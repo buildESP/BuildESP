@@ -1,6 +1,6 @@
 // controllers/userController.js
 
-const { User, Group } = require('../models/associations');
+const { User, Group, Exchange} = require('../models/associations');
 const { updateEntityImage } = require('../utils/imageUtils');
 
 // Create user
@@ -70,7 +70,12 @@ exports.getUserById = async (req, res) => {
   try {
     const userId = req.params.user_id;
     console.log(userId);
-    const user = await User.findByPk(userId);
+    const user = await User.findByPk(userId, {
+      include: [
+        { model: Exchange, as: 'lender_exchanges' },
+        { model: Exchange, as: 'borrow_exchanges' },
+      ],
+    });
 
     if (!user) {
       return res.status(404).json({ message: 'User not found' });

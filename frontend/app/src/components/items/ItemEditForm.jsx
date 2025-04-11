@@ -1,13 +1,15 @@
 import FormComponent from "../FormComponent";
 import { itemUpdateSchema } from "../../validation/schemas";
 import useFetchData from "../../hooks/useFetchData";
+import { useRef } from "react";
 
 const ItemEditForm = ({ item, onSubmit, loading }) => {
 
     const { data: subcategories, loading: subLoading } = useFetchData("/subcategories");
-
+    const generatedId = useRef(`${Date.now()}`).current;
+  
     const fields = [
-        { name: "name", label: "Nom de l'item" },
+        { name: "name", label: "Nom de l'objet" },
         { name: "description", label: "Description", type: "textarea" },
         { name: "picture", label: "Image URL", type: "file" }, 
         {
@@ -32,13 +34,20 @@ const ItemEditForm = ({ item, onSubmit, loading }) => {
 
       return (
         <FormComponent
-          schema={itemUpdateSchema}
-          fields={fields}
-          onSubmit={onSubmit}
-          submitLabel="Mettre à jour"
-          loading={loading || subLoading} 
-          title="Modifier l'item"
-          defaultValues={{ ...item, subcategory_id: item.subcategory_id }}        />
+        schema={itemUpdateSchema}
+        fields={fields}
+        onSubmit={onSubmit}
+        submitLabel="Mettre à jour"
+        loading={loading || subLoading}
+        title="Modifier l'item"
+        entityType = "item"
+        entityId= {item.id || generatedId}
+        defaultValues={{
+          ...item,
+          picture: item.picture ?? "",
+        }}
+      />
+      
       );
     };
     

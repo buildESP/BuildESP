@@ -1,26 +1,18 @@
+// src/hooks/usePutData.js
 import { useState } from "react";
 import useAuth from "./useAuth";
 import { toast } from "react-toastify";
-
-// Utilisez la variable d'environnement pour la base URL de l'API et ajoutez le port et le chemin
-const API_BASE_URL = `${import.meta.env.VITE_API_BASE_URL}/api`;
+import { API_BASE_URL } from "@/config"; // Import de la variable depuis config.js
 
 const usePutData = (endpoint) => {
   const { token } = useAuth();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  /**
-   * @param {Object} updatedData - The new form data
-   * @param {Object} originalData - The existing data from the API
-   * @param {string} successMessage - Custom success message
-   * @param {string} errorMessage - Custom error message
-   */
   const putData = async (updatedData, originalData, successMessage = " Updated successfully!", errorMessage = " Update failed.") => {
     setLoading(true);
     setError(null);
 
-    // ✅ Check if any field was modified
     const isModified = Object.entries(updatedData).some(([key, value]) => value !== originalData[key]);
 
     if (!isModified) {

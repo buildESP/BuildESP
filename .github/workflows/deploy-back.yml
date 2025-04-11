@@ -3,7 +3,7 @@ name: Deploy Backend
 on:
   push:
     branches:
-      - main
+      - DevOps_ESP-185
     paths:
       - 'backend/**'
 
@@ -14,6 +14,12 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Configure SSH
         run: |
@@ -34,7 +40,7 @@ jobs:
             cd /opt/bitnami/apps/back/backend/api
 
             echo "📥 Pulling latest changes..."
-            git pull origin main
+            git pull origin DevOps_ESP-185
 
             echo "📦 Installing dependencies..."
             npm install
@@ -46,7 +52,7 @@ jobs:
 
             echo "⚙️  Mise à jour de la base de données..."
             docker exec backend-backend-1 node config/sync.js
-            docker exec backend-backend-1 npm run fixtures
+            echo "yes" | docker exec -i backend-backend-1 npm run fixtures
 
             echo "✅ Déploiement Backend terminé !"
           EOF

@@ -1,13 +1,38 @@
-# Welcome to NEIGHBORROW repository
+# Neighborrow – Plateforme de prêt d’objets entre voisins 🔧🏡
 
-## Architecture
+**Neighborrow** est une application web collaborative qui permet aux utilisateurs de **partager, prêter et emprunter des objets** entre voisins. L’objectif est de favoriser une consommation plus responsable et solidaire, tout en renforçant les liens de proximité.
 
-You will find an api folder with the back-end (with his own README). You also find some documentation. Enjoy the discovery! 
+---
 
-## Git conventionnals
+## 🛠️ Technologies utilisées
 
-Please use conventionnals commits specification. You can use the dedicated extension on VSCode store.
+| Frontend        | Backend        | Autres                  |
+|----------------|----------------|-------------------------|
+| React 19 ⚛️       | Express.js 🚂    | Docker 🐳                |
+| Vite ⚡          | Sequelize 🗃️      | MySQL 🐬                 |
+| Chakra UI 🎨      | JWT Auth 🔐       | ESLint / Prettier 🧹     |
+| Zod ✅           | Swagger 🧾        | GitHub Actions ⚙️       |
+| React Hook Form ✍️ |                 |                         |
 
-The work branch is develop/
+---
 
-Each new user story mean a new branch, that will be fetch on develop branch.
+## ✨ Fonctionnalités clés
+
+- 🔐 Authentification sécurisée (JWT)
+- 📦 Gestion des objets (ajout, édition, suppression)
+- 🧑‍💼 Interface d’administration pour gérer utilisateurs, objets et catégories
+- 📤 Upload d'images sur S3
+- 📚 Documentation via Swagger
+- 🔁 Requêtes API avec `useFetchData`
+- 🧪 Tests Cypress (E2E)
+
+---
+
+## 📁 Structure du Projet
+
+```bash
+.
+├── frontend/          # Application React (Vite)
+├── backend/           # API Express avec Sequelize
+├── monitoring/        # Interface & outils de suivi
+├── docker-compose.yml # Docker multi-container

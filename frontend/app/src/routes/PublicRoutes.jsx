@@ -11,14 +11,14 @@ import { Navigate, Outlet } from "react-router";
  * 👉 **Sinon**, il peut accéder normalement aux routes publiques.
  *
  * @component
- * @returns {JSX.Element} - Redirection vers `/my-items` si connecté, sinon affiche la route publique demandée.
+ * @returns {JSX.Element} - Redirection vers `/home` si connecté, sinon affiche la route publique demandée.
  */
 const PublicRoutes = () => {
     const { isAuthenticated } = useAuth(); // 🔹 Vérifie si l'utilisateur est connecté
 
     return isAuthenticated ? (
-        // ✅ Redirige vers  `/my-items` si connecté
-        <Navigate to={location.state?.from || "/my-items"} replace />
+        // ✅ Redirige vers  `/home` si connecté
+        <Navigate to={location.state?.from || "/"} replace />
     ) : (
         // ✅ Affiche la route demandée si non connecté
         <Outlet />
