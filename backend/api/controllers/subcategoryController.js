@@ -27,7 +27,7 @@ exports.createSubcategory = async (req, res) => {
     res.status(500).json({ error: 'Error during subcategory creation' });
   }
 };
-aaa
+
 // get all subcategories
 exports.getSubcategoriesls = async (req, res) => {
   try {
