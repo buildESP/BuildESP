@@ -28,8 +28,9 @@ exports.createSubcategory = async (req, res) => {
   }
 };
 
+
 // get all subcategories
-exports.getSubcategoriesls = async (req, res) => {
+exports.getSubcategories = async (req, res) => {
   try {
     const subcategories = await Subcategory.findAll({
       include: [
