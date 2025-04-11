@@ -48,7 +48,7 @@ const ResetPasswordPage = () => {
           value={confirmPassword}
           onChange={(e) => setConfirmPassword(e.target.value)}
         />
-        <Button type="submit" colorScheme="teal">Réinitialiser</Button>
+        <Button type="submit" colorPalette="teal">Réinitialiser</Button>
       </VStack>
     </Box>
   );

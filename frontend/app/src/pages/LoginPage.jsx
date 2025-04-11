@@ -45,10 +45,10 @@ const LoginPage = () => {
       <VStack spacing={4} as="form" onSubmit={handleSubmit}>
         <Input bg="green.contrast" placeholder="Email" name="login" onChange={handleChange} />
         <Input bg="green.contrast" placeholder="Mot de passe" type="password" name="password" onChange={handleChange} />
-        <Button type="submit" colorScheme="teal">Se connecter</Button>
+        <Button type="submit" colorPalette="teal">Se connecter</Button>
       </VStack>
 
-      <Button variant="link" colorScheme="blue" onClick={handleResetPassword} mt={4}>
+      <Button variant="link" colorPalette="blue" onClick={handleResetPassword} mt={4}>
         Mot de passe oublié ?
       </Button>
     </Box>

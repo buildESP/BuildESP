@@ -38,7 +38,7 @@ const ForgotPasswordPage = () => {
           value={email}
           onChange={handleChange}
         />
-        <Button type="submit" colorScheme="teal">Envoyer un email de réinitialisation</Button>
+        <Button type="submit" colorPalette="teal">Envoyer un email de réinitialisation</Button>
       </VStack>
     </Box>
   );
