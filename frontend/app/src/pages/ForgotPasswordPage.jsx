@@ -6,7 +6,7 @@ import { toast } from "react-toastify";
 
 const ForgotPasswordPage = () => {
   const [email, setEmail] = useState("");
-  const [error, setError] = useState(null);
+  const [error] = useState(null);
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -16,7 +16,7 @@ const ForgotPasswordPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await forgotPassword(email);
+      await forgotPassword(email);
       toast.success("Un email de réinitialisation a été envoyé !", { position: "top-right" });
       navigate("/login");
     } catch (err) {
