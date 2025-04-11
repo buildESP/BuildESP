@@ -57,6 +57,18 @@ services:
     command: -config.file=/etc/promtail/promtail-config.yml -config.expand-env=true
     networks:
       - buildesp_network
+ 
+  node-exporter:
+    image: prom/node-exporter
+    container_name: node-exporter
+    network_mode: host   # This gives node-exporter access to host metrics
+    pid: "host"          # To see host process metrics
+    command:
+      - '--path.procfs=/host/proc'
+      - '--path.sysfs=/host/sys'
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
 
 volumes:
   mysql-data:

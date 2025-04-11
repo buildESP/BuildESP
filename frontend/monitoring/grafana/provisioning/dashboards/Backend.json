@@ -1,0 +1,138 @@
+{
+     "uid": "backend-node-dashboard",
+     "title": "Backend Server - Node Exporter",
+     "tags": ["backend", "node-exporter", "prometheus"],
+     "timezone": "browser",
+     "schemaVersion": 30,
+     "version": 1,
+     "refresh": "10s",
+     "panels": [
+       {
+         "type": "timeseries",
+         "title": "CPU Usage (%)",
+         "gridPos": { "x": 0, "y": 0, "w": 12, "h": 8 },
+         "datasource": "Prometheus",
+         "targets": [
+           {
+             "expr": "100 - (avg by (instance) (rate(node_cpu_seconds_total{mode=\"idle\", instance=~\".*\"}[5m])) * 100)",
+             "legendFormat": "{{instance}}",
+             "refId": "A"
+           }
+         ]
+       },
+       {
+         "type": "timeseries",
+         "title": "Memory Usage (%)",
+         "gridPos": { "x": 12, "y": 0, "w": 12, "h": 8 },
+         "datasource": "Prometheus",
+         "targets": [
+           {
+             "expr": "(1 - node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes) * 100",
+             "legendFormat": "{{instance}}",
+             "refId": "B"
+           }
+         ]
+       },
+       {
+         "type": "timeseries",
+         "title": "Disk Space Used (%)",
+         "gridPos": { "x": 0, "y": 8, "w": 12, "h": 8 },
+         "datasource": "Prometheus",
+         "targets": [
+           {
+             "expr": "100 * (1 - node_filesystem_avail_bytes{fstype!~\"tmpfs|overlay\"} / node_filesystem_size_bytes{fstype!~\"tmpfs|overlay\"})",
+             "legendFormat": "{{instance}} {{mountpoint}}",
+             "refId": "C"
+           }
+         ]
+       },
+       {
+         "type": "timeseries",
+         "title": "Load Average (1m)",
+         "gridPos": { "x": 12, "y": 8, "w": 12, "h": 8 },
+         "datasource": "Prometheus",
+         "targets": [
+           {
+             "expr": "node_load1",
+             "legendFormat": "{{instance}}",
+             "refId": "D"
+           }
+         ]
+       },
+       {
+         "type": "timeseries",
+         "title": "Network Traffic (bytes/sec)",
+         "gridPos": { "x": 0, "y": 16, "w": 24, "h": 8 },
+         "datasource": "Prometheus",
+         "targets": [
+           {
+             "expr": "rate(node_network_receive_bytes_total[1m])",
+             "legendFormat": "recv {{instance}} {{device}}",
+             "refId": "E"
+           },
+           {
+             "expr": "rate(node_network_transmit_bytes_total[1m])",
+             "legendFormat": "send {{instance}} {{device}}",
+             "refId": "F"
+           }
+         ]
+       },
+       {
+         "type": "stat",
+         "title": "Uptime (days)",
+         "gridPos": { "x": 0, "y": 24, "w": 12, "h": 4 },
+         "datasource": "Prometheus",
+         "targets": [
+           {
+             "expr": "node_time_seconds - node_boot_time_seconds",
+             "refId": "G"
+           }
+         ],
+         "fieldConfig": {
+           "defaults": {
+             "unit": "d"
+           },
+           "overrides": []
+         },
+         "options": {
+           "reduceOptions": {
+             "calcs": ["lastNotNull"]
+           }
+         }
+       },
+       {
+         "type": "gauge",
+         "title": "Filesystem Usage %",
+         "gridPos": { "x": 12, "y": 24, "w": 12, "h": 4 },
+         "datasource": "Prometheus",
+         "targets": [
+           {
+             "expr": "100 * (1 - node_filesystem_free_bytes{mountpoint=\"/\"} / node_filesystem_size_bytes{mountpoint=\"/\"})",
+             "refId": "H"
+           }
+         ],
+         "fieldConfig": {
+           "defaults": {
+             "unit": "percent",
+             "thresholds": {
+               "mode": "absolute",
+               "steps": [
+                 { "color": "green", "value": null },
+                 { "color": "orange", "value": 75 },
+                 { "color": "red", "value": 90 }
+               ]
+             }
+           },
+           "overrides": []
+         },
+         "options": {
+           "reduceOptions": {
+             "calcs": ["lastNotNull"]
+           },
+           "showThresholdLabels": true,
+           "showThresholdMarkers": true
+         }
+       }
+     ]
+   }
+   
