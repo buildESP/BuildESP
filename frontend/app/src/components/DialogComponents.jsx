@@ -12,7 +12,7 @@ import {
     DialogActionTrigger,
     DialogCloseTrigger,
 } from './ui/dialog';
-import { Button, Text } from '@chakra-ui/react';
+import { Button, Text, CloseButton } from '@chakra-ui/react';
 import usePostData from "../hooks/usePostData";
 import useAuth from "../hooks/useAuth";
 import { toast } from "react-toastify";
@@ -66,7 +66,7 @@ const DialogComponents = ({ item }) => {
     return (
         <DialogRoot>
             <DialogTrigger asChild>
-                <Button colorPalette="green">Emprunter</Button>
+                <Button variant="surface" colorPalette="blue">Emprunter</Button>
             </DialogTrigger>
 
             <DialogContent>
@@ -93,10 +93,10 @@ const DialogComponents = ({ item }) => {
                 </DialogBody>
                 <DialogFooter>
                     <DialogCloseTrigger asChild>
-                        <Button variant="outline">Annuler</Button>
+                    <CloseButton size="sm" />
                     </DialogCloseTrigger>
                     <DialogActionTrigger asChild>
-                        <Button colorScheme="blue" onClick={handleConfirm} isLoading={loading} loadingText="Envoi en cours...">
+                        <Button colorPalette="blue" variant="surface" onClick={handleConfirm} isLoading={loading} loadingText="Envoi en cours...">
                             Confirmer
                         </Button>
                     </DialogActionTrigger>
