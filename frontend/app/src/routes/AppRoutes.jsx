@@ -3,6 +3,8 @@ import MainLayout from "../layouts/MainLayouts";
 import HomePage from "../pages/HomePage";
 import ProfilePage from "../pages/ProfilePage";
 import LoginPage from "../pages/LoginPage";
+import ForgotPasswordPage from "../pages/ForgotPasswordPage";
+import ResetPasswordPage from "../pages/ResetPasswordPage";
 import PrivateRoute from "./PrivateRoutes";
 import PublicRoutes from "./PublicRoutes";
 import AdminRoute from "./AdminRoute";
@@ -46,11 +48,13 @@ const AppRoutes = () => {
             <Route path="my-neighbors" element={<MyNeighborsPage />} />
             <Route path="my-neighbors/:id" element={<MyNeighborsItemsPages />} />
 
-            {/* 🚪 Routes accessibles uniquement aux utilisateurs non connectés */}
-            <Route element={<PublicRoutes />}>
-              <Route path="login" element={<LoginPage />} />
-              <Route path="register" element={<RegisterPage />} />
-            </Route>
+          {/* 🚪 Routes accessibles uniquement aux utilisateurs non connectés */}
+          <Route element={<PublicRoutes />}>
+            <Route path="login" element={<LoginPage />} />
+            <Route path="register" element={<RegisterPage />} />
+            <Route path="forgot-password" element={<ForgotPasswordPage />} />
+            <Route path="reset-password/:token" element={<ResetPasswordPage />} />
+          </Route>
 
             {/* 🔒 Routes protégées nécessitant une authentification */}
             <Route element={<PrivateRoute />}>

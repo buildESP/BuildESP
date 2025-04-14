@@ -68,7 +68,7 @@ const DialogComponents = ({ item }) => {
     return (
         <DialogRoot>
             <DialogTrigger asChild>
-                <Button colorScheme="blue">Emprunter</Button>
+                <Button variant="surface" colorPalette="blue">Emprunter</Button>
             </DialogTrigger>
 
             <DialogContent>

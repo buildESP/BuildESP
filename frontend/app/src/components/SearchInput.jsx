@@ -5,7 +5,7 @@ import { InputGroup } from "./ui/input-group";
 const SearchInput = ({ value, onChange }) => (
   <InputGroup flex="1" startElement={<LuSearch />} >
     <Input
-      placeholder="Search contacts"
+      placeholder="Chercher un objet"
       value={value}
       onChange={onChange}
     />

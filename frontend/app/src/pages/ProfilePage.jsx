@@ -8,11 +8,13 @@ import BorrowHistory from "../components/BorrowHistory";
 
 const ProfilePage = () => {
   const { user } = useAuth();
-  const { data: userData, loading, error, refetch } = useFetchData(`/users/${user?.id}`, { requiresAuth: true });
+  const { data: rawUserData, loading, error, refetch } = useFetchData(`/users/${user?.id}`, { requiresAuth: true });
   const [isEditing, setIsEditing] = useState(false);
 
   if (loading) return <Spinner />;
   if (error) return <Text color="red.500">{error}</Text>;
+
+  const userData = rawUserData ? { ...rawUserData, password: "" } : null;
 
   return (
       <VStack spacing={6} p={6} align="stretch">

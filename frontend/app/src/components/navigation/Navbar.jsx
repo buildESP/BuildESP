@@ -24,6 +24,7 @@ import NotificationsDialog from "../notifications/NotificationsDialog";
 
 const Navbar = () => {
   const { user, logout, isAdmin } = useAuth();
+  const { user, logout, isAdmin } = useAuth();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { toggleColorMode, colorMode } = useColorMode();
   const { searchTerm, handleSearchChange } = useSearch();

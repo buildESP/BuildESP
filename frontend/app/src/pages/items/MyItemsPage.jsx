@@ -16,7 +16,7 @@ const MyItemsPage = () => {
 
   return (
     <VStack spacing={8} p={4}>
-      <Text fontSize="2xl" fontWeight="bold">Mes Items</Text>
+      <Text fontSize="2xl" fontWeight="bold">Mes Objets</Text>
 
       {myItems.length > 0 ? (
         <ItemsGallery items={myItems} />

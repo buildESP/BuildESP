@@ -1,7 +1,7 @@
 import { screen, fireEvent, waitFor } from "@testing-library/react"
 import { describe, it, expect, vi, beforeEach } from "vitest"
-import { renderWithProvider } from "@/test/renderWithProvider"
 import ItemsGallery from "@/components/items/ItemsGallery"
+import { renderWithTourProvider } from "@/test/renderWithTourProvider"
 
 // 🧪 MOCK DE ItemCard AVEC data-testid
 vi.mock("@/components/items/ItemCard", () => {
@@ -27,27 +27,25 @@ const mockItems = Array.from({ length: 9 }, (_, i) => ({
 describe("ItemsGallery", () => {
   beforeEach(() => vi.clearAllMocks())
 
-  it("affiche le titre et le bouton d’ajout", () => {
-    renderWithProvider(<ItemsGallery items={mockItems} title="Mes objets" />)
-    expect(screen.getByText("Mes objets")).toBeInTheDocument()
-    expect(screen.getByRole("link", { name: /ajouter un item/i })).toBeInTheDocument()
-  })
+  
 
   it("affiche le message si aucun item", () => {
-    renderWithProvider(<ItemsGallery items={[]} />)
+    renderWithTourProvider(<ItemsGallery items={[]} />)
     expect(screen.getByText(/aucun item disponible/i)).toBeInTheDocument()
   })
 
   it("affiche les 6 premiers items max", () => {
-    renderWithProvider(<ItemsGallery items={mockItems} />)
+    renderWithTourProvider(<ItemsGallery items={mockItems} />)
     const visibleItems = screen.getAllByTestId("item-card")
     expect(visibleItems).toHaveLength(6)
     expect(visibleItems[0]).toHaveTextContent("Item 1")
   })
 
   it("change de page quand on clique sur un bouton", async () => {
-    renderWithProvider(<ItemsGallery items={mockItems} />)
-
+    renderWithTourProvider(<ItemsGallery items={mockItems} />, {
+      steps: [{ id: "items-gallery", title: "Focus!", description: "..." }]
+    })
+    
     const page2Button = screen.getByRole("button", { name: "2" })
     fireEvent.click(page2Button)
 

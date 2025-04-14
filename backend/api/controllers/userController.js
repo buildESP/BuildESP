@@ -1,8 +1,8 @@
 // controllers/userController.js
 
-const { User, Group, Exchange} = require('../models/associations');
+const { User, Group, Exchange } = require('../models/associations');
 const { updateEntityImage } = require('../utils/imageUtils');
-
+const { sendWelcomeEmail } = require('../services/emailService');
 
 // Create user
 exports.createUser = async (req, res) => {
@@ -45,6 +45,13 @@ exports.createUser = async (req, res) => {
 
       // Associate user with the selected groups
       await newUser.addGroups(groupInstances);
+    }
+
+    // ✅ Envoi de l'email de bienvenue
+    try {
+      await sendWelcomeEmail(email, firstname);
+    } catch (emailError) {
+      console.warn("User created but failed to send welcome email:", emailError.message);
     }
 
     res.status(201).json({ message: 'User created successfully', user: newUser });
@@ -126,7 +133,7 @@ exports.updateUser = async (req, res) => {
       picture: picture || user.picture,
       is_admin: is_admin !== undefined ? is_admin : user.is_admin,
       ...(password ? { password } : {})
-  
+
     });
 
 
