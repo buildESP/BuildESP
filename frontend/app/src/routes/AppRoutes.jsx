@@ -58,7 +58,6 @@ const AppRoutes = () => {
               <Route path="my-items" element={<MyItemsPage />} />
               <Route path="items/:id" element={<ItemDetailsPage />} />
               <Route path="add-item" element={<AddItemPage />} />
-              {/* ✅ Nouvelle Route pour Mes Échanges */}
               <Route path="exchanges" element={<ExchangesPage />} />
             </Route>
 

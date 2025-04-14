@@ -3,12 +3,19 @@ import useAuth from "./useAuth";
 import { toast } from "react-toastify";
 import { API_BASE_URL } from "@/config";
 
+
 const usePostData = (endpoint) => {
     const { token } = useAuth();
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
 
-    const postData = async (payload, successMessage = "✅ Données envoyées avec succès !", errorMessage = "❌ Une erreur est survenue lors de l'envoi.") => {
+
+    /**
+   * @param {Object} data - The data to send in the request
+   * @param {string} successMessage - Custom success message
+   * @param {string} errorMessage - Custom error message
+   */
+    const postData = async (data, successMessage = " Successfully submitted!", errorMessage = " An error occurred.") => {
         setLoading(true);
         setError(null);
 
@@ -17,23 +24,21 @@ const usePostData = (endpoint) => {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    ...(token && { Authorization: `Bearer ${token}` }),
+                    Authorization: token ? `Bearer ${token}` : ""
                 },
-                body: JSON.stringify(payload),
+                body: JSON.stringify(data),
             });
 
             if (!response.ok) {
                 const errorData = await response.json();
                 throw new Error(errorData.message || `Erreur ${response.status}`);
             }
-
             const result = await response.json();
             toast.success(successMessage);
             return result;
         } catch (err) {
-            console.error("Erreur POST:", err.message);
             setError(err.message);
-            toast.error(errorMessage);
+            toast.error(errorMessage); 
             return null;
         } finally {
             setLoading(false);

@@ -118,7 +118,7 @@ exports.updateExchange = async (req, res) => {
 
     // 🛠️ Ici on change aussi le statut de l'item si accepté ou décliné
     if (status === "Approved") {
-      await item.update({ status: "Rented" });
+      await item.update({ status: "Unavailable" });
     } else if (status === "Declined") {
       await item.update({ status: "Available" });
     }
