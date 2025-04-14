@@ -65,7 +65,7 @@ const BorrowHistory = () => {
                                         Du {new Date(exchange.start_date).toLocaleDateString()} au {new Date(exchange.end_date).toLocaleDateString()}
                                     </Text>
                                     <HStack spacing={2} mt={4}>
-                                        <Badge colorScheme={exchange.status === 'Accepted' ? 'green' : 'yellow'}>
+                                        <Badge colorPalette={exchange.status === 'Accepted' ? 'green' : 'yellow'}>
                                             {exchange.status}
                                         </Badge>
                                     </HStack>
@@ -74,7 +74,7 @@ const BorrowHistory = () => {
                                         size="sm"
                                         mt={4}
                                         variant="outline"
-                                        colorScheme="blue"
+                                        colorPalette="blue"
                                         onClick={() => navigate(`/items/${exchange.item.id}`)}
                                     >
                                         Voir l'objet
@@ -101,7 +101,7 @@ const BorrowHistory = () => {
                                         Du {new Date(exchange.start_date).toLocaleDateString()} au {new Date(exchange.end_date).toLocaleDateString()}
                                     </Text>
                                     <HStack spacing={2} mt={4}>
-                                        <Badge colorScheme="red">Indisponible</Badge>
+                                        <Badge colorPalette="red">Indisponible</Badge>
                                     </HStack>
                                     <Button size="sm" mt={4} variant="outline" isDisabled>
                                         Objet supprimé

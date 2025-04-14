@@ -21,16 +21,19 @@ import useSearch from "@/hooks/useSearch";
 import SearchInput from "../SearchInput";
 import useFetchData from "../../hooks/useFetchData";
 import NotificationsDialog from "../notifications/NotificationsDialog";
-
+import useItems from "../../hooks/useItems";
 const Navbar = () => {
-  const { user, logout, isAdmin } = useAuth();
   const { user, logout, isAdmin } = useAuth();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { toggleColorMode, colorMode } = useColorMode();
   const { searchTerm, handleSearchChange } = useSearch();
+  const { items } = useItems();
+  const filteredItems = items?.filter((item) =>
+    item.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   const { data: exchanges } = useFetchData('/exchanges', { requiresAuth: true });
   const [isNotifOpen, setNotifOpen] = useState(false);
-
   const pendingRequests = exchanges?.filter(
     (exchange) => exchange.lender_user_id === user?.id && exchange.status === "Pending"
   ) || [];
@@ -56,15 +59,55 @@ const Navbar = () => {
 
         {isDesktop ? (
           <HStack spacing={4}>
-            <SearchInput value={searchTerm} onChange={handleSearchChange} />
-            {user && (
+  <VStack position="relative">
+              <SearchInput value={searchTerm} onChange={handleSearchChange} />
+
+              {searchTerm && filteredItems && filteredItems.length > 0 && (
+                <div>
+                  <Box
+                    position="absolute"
+                    top="100%"
+                    left="0"
+                    right="0"
+                    zIndex="10"
+                    bg="white"
+                    boxShadow="md"
+                    borderRadius="md"
+                    p={4}
+                    mt={1}
+                    maxHeight="200px" // Set a max height
+                    overflowY="auto" // Enable vertical scrolling
+                  >
+                    {filteredItems.slice(0, 5).map((item) => ( // Limit to 5 items
+                      <Box
+                        key={item.id}
+                        overflow={"hidden"}
+                        _hover={{ bg: "gray.100" }}
+                        as={RouterLink}
+                        to={`/items/${item.id}`}
+                        onClick={() => handleSearchChange({ target: { value: "" } })} // 🔹 Clears input
+                        style={{
+                          display: "block",
+                          padding: "8px",
+                          marginBottom: "4px",
+                          textDecoration: "none",
+                          borderRadius: "4px",
+                        }}
+                      >
+                        {item.name}
+                      </Box>
+                    ))}
+                  </Box>
+                </div>
+              )}
+            </VStack>            {user && (
               <Box position="relative">
                 <Button onClick={() => setNotifOpen(true)} variant="ghost" color="yellow.900">
                   <Box animation={animation}>
                     <LuBell size={24} />
                   </Box>
                   {pendingRequests.length > 0 && (
-                    <Badge colorScheme="red" borderRadius="full" position="absolute" top="-1" right="-1" fontSize="0.6em">
+                    <Badge colorPalette="red" borderRadius="full" position="absolute" top="-1" right="-1" fontSize="0.6em">
                       {pendingRequests.length}
                     </Badge>
                   )}
@@ -117,7 +160,7 @@ const Navbar = () => {
                     <Button variant="ghost" onClick={() => setNotifOpen(true)}>
                       <LuBell /> Notifications
                       {pendingRequests.length > 0 && (
-                        <Badge ml={2} colorScheme="red">{pendingRequests.length}</Badge>
+                        <Badge ml={2} colorPalette="red">{pendingRequests.length}</Badge>
                       )}
                     </Button>
                   )}

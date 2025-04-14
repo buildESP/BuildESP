@@ -17,7 +17,7 @@ const ExchangeCard = ({ exchange }) => {
                     <Text fontSize="lg" fontWeight="bold" mb={2}>
                         {item.name}
                     </Text>
-                    <Badge colorScheme={status === "Accepted" ? "green" : status === "Pending" ? "yellow" : "red"}>
+                    <Badge colorPalette={status === "Accepted" ? "green" : status === "Pending" ? "yellow" : "red"}>
                         {status}
                     </Badge>
                     <VStack align="start" spacing={1} mt={3}>

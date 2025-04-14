@@ -43,7 +43,7 @@ const NotificationItem = ({ exchange, refetch, navigate }) => {
                 <HStack spacing={2} mt={2}>
                     <Button
                         size="sm"
-                        colorScheme="red"
+                        colorPalette="red"
                         flex="1"
                         onClick={handleDecline}
                         leftIcon={<LuX />}
@@ -53,7 +53,7 @@ const NotificationItem = ({ exchange, refetch, navigate }) => {
                     </Button>
                     <Button
                         size="sm"
-                        colorScheme="green"
+                        colorPalette="green"
                         flex="1"
                         onClick={handleAccept}
                         leftIcon={<LuCheck />}
@@ -66,7 +66,7 @@ const NotificationItem = ({ exchange, refetch, navigate }) => {
                 {exchange.item && (
                     <Button
                         variant="link"
-                        colorScheme="blue"
+                        colorPalette="blue"
                         size="sm"
                         onClick={() => navigate(`/items/${exchange.item.id}`)}
                     >

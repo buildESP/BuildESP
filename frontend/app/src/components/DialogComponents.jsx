@@ -101,14 +101,14 @@ const DialogComponents = ({ item }) => {
 
                         <HStack justify="flex-end" w="full" pt={4}>
                             <DialogCloseTrigger asChild>
-                                <Button variant="outline" colorScheme="gray">
+                                <Button variant="outline" colorPalette="gray">
                                     Annuler
                                 </Button>
                             </DialogCloseTrigger>
 
                             <DialogActionTrigger asChild>
                                 <Button
-                                    colorScheme="blue"
+                                    colorPalette="blue"
                                     onClick={handleConfirm}
                                     isLoading={loading}
                                     loadingText="Envoi en cours..."
