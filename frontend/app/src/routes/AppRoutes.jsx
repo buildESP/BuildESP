@@ -65,6 +65,9 @@ const AppRoutes = () => {
               <Route path="exchanges" element={<ExchangesPage />} />
             </Route>
 
+            {/* 📄 Détail d’un objet (utilisé pour les clics sur ExchangeCard) */}
+            <Route path="items/:id" element={<ItemDetailsPage />} />
+
             {/* 🔐 Route admin */}
             <Route element={<AdminRoute />}>
               <Route path="admin" element={<AdminPage />} />
