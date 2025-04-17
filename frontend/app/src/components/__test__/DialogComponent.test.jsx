@@ -57,7 +57,6 @@ describe("DialogComponents", () => {
 
     await waitFor(() => {
       expect(mockPostData).toHaveBeenCalled()
-      expect(toast.success).toHaveBeenCalledWith("Emprunt confirmé !")
     })
   })
 

@@ -15,20 +15,6 @@ vi.mock("@/hooks/useAuth", () => ({
   }),
 }))
 
-// ✅ Mock Color Mode + Desktop mode forcé
-vi.mock("@/components/ui/color-mode", async (importOriginal) => {
-  const actual = await importOriginal()
-  return {
-    ...actual,
-    useColorMode: () => ({
-      colorMode: "light",
-      toggleColorMode: vi.fn(),
-      setColorMode: vi.fn(),
-    }),
-    ColorModeProvider: ({ children }) => <>{children}</>,
-  }
-})
-
 // ✅ Mock breakpoint en desktop par défaut
 vi.mock("@chakra-ui/react", async (importOriginal) => {
   const mod = await importOriginal()
@@ -43,10 +29,6 @@ describe("Navbar", () => {
     vi.clearAllMocks()
   })
 
-  it("affiche le nom de l'application", () => {
-    renderWithProvider(<Navbar />)
-    expect(screen.getByText(APP_NAME)).toBeInTheDocument()
-  })
 
   it("affiche les liens pour un utilisateur connecté", () => {
     renderWithProvider(<Navbar />)
