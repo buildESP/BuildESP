@@ -1,21 +1,29 @@
-#!/bin/bash
+#!/bin/sh
 
-# Attend que Kuma soit dispo
+echo "[init] Attente que Kuma soit en ligne..."
 until curl -s http://localhost:3001 > /dev/null; do
-  echo "En attente de Kuma..."
   sleep 2
 done
 
-# Login admin (remplace les credentials si besoin)
-TOKEN=$(curl -s -X POST http://localhost:3001/api/login \
+echo "[init] Connexion à Kuma..."
+
+LOGIN_JSON=$(curl -s -X POST http://localhost:3001/api/login \
   -H "Content-Type: application/json" \
-  -d '{"username": "admin", "password": "BuildinguerieCestMieux"}' \
-  | jq -r .token)
+  -d '{"username": "admin", "password": "BuildinguerieCestMieux"}')
 
-# IP dynamique du backend (ex: via dig, route, etc.)
+TOKEN=$(echo "$LOGIN_JSON" | grep -o '"token":"[^"]*' | cut -d':' -f2 | tr -d '"')
+
+if [ -z "$TOKEN" ]; then
+  echo "[init] Échec de connexion à Kuma. Vérifie le mot de passe."
+  echo "[DEBUG] Réponse brute : $LOGIN_JSON"
+  exit 1
+fi
+
+echo "[init] Token récupéré."
+
 BACKEND_IP=$(getent hosts backend | awk '{ print $1 }')
+echo "[init] IP du backend : $BACKEND_IP"
 
-# Ajoute une sonde HTTP vers le backend
 curl -s -X POST http://localhost:3001/api/monitor \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer $TOKEN" \
@@ -27,3 +35,5 @@ curl -s -X POST http://localhost:3001/api/monitor \
     \"retryInterval\": 30,
     \"maxretries\": 3
   }"
+
+echo "[init] Sondes ajoutées."
