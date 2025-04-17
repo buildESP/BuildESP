@@ -10,6 +10,8 @@ COPY package.json  ./
 # Install only production dependencies
 RUN npm i
 
+RUN npm install dotenv --save
+
 # Copy the rest of the application code
 COPY . .
 
