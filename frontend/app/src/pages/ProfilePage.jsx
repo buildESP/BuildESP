@@ -22,7 +22,7 @@ const ProfilePage = () => {
             <>
               <ProfileDetails userData={userData} />
               <Button onClick={() => setIsEditing(true)} colorPalette="teal">
-                Edit Profile
+                Modifier le profil
               </Button>
 
               {/* ✅ Affiche l'historique des emprunts */}
