@@ -29,9 +29,6 @@ exports.createExchange = async (req, res) => {
       status,
     });
 
-    // 🛠️ Ici on change aussi le statut de l'item
-    await item.update({ status: "Pending" });
-
     res.status(201).json({ message: 'Exchange created successfully', exchange: newExchange });
   } catch (error) {
     console.error(error);
