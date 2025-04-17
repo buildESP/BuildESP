@@ -1,4 +1,4 @@
-import { Link as RouterLink } from "react-router-dom";
+import { Link, Link as RouterLink } from "react-router-dom";
 import { useBreakpointValue, Box, Flex, HStack, Button, IconButton, useDisclosure, VStack, Badge } from "@chakra-ui/react";
 import { keyframes } from "@emotion/react";
 import { useState } from "react";
@@ -52,8 +52,8 @@ const Navbar = () => {
   return (
     <Box bg="green.300" px={4} boxShadow="md" position="fixed" zIndex="1000" w="100vw">
       <Flex h={16} alignItems="center" justifyContent="space-between">
-        <Box fontWeight="bold" as={RouterLink} to="/" fontSize="lg" color="yellow.900">
-          {APP_NAME}
+        <Box as={RouterLink} to="/" display="flex" alignItems="center">
+          <a href="/"> <img src="/assets/logo.png" href="/accueil" alt="Logo" style={{ height: '40px' }} /></a>
         </Box>
 
         {isDesktop ? (
@@ -139,9 +139,6 @@ const Navbar = () => {
                 <Button as={RouterLink} to="/register" variant="ghost" color="yellow.900">S'enregistrer</Button>
               </>
             )}
-            <IconButton onClick={toggleColorMode} variant="outline" size="sm">
-              {colorMode === "light" ? <LuSun /> : <LuMoon />}
-            </IconButton>
           </HStack>
         ) : (
           <DrawerRoot open={isOpen} onOpenChange={(e) => (e.open ? onOpen() : onClose())}>

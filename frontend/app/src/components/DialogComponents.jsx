@@ -9,7 +9,6 @@ import {
     DialogTitle,
     DialogBody,
     DialogActionTrigger,
-    DialogCloseTrigger,
 } from './ui/dialog';
 import { Button, Text, VStack, HStack } from '@chakra-ui/react';
 import usePostData from "../hooks/usePostData";
@@ -21,6 +20,7 @@ const DialogComponents = ({ item }) => {
     const { postData, loading } = usePostData("/exchanges");
     const { user } = useAuth();
 
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [startDate, setStartDate] = useState(new Date());
     const [endDate, setEndDate] = useState(() => {
         const date = new Date();
@@ -61,18 +61,36 @@ const DialogComponents = ({ item }) => {
 
         if (response) {
             navigate(-1); 
+
         }
     };
 
     return (
-        <DialogRoot>
+        <DialogRoot open={isDialogOpen} onOpenChange={setIsDialogOpen}>
             <DialogTrigger asChild>
-                <Button variant="surface" colorPalette="blue">Emprunter</Button>
+                <Button variant="surface" colorPalette="blue" onClick={() => setIsDialogOpen(true)}>
+                    Emprunter
+                </Button>
             </DialogTrigger>
 
             <DialogContent>
-                <DialogHeader>
+                <DialogHeader style={{ position: "relative" }}>
                     <DialogTitle>Emprunter {item.name}</DialogTitle>
+                    <Button
+                        size="sm"
+                        variant="ghost"
+                        onClick={() => setIsDialogOpen(false)}
+                        style={{
+                            position: "absolute",
+                            top: "0.5rem",
+                            right: "0.5rem",
+                            fontSize: "1.2rem",
+                            lineHeight: "1",
+                        }}
+                        aria-label="Fermer"
+                    >
+                        ✕
+                    </Button>
                 </DialogHeader>
 
                 <DialogBody>
@@ -99,11 +117,9 @@ const DialogComponents = ({ item }) => {
                         />
 
                         <HStack justify="flex-end" w="full" pt={4}>
-                            <DialogCloseTrigger asChild>
-                                <Button variant="outline" colorPalette="gray">
-                                    Annuler
-                                </Button>
-                            </DialogCloseTrigger>
+                            <Button variant="outline" onClick={() => setIsDialogOpen(false)}>
+                                ✕
+                            </Button>
 
                             <DialogActionTrigger asChild>
                                 <Button

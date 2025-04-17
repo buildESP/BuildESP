@@ -10,7 +10,6 @@ import { API_BASE_URL } from "@/config";
  * @throws {Error} - En cas d'échec de connexion.
  */
 export const login = async (login, password) => {
-  console.log(API_BASE_URL)
   try {
     const response = await fetch(`${API_BASE_URL}/access-token`, {
       method: "POST",

@@ -1,5 +1,5 @@
 const API_BASE_URL = `${import.meta.env.VITE_API_BASE_URL}api`;
-const SOCKET_BASE_URL = import.meta.env.VITE_API_BASE_URL
+const SOCKET_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 const AUTH_TOKEN_KEY = import.meta.env.VITE_AUTH_TOKEN_KEY || "token";
 const APP_NAME = import.meta.env.VITE_APP_NAME || "Neighborrow";
 const DEFAULT_LANGUAGE = import.meta.env.VITE_DEFAULT_LANGUAGE || "fr";

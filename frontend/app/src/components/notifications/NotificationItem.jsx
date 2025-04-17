@@ -17,7 +17,7 @@ const NotificationItem = ({ exchange, refetch, navigate }) => {
 
     const handleDecline = async () => {
         await putData(
-            { ...exchange, status: "Declined" },
+            { ...exchange, status: "Cancelled" },
             exchange,
             "Demande refusée.",
             "Erreur lors du refus"

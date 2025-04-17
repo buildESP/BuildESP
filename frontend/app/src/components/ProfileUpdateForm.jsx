@@ -11,11 +11,8 @@ const ProfileUpdateForm = ({ userData, onSuccess, onCancel }) => {
     { name: "lastname", label: "Nom" },
     { name: "email", label: "Email", type: "email", disabled: true },
     { name: "address", label: "Addresse",  },
-    { name: "password", label: "Password", type: 'password' },
     { name: "phone", label: "Téléphone", type: "tel" },
     { name: "picture", label: "Photo", type: "file" },
-
-
   ];
 
   const handleSubmit = async (updatedData) => {
@@ -33,7 +30,7 @@ const ProfileUpdateForm = ({ userData, onSuccess, onCancel }) => {
       loading={loading}
       entityType = "avatar"
       entityId= {userData.id.id || generatedId}
-      title="Mets à jour ton profil"
+      title="Modification du profil"
       defaultValues={userData} 
       onCancel={onCancel}
     />

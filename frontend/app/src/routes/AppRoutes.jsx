@@ -20,7 +20,9 @@ import MyNeighborsItemsPages from "../pages/items/MyNeighborsItemsPage";
 import AdminPage from "@/pages/AdminPage";
 import ConditionOfUs from "@/pages/ConditionOfUs";
 import ExchangesPage from "../pages/ExchangesPage";
-import ChatPage from "../pages/ChatPage"; // ✅ AJOUT ICI
+import ChatPage from "../pages/ChatPage";
+import MentionLegales from "@/pages/MentionLegales";
+import ExchangesPage from "@/pages/ExchangesPage";
 
 /**
  * @component AppRoutes
@@ -37,8 +39,14 @@ const AppRoutes = () => {
             {/* 🏠 Page d'accueil */}
             <Route index element={<HomePage />} />
 
-            {/* ⚖️ Pages légales */}
-            <Route path="condition-of-us" element={<ConditionOfUs />} />
+          {/* 🏠 Page d'accueil */}
+          <Route index element={<HomePage />} />
+          
+           {/* ⚖️Pages légales */}
+          <Route path="condition-of-us" element={<ConditionOfUs />} />
+          <Route path="Mention-legales" element={<MentionLegales />} />
+           
+
 
             {/* 📂 Pages de catégories et sous-catégories */}
             <Route path="categories" element={<CategoriesPage />} />
