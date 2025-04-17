@@ -12,7 +12,6 @@ import TypingIndicator from "./TypingIndicator";
 const ChatWindow = ({
                         chat,
                         message,
-                        setMessage,
                         onSend,
                         onTyping,
                         isTyping,

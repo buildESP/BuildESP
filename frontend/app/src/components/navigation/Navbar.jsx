@@ -6,7 +6,6 @@ import { CiMenuBurger } from "react-icons/ci";
 import { LuBell, LuMoon, LuSun } from "react-icons/lu";
 import {
   DrawerRoot,
-  DrawerBackdrop,
   DrawerTrigger,
   DrawerContent,
   DrawerCloseTrigger,
@@ -59,7 +58,7 @@ const Navbar = () => {
 
         {isDesktop ? (
           <HStack spacing={4}>
-  <VStack position="relative">
+            <VStack position="relative">
               <SearchInput value={searchTerm} onChange={handleSearchChange} />
 
               {searchTerm && filteredItems && filteredItems.length > 0 && (
