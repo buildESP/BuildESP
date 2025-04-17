@@ -1,41 +1,44 @@
 import { useState } from "react";
-
+import { VStack, Text, Spinner, Button } from "@chakra-ui/react";
 import useAuth from "../hooks/useAuth";
 import useFetchData from "../hooks/useFetchData";
-import { VStack, Text, Spinner, Button } from "@chakra-ui/react";
 import ProfileDetails from "../components/ProfileDetails";
 import ProfileUpdateForm from "../components/ProfileUpdateForm";
+import BorrowHistory from "../components/BorrowHistory";
 
 const ProfilePage = () => {
   const { user } = useAuth();
-  const { data: userData, loading, error, refetch } = useFetchData(`/users/${user?.id}`, { requiresAuth: true });
+  const { data: rawUserData, loading, error, refetch } = useFetchData(`/users/${user?.id}`, { requiresAuth: true });
   const [isEditing, setIsEditing] = useState(false);
 
   if (loading) return <Spinner />;
   if (error) return <Text color="red.500">{error}</Text>;
 
-  return (
-    <VStack spacing={6} p={6} align="stretch">
-      {/* ✅ Show profile details if not editing */}
-      {!isEditing && userData && (
-        <>
-          <ProfileDetails userData={userData} />
-          <Button onClick={() => setIsEditing(true)} colorPalette="teal">
-            Edit Profile
-          </Button>
-        </>
-      )}
+  const userData = rawUserData ? { ...rawUserData, password: "" } : null;
 
-      {/* ✅ Show form only when editing */}
-      {isEditing && userData && (
-        <ProfileUpdateForm userData={userData} onSuccess={() => {
-          setIsEditing(false);
-          refetch();
-        }}
-          onCancel={() => setIsEditing(false)}
-        />
-      )}
-    </VStack>
+  return (
+      <VStack spacing={6} p={6} align="stretch">
+        {!isEditing && userData && (
+            <>
+              <ProfileDetails userData={userData} />
+              <Button onClick={() => setIsEditing(true)} colorPalette="teal">
+                Modifier le profil
+              </Button>
+
+              {/* ✅ Affiche l'historique des emprunts */}
+              <BorrowHistory />
+            </>
+        )}
+
+        {isEditing && userData && (
+            <ProfileUpdateForm userData={userData} onSuccess={() => {
+              setIsEditing(false);
+              refetch();
+            }}
+                               onCancel={() => setIsEditing(false)}
+            />
+        )}
+      </VStack>
   );
 };
 

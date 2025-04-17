@@ -5,7 +5,7 @@ const bcrypt = require('bcrypt');
 const { User } = require('../models/associations');
 const JWT_SECRET = process.env.JWT_SECRET;
 const crypto = require('crypto');
-const { sendResetEmail } = require('../utils/emailService');
+const { sendResetEmail } = require('../services/emailService');
 const { Op } = require('sequelize');
 
 exports.generateAccessToken = async (req, res) => {

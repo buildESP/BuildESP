@@ -17,7 +17,7 @@ const EmptyItemsHero = () => {
       <Text color="gray.600" maxW="lg">
         Vous n’avez encore ajouté aucun objet. Commencez dès maintenant et partagez vos outils ou objets avec la communauté !
       </Text>
-      <Button colorPalette="blue" size="lg" onClick={() => navigate("/add-item")}>
+      <Button colorPalette="teal" size="lg" onClick={() => navigate("/add-item")}>
         Ajouter un objet
       </Button>
     </VStack>

@@ -28,9 +28,13 @@ const HomePage = () => {
   if (loading) return <Skeleton />
   if (error) return <Text color="red.500">{error}</Text>
 
-  const filteredItems = items?.filter((item) =>
-    item.name.toLowerCase().includes(searchTerm.toLowerCase())
-  )
+  const filteredItems = items?.filter(
+    (item) =>
+      item.status === "Available" &&
+      user?.id !== item.user_id &&
+      item.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+  
 
   const handleStartTour = () => {
     start()
@@ -44,7 +48,7 @@ const HomePage = () => {
 
       {user && !hasSeenTour && (
         <Flex justify="flex-end" p={4}>
-          <Button onClick={handleStartTour} colorScheme="teal" variant="outline">
+          <Button onClick={handleStartTour} colorPalette="teal" variant="outline">
             Démarrer la visite 👋
           </Button>
         </Flex>

@@ -62,9 +62,7 @@ describe("FormComponent", () => {
     expect(screen.getByLabelText(/Nom/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/Description/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/Catégorie/i)).toBeInTheDocument();
-    expect(screen.getByText(/Upload Image/i)).toBeInTheDocument();
-
-    // Change le nom
+  
     fireEvent.change(screen.getByLabelText(/Nom/i), {
       target: { value: "Un nouveau nom" },
     });

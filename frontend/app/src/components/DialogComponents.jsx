@@ -8,19 +8,20 @@ import {
     DialogHeader,
     DialogTitle,
     DialogBody,
-    DialogFooter,
     DialogActionTrigger,
-    DialogCloseTrigger,
 } from './ui/dialog';
-import { Button, Text } from '@chakra-ui/react';
+import { Button, Text, VStack, HStack } from '@chakra-ui/react';
 import usePostData from "../hooks/usePostData";
 import useAuth from "../hooks/useAuth";
 import { toast } from "react-toastify";
+import useItems from "../hooks/useItems";
 
 const DialogComponents = ({ item }) => {
     const { postData, loading } = usePostData("/exchanges");
     const { user } = useAuth();
+    const { refetch } = useItems();
 
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [startDate, setStartDate] = useState(new Date());
     const [endDate, setEndDate] = useState(() => {
         const date = new Date();
@@ -60,47 +61,80 @@ const DialogComponents = ({ item }) => {
 
         if (response) {
             toast.success("Emprunt confirmé !");
+            await refetch();
+            setIsDialogOpen(false);
         }
     };
 
     return (
-        <DialogRoot>
+        <DialogRoot open={isDialogOpen} onOpenChange={setIsDialogOpen}>
             <DialogTrigger asChild>
-                <Button colorPalette="green">Emprunter</Button>
+                <Button variant="surface" colorPalette="blue" onClick={() => setIsDialogOpen(true)}>
+                    Emprunter
+                </Button>
             </DialogTrigger>
 
             <DialogContent>
-                <DialogHeader>
+                <DialogHeader style={{ position: "relative" }}>
                     <DialogTitle>Emprunter {item.name}</DialogTitle>
+                    <Button
+                        size="sm"
+                        variant="ghost"
+                        onClick={() => setIsDialogOpen(false)}
+                        style={{
+                            position: "absolute",
+                            top: "0.5rem",
+                            right: "0.5rem",
+                            fontSize: "1.2rem",
+                            lineHeight: "1",
+                        }}
+                        aria-label="Fermer"
+                    >
+                        ✕
+                    </Button>
                 </DialogHeader>
+
                 <DialogBody>
-                    <Text>Sélectionnez les dates d'emprunt :</Text>
-                    <DatePicker
-                        selected={startDate}
-                        onChange={(date) => setStartDate(date)}
-                        minDate={new Date()}
-                    />
-                    <DatePicker
-                        selected={endDate}
-                        onChange={(date) => setEndDate(date)}
-                        minDate={startDate}
-                        maxDate={(() => {
-                            const date = new Date(startDate);
-                            date.setDate(date.getDate() + 7);
-                            return date;
-                        })()}
-                    />
+                    <VStack spacing={4} align="start">
+                        <Text>Sélectionnez les dates d'emprunt :</Text>
+                        <DatePicker
+                            selected={startDate}
+                            onChange={(date) => setStartDate(date)}
+                            minDate={new Date()}
+                            dateFormat="dd/MM/yyyy"
+                            inline
+                        />
+                        <DatePicker
+                            selected={endDate}
+                            onChange={(date) => setEndDate(date)}
+                            minDate={startDate}
+                            maxDate={(() => {
+                                const date = new Date(startDate);
+                                date.setDate(date.getDate() + 7);
+                                return date;
+                            })()}
+                            dateFormat="dd/MM/yyyy"
+                            inline
+                        />
+
+                        <HStack justify="flex-end" w="full" pt={4}>
+                            <Button variant="outline" onClick={() => setIsDialogOpen(false)}>
+                                ✕
+                            </Button>
+
+                            <DialogActionTrigger asChild>
+                                <Button
+                                    colorPalette="blue"
+                                    onClick={handleConfirm}
+                                    isLoading={loading}
+                                    loadingText="Envoi en cours..."
+                                >
+                                    Confirmer
+                                </Button>
+                            </DialogActionTrigger>
+                        </HStack>
+                    </VStack>
                 </DialogBody>
-                <DialogFooter>
-                    <DialogCloseTrigger asChild>
-                        <Button variant="outline">Annuler</Button>
-                    </DialogCloseTrigger>
-                    <DialogActionTrigger asChild>
-                        <Button colorScheme="blue" onClick={handleConfirm} isLoading={loading} loadingText="Envoi en cours...">
-                            Confirmer
-                        </Button>
-                    </DialogActionTrigger>
-                </DialogFooter>
             </DialogContent>
         </DialogRoot>
     );

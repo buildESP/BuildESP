@@ -7,6 +7,7 @@ import { Field } from './ui/field';
 import { FileUploadList, FileUploadRoot, FileUploadTrigger } from './ui/file-upload';
 import { PasswordInput } from './ui/password-input';
 import useUploadImage from '../hooks/useUploadImage';
+import { LuFileImage } from 'react-icons/lu';
 
 /**
  * 📌 **Composant dynamique pour générer des formulaires.**
@@ -189,9 +190,9 @@ const handleFormSubmit = async (data) => {
                       },
                     }}
                   >
-                    <FileUploadTrigger>
-                      <Button colorPalette="orange" isLoading={uploading}>
-                        Upload Image
+                    <FileUploadTrigger >
+                      <Button colorPalette="orange" isLoading={uploading}  variant="surface" >
+                      <LuFileImage />  Ajouter une image
                       </Button>
                     </FileUploadTrigger>
                     <FileUploadList />
@@ -212,7 +213,7 @@ const handleFormSubmit = async (data) => {
                   )}
                 </>
           ) : type === "password" ? (
-            <PasswordInput  bg="green.contrast" visible={false} {...register(name)} placeholder={label} />
+            <PasswordInput  bg="green.contrast" {...register(name)} placeholder={label} />
           ) : (
             <Input bg="green.contrast" {...register(name)} type={type} placeholder={label} />
           )}
