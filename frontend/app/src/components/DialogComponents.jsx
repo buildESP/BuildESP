@@ -15,12 +15,11 @@ import { Button, Text, VStack, HStack } from '@chakra-ui/react';
 import usePostData from "../hooks/usePostData";
 import useAuth from "../hooks/useAuth";
 import { toast } from "react-toastify";
-import useItems from "../hooks/useItems";
+import { useNavigate } from "react-router";
 
 const DialogComponents = ({ item }) => {
     const { postData, loading } = usePostData("/exchanges");
     const { user } = useAuth();
-    const { refetch } = useItems();
 
     const [startDate, setStartDate] = useState(new Date());
     const [endDate, setEndDate] = useState(() => {
@@ -28,6 +27,7 @@ const DialogComponents = ({ item }) => {
         date.setDate(date.getDate() + 7);
         return date;
     });
+    const navigate = useNavigate()
 
     useEffect(() => {
         const maxEndDate = new Date(startDate);
@@ -60,8 +60,7 @@ const DialogComponents = ({ item }) => {
         );
 
         if (response) {
-            toast.success("Emprunt confirmé !");
-            await refetch(); // 👈 On recharge les items directement après la demande
+            navigate(-1); 
         }
     };
 
