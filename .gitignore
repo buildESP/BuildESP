@@ -13,7 +13,8 @@ node_modules/
 # Build directories
 build/
 dist/
-
+.github/
+cypress/
 # Runtime data
 pids/
 *.pid
@@ -23,8 +24,6 @@ pids/
 # Coverage directory
 coverage/
 
-# dotenv environment variables file
-.env
 
 # VS Code directories
 .vscode/

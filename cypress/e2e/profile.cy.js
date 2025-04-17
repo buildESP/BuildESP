@@ -1,7 +1,7 @@
 describe('profile Test', () => {
     it('should login successfully with valid credentials', () => {
       // Visit the login page
-      cy.visit('http://localhost:3001/login'); // Update the URL to match your login page
+      cy.visit('http://172.31.41.254:3001/login'); // Update the URL to match your login page
   
       // Enter email
         
@@ -25,7 +25,7 @@ describe('profile Test', () => {
     });
     it('should update profile successfully', () => {
       // Visit the login page
-      cy.visit('http://localhost:3001/login'); // Update the URL to match your login page
+      cy.visit('http://172.31.41.254:3001/login'); // Update the URL to match your login page
   
       // Enter email
           // Enter email

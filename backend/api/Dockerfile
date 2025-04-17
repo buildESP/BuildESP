@@ -1,26 +1,32 @@
-# Use a lighter Alpine-based Node.js image
-FROM node:18-alpine
+# Utiliser une image Node.js basée sur Alpine pour un conteneur léger
+FROM node:22-alpine
 
-# Set the working directory inside the container
+# Définir le répertoire de travail
 WORKDIR /usr/src/app
 
-# Copy package.json and package-lock.json for dependency installation
-COPY package.json  ./
+# Installer AWS CLI directement via `apk`
+RUN apk add --no-cache aws-cli curl unzip python3 py3-pip
 
-# Install only production dependencies
-RUN npm i
+# Vérifier l'installation d'AWS CLI
+RUN aws --version
 
-# Copy the rest of the application code
+# Copier package.json et package-lock.json avant d'installer les dépendances
+COPY package.json package-lock.json ./
+
+# Installer les dépendances Node.js
+RUN npm install --omit=dev
+
+# Ajouter explicitement les dépendances nécessaires si elles ne sont pas dans package.json
+RUN npm install multer multer-s3 @aws-sdk/client-s3 dotenv helmet
+
+# Copier le reste du code source
 COPY . .
 
-# Change ownership of the application files to the node user
-RUN chown -R node:node /usr/src/app
+# Définir les variables d'environnement
+ENV NODE_ENV=production
 
-# Set the container to run as the non-root node user
-USER node
-
-# Expose the port the app runs on
+# Exposer le port de l'application
 EXPOSE 3000
 
-# Define the command to run the app
+# Démarrer l'application
 CMD ["node", "app.js"]

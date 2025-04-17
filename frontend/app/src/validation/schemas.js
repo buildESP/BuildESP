@@ -33,6 +33,8 @@ export const updateProfileSchema = z.object({
   postcode: z.string().optional().or(z.literal("")), // ✅ Optional, allows empty string
   phone: z.string().min(10, "Phone number must be at least 10 digits").optional().or(z.literal("")), // ✅ Allow empty or valid number
   picture: z.string().url("Invalid picture URL").optional().or(z.literal("")), // ✅ Allow empty or valid URL
+  password: z.string().min(6, "Password must be at least 6 characters"),
+
 });
 
 

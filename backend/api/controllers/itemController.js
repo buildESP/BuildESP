@@ -1,6 +1,4 @@
-// controllers/itemController.js
-
-const { Item, User, Subcategory } = require('../models/associations');
+const { Item, User, Subcategory, Exchange } = require('../models/associations');
 const { updateEntityImage } = require('../utils/imageUtils');
 
 // Create item
@@ -34,13 +32,14 @@ exports.createItem = async (req, res) => {
   }
 };
 
-// Get all items
+// Get all items (avec échanges associés)
 exports.getItems = async (req, res) => {
   try {
     const items = await Item.findAll({
       include: [
         { model: User, as: 'user' },
         { model: Subcategory, as: 'subcategory' },
+        { model: Exchange, as: 'exchanges' }, // ✅ Ajout des échanges
       ],
     });
     res.status(200).json(items);
@@ -50,7 +49,7 @@ exports.getItems = async (req, res) => {
   }
 };
 
-// Get item by ID
+// Get item by ID (avec échanges associés)
 exports.getItemById = async (req, res) => {
   try {
     const itemId = req.params.item_id;
@@ -58,6 +57,7 @@ exports.getItemById = async (req, res) => {
       include: [
         { model: User, as: 'user' },
         { model: Subcategory, as: 'subcategory' },
+        { model: Exchange, as: 'exchanges' }, // ✅ Ajout des échanges
       ],
     });
 
@@ -88,14 +88,14 @@ exports.updateItem = async (req, res) => {
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
-    
-    
+
     const subcategory = await Subcategory.findByPk(subcategory_id);
     if (!subcategory) {
       return res.status(404).json({ message: 'Subcategory not found' });
     }
-    await updateEntityImage(item, req.body.picture);
-    
+
+    await updateEntityImage(item, picture);
+
     await item.update({
       user_id,
       subcategory_id,
@@ -108,7 +108,7 @@ exports.updateItem = async (req, res) => {
     res.status(200).json({ message: 'Item updated successfully', item });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Error during item update' });
+    res.status(500).json({ error: 'Error during item update, ' + error });
   }
 };
 

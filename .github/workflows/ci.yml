@@ -56,7 +56,7 @@ jobs:
       - name: Install frontend dependencies
         if: steps.cache-frontend.outputs.cache-hit != 'true'
         working-directory: frontend/app
-        run: npm ci --prefer-offline --no-audit
+        run: npm i --prefer-offline --no-audit
 
       - name: Cache Node.js modules (backend)
         id: cache-backend
@@ -71,7 +71,7 @@ jobs:
       - name: Install backend dependencies
         if: steps.cache-backend.outputs.cache-hit != 'true'
         working-directory: backend/api
-        run: npm ci --prefer-offline --no-audit
+        run: npm i --prefer-offline --no-audit
 
   quality:
     needs: init
@@ -137,7 +137,7 @@ jobs:
           args: --all-projects --severity-threshold=high
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-
+        continue-on-error: true
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v3
         with:

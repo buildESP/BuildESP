@@ -1,20 +1,14 @@
+// src/hooks/usePutData.js
 import { useState } from "react";
 import useAuth from "./useAuth";
 import { toast } from "react-toastify";
-import { API_BASE_URL } from "@/config";
-
+import { API_BASE_URL } from "@/config"; // Import de la variable depuis config.js
 
 const usePutData = (endpoint) => {
   const { token } = useAuth();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  /**
-   * @param {Object} updatedData - The new form data
-   * @param {Object} originalData - The existing data from the API
-   * @param {string} successMessage - Custom success message
-   * @param {string} errorMessage - Custom error message
-   */
   const putData = async (updatedData, originalData, successMessage = " Updated successfully!", errorMessage = " Update failed.") => {
     setLoading(true);
     setError(null);

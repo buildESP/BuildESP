@@ -12,7 +12,8 @@ const MainLayout = () => {
 
 
   return (
-    <Box display="flex" flexDirection="column" minH="100vh" bg="yellow.50">
+    <Box display="flex" flexDirection="column"   overflowX="hidden" 
+    minH="100vh" bg="yellow.50">
 
       {/* 🔹 Navbar fixée en haut */}
       <Box position="fixed" top="0" w="100%" zIndex="10">
@@ -20,7 +21,7 @@ const MainLayout = () => {
       </Box>
 
       {/* 🔹 Contenu principal avec un padding-top pour éviter que la Navbar ne cache */}
-      <Box display="flex" flexDirection="column" flex="1" pt={{ base: "3rem", md: "4rem" }}>
+      <Box display="flex" flexDirection="column"  flex="1" pt={{ base: "3rem", md: "4rem" }}>
 
         <SubMenu />
         {/* <Breadcrumbs/> */}

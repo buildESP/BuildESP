@@ -1,0 +1,86 @@
+groups:
+  # Log missing Alerts
+  - name: web_logs_missing
+    rules:
+      - alert: WebLogsMissing
+        expr: absent(web_logging)
+        for: 1m
+
+  - name: database_logs_missing
+    rules:
+      - alert: DBLogsMissing
+        expr: absent(database_logs)
+        for: 1m
+
+  # DDOS Alerts
+  - name: ddos_detection
+    rules:
+      - alert: DDoSAttackDetected
+        expr: sum(rate({job="web_logs", instance="app-web951520.westeurope.cloudapp.azure.com"}[1m])) > 200
+        for: 1m
+        labels:
+          severity: critical
+          type: ddos_attack
+        annotations:
+          summary: "Possible DDoS attack detected"
+          description: "The rate of logs received exceeds the threshold of 200 logs per minute, indicating a potential DDoS attack."
+
+  # CPU Alerts
+  - name: CPU Usage Alerts
+    rules:
+      - alert: VeryLowCpuUsage
+        expr: sum(rate(container_cpu_usage_seconds_total{instance=~".*",name=~".*",name=~".+"}[5m])) by (name) * 100 > 1
+        for: 1m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High CPU usage detected (instance {{ $labels.instance }})"
+          description: "CPU usage is above 1% for more than 1 minute."
+
+      - alert: LowCpuUsage
+        expr: sum(rate(container_cpu_usage_seconds_total{instance=~".*",name=~".*",name=~".+"}[5m])) by (name) * 100 > 30
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Very High CPU usage detected (instance {{ $labels.instance }})"
+          description: "CPU usage is above 30% for more than 1 minute."
+
+      - alert: NormalCpuUsage
+        expr: sum(rate(container_cpu_usage_seconds_total{instance=~".*",name=~".*",name=~".+"}[5m])) by (name) * 100 > 50
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Very High CPU usage detected (instance {{ $labels.instance }})"
+          description: "CPU usage is above 50% for more than 1 minute."
+
+      - alert: HighCpuUsage
+        expr: sum(rate(container_cpu_usage_seconds_total{instance=~".*",name=~".*",name=~".+"}[5m])) by (name) * 100 > 70
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Very High CPU usage detected (instance {{ $labels.instance }})"
+          description: "CPU usage is above 70% for more than 1 minute."
+
+      - alert: CriticalCpuUsage
+        expr: sum(rate(container_cpu_usage_seconds_total{instance=~".*",name=~".*",name=~".+"}[5m])) by (name) * 100 > 90
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Very High CPU usage detected (instance {{ $labels.instance }})"
+          description: "CPU usage is above 90% for more than 1 minute."
+
+  # HTTP Status Code Alerts
+  - name: HttpStatusAlert
+    rules:
+      - alert: HttpStatusNot200
+        expr: probe_http_status_code{target=~"()"} != 200
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "HTTP status is not 200"
+          description: "The monitored URL does not return HTTP status code 200."

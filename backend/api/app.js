@@ -1,23 +1,19 @@
-// app.js
-
 require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
 const swaggerJsdoc = require('swagger-jsdoc');
 const swaggerUi = require('swagger-ui-express');
 const swaggerOptions = require('./swaggerOptions');
-const jwt = require('jsonwebtoken');
 const cors = require('cors');
 const chalk = require('chalk');
 const { createServer } = require('http');
 const { Server } = require('socket.io');
 
 
-const JWT_SECRET = process.env.JWT_SECRET;
 const app = express();
 const port = process.env.PORT || 3000;
 
-// import routes
+// Import routes
 const authRoutes = require('./routes/authRoutes');
 const userRoutes = require('./routes/userRoutes');
 const categoryRoutes = require('./routes/categoryRoutes');
@@ -29,15 +25,34 @@ const groupRoutes = require('./routes/groupRoutes');
 const chatRoutes = require('./routes/chatRoutes');
 const { initSockets } = require('./sockets/chatSocket');
 
-
 app.use(bodyParser.json());
 
 // Swagger configuration
 const swaggerSpec = swaggerJsdoc(swaggerOptions);
 app.use('/doc', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
+// CORS configuration
+const allowedOrigins = [
+  'http://neighborrow.hephel.fr',
+  'https://neighborrow.hephel.fr',
+  'http://localhost:3000',
+  'http://localhost:5173',
+];
+
+app.use(cors({
+  origin: (origin, callback) => {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true,
+  methods: 'GET,POST,PUT,DELETE,OPTIONS',
+  allowedHeaders: 'Content-Type,Authorization',
+}));
+
 // Routes use
-app.use(cors({ origin: true }));
 app.use('/api', userRoutes);
 app.use('/api', authRoutes);
 app.use('/api', categoryRoutes);
@@ -77,6 +92,7 @@ io.use((socket, next) => {
 
 
 initSockets(io);
+
 
 server.listen(port, () => {
   console.log(chalk.green.bold(`🚀 Good job! Buildinguerie API is running on http://localhost:${port}\n`));

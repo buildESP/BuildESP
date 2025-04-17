@@ -3,7 +3,6 @@
 const { User, Group, Exchange} = require('../models/associations');
 const { updateEntityImage } = require('../utils/imageUtils');
 
-
 // Create user
 exports.createUser = async (req, res) => {
   try {

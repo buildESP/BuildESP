@@ -25,7 +25,9 @@ describe('GroupController', () => {
       await createGroup(req, res);
       expect(res.status).toHaveBeenCalledWith(201);
       expect(res.json).toHaveBeenCalledWith({ message: 'Group created successfully', group: newGroup });
-    });
+  });
+
+
     test('should return 404 if admin user not found', async () => {
       req.body = { name: 'Group1', description: 'Desc', group_admin: 1 };
       User.findByPk.mockResolvedValue(null);
@@ -62,16 +64,41 @@ describe('GroupController', () => {
   });
 
   describe('updateGroup', () => {
-    test('should update group when found and admin exists', async () => {
-      req.params.group_id = 1;
-      req.body = { name: 'Updated', description: 'New', group_admin: 1 };
-      const group = { id: 1, update: jest.fn().mockResolvedValue() };
-      Group.findByPk.mockResolvedValue(group);
-      User.findByPk.mockResolvedValue({ id: 1 });
-      await updateGroup(req, res);
-      expect(res.status).toHaveBeenCalledWith(200);
-      expect(res.json).toHaveBeenCalledWith({ message: 'Group updated successfully', group });
+test('should update group when found and admin exists', async () => {
+    // Mock data
+    const mockGroup = {
+      id: 1,
+      update: jest.fn().mockResolvedValue({
+        id: 1,
+        name: 'Updated',
+        description: 'New',
+        group_admin: 1
+      })
+    };
+
+    const mockAdminUser = { id: 1 };
+    Group.findByPk = jest.fn().mockResolvedValue(mockGroup);
+    User.findByPk = jest.fn().mockResolvedValue(mockAdminUser);
+
+    req.params.group_id = '1';
+    req.body = { name: 'Updated', description: 'New', group_admin: 1 };
+
+    await updateGroup(req, res);
+
+    expect(Group.findByPk).toHaveBeenCalledWith('1');
+    expect(User.findByPk).toHaveBeenCalledWith(1);
+    expect(mockGroup.update).toHaveBeenCalledWith({
+      name: 'Updated',
+      description: 'New',
+      group_admin: 1
     });
+    expect(res.status).toHaveBeenCalledWith(200);
+    expect(res.json).toHaveBeenCalledWith({
+      message: 'Group updated successfully',
+      group: mockGroup
+    });
+  });
+    
     test('should return 404 if group to update not found', async () => {
       req.params.group_id = 1;
       Group.findByPk.mockResolvedValue(null);

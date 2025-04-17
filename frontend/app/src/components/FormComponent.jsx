@@ -5,6 +5,7 @@ import { Box, Button, VStack, Input, Textarea, NativeSelect, HStack, Image } fro
 import { Fieldset, FieldsetLegend } from '@chakra-ui/react/fieldset';
 import { Field } from './ui/field';
 import { FileUploadList, FileUploadRoot, FileUploadTrigger } from './ui/file-upload';
+import { PasswordInput } from './ui/password-input';
 import useUploadImage from '../hooks/useUploadImage';
 
 /**
@@ -26,7 +27,7 @@ import useUploadImage from '../hooks/useUploadImage';
  * @param {Function} [props.onCancel] - Fonction appelée lors de l'annulation.
  * @returns {JSX.Element} - Composant de formulaire dynamique.
  */
-const FormComponent = ({ schema, fields, onSubmit, submitLabel = 'Submit', loading, title, defaultValues, onCancel }) => {
+const FormComponent = ({ schema, fields, onSubmit, submitLabel = 'Submit', loading, title, defaultValues, onCancel, entityType = "default", entityId = "default" }) => {
   // ✅ Configuration du formulaire avec react-hook-form et validation zod
   const {
     register,
@@ -78,52 +79,67 @@ const FormComponent = ({ schema, fields, onSubmit, submitLabel = 'Submit', loadi
    * - Injecte l'URL de l'image au bon champ dans les données
    * - Appelle `onSubmit` avec les données complètes
    */
-  const handleFormSubmit = async (data) => {
-    console.log("Form Data before submit:", data);
+const handleFormSubmit = async (data) => {
+  console.log("Form Data before submit:", data);
 
-    // 🔍 Détermine dynamiquement le nom du champ image attendu
-    const imageField = fields.some((f) => f.name === "picture") ? "picture" : "image_url";
+  // 🔍 Détermine dynamiquement le nom du champ image attendu
+  const imageField = fields.some((f) => f.name === "picture") ? "picture" : "image_url";
 
-    let imageUrl = null;
+  let imageUrl = null;
 
-    // 📤 Upload du fichier si sélectionné
-    if (selectedFile) {
-      const uploaded = await uploadImage(selectedFile);
-      if (uploaded) {
-        imageUrl = uploaded;
-        setUploadedImageUrl(uploaded);
-      }
-    }
+  const resolvedEntityType = entityType;
+  const resolvedEntityId = entityId;
+  // 📤 Upload du fichier si sélectionné
+  if (selectedFile) {
 
-    // 🔁 Sinon, on récupère l'image déjà présente en édition
-    if (!imageUrl) {
-      imageUrl = defaultValues?.[imageField] || null;
-    }
 
-    // ✅ Injecte l'URL dans les données, ou supprime le champ si aucune image
-    if (imageUrl) {
-      data[imageField] = imageUrl;
-    } else {
-      delete data[imageField]; // évite erreur Zod sur `null`
-    }
-
-    console.log("✅ Data sent to onSubmit:", {
-      ...data,
-      debug_imageField: imageField,
-      debug_imageValue: data[imageField],
-      debug_selectedFile: selectedFile,
-      debug_uploadedImageUrl: uploadedImageUrl,
-      debug_defaultImage: defaultValues?.[imageField],
+    console.log("📤 Uploading image with:", {
+      file: selectedFile,
+      entityType: resolvedEntityType,
+      entityId: resolvedEntityId,
     });
-    
-    // 🚀 Envoie final des données
-    await onSubmit(data);
 
-    // 🔄 Réinitialisation du formulaire
-    reset();
-    setUploadedImageUrl(null);
-    setSelectedFile(null);
-  };
+    const uploaded = await uploadImage(selectedFile, resolvedEntityType, resolvedEntityId);
+
+    if (uploaded) {
+      imageUrl = uploaded;
+      setUploadedImageUrl(uploaded);
+    }
+  }
+
+  // 🔁 Sinon, on récupère l'image déjà présente en édition
+  if (!imageUrl) {
+    imageUrl = defaultValues?.[imageField] || null;
+  }
+
+  // ✅ Injecte l'URL dans les données, ou supprime le champ si aucune image
+  if (imageUrl) {
+    data[imageField] = imageUrl;
+  } else {
+    delete data[imageField];
+  }
+
+  // 🪵 DEBUG : données envoyées
+  console.log("✅ Data sent to onSubmit:", {
+    ...data,
+    debug_imageField: imageField,
+    debug_imageValue: data[imageField],
+    debug_selectedFile: selectedFile,
+    debug_uploadedImageUrl: uploadedImageUrl,
+    debug_defaultImage: defaultValues?.[imageField],
+    debug_entityType: resolvedEntityType,
+    debug_entityId: resolvedEntityId,
+  });
+
+  // 🚀 Envoie final des données
+  await onSubmit(data);
+
+  // 🔄 Réinitialisation du formulaire
+  reset();
+  setUploadedImageUrl(null);
+  setSelectedFile(null);
+};
+
 
 
   return (
@@ -195,9 +211,11 @@ const FormComponent = ({ schema, fields, onSubmit, submitLabel = 'Submit', loadi
                     </Box>
                   )}
                 </>
-              ) : (
-                <Input bg="green.contrast" {...register(name)} type={type} placeholder={label} />
-              )}
+          ) : type === "password" ? (
+            <PasswordInput  bg="green.contrast" visible={false} {...register(name)} placeholder={label} />
+          ) : (
+            <Input bg="green.contrast" {...register(name)} type={type} placeholder={label} />
+          )}
             </Field>
           ))}
           {/* 🔹 Boutons d'action */}

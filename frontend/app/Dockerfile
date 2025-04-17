@@ -1,4 +1,4 @@
-# Use Node.js 18 with Alpine for a lightweight base image
+# Use Node.js 22 with Alpine for a lightweight base image
 FROM node:22-alpine
 
 # Set the working directory inside the container
@@ -10,12 +10,14 @@ COPY package.json package-lock.json ./
 # Install dependencies consistently with npm ci
 RUN npm ci
 
-# Create and set permissions for the Vite cache directory
-RUN mkdir -p node_modules/.vite && chmod -R 777 node_modules/.vite
+# Ensure Vite has proper cache permissions
+RUN mkdir -p node_modules/.cache && chmod -R 777 node_modules/.cache
 
-# Copy the rest of your application code
+# Copy the rest of the application code
 COPY . .
 
-EXPOSE 3000
+# Expose the port Vite typically runs on (si tu utilises Vite, c'est souvent 5173)
+EXPOSE 5173
 
-CMD ["npm", "run", "dev", "--", "--host", "0.0.0.0", "--port", "3000"]
+# Command to run the application (adapté pour Vite)
+CMD ["npm", "run", "dev", "--", "--host"]

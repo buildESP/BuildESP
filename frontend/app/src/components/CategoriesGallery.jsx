@@ -9,9 +9,14 @@ import {
 } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 import { FaFire } from "react-icons/fa";
+import TourStep from "./tour/TourStep";
+import { useTourStep } from '@/hooks/useTourStep'
+
 
 const CategoriesGallery = () => {
   const { data: categories, loading, error } = useFetchData("/categories");
+  const { isCurrent: isHighlighting } = useTourStep("category-card")
+
 
   if (loading) return <Skeleton height="250px" />;
   if (error) return <Text color="red.500">{error}</Text>;
@@ -46,12 +51,13 @@ const CategoriesGallery = () => {
             scrollSnapAlign="start"
             flexShrink={0}
             boxShadow="md"
+            
           >
             <Text fontSize="xl" fontWeight="bold" color="gray.800" mb={2}>
               Ça circule en ce moment            </Text>
             <Icon as={FaFire} boxSize={6} color="orange.500" />
           </Box>
-
+          <TourStep id="category-card" />
           {/* Dynamic Category Cards */}
           {categories.map((category) => (
             <Box
@@ -65,8 +71,19 @@ const CategoriesGallery = () => {
               overflow="hidden"
               flexShrink={0}
               scrollSnapAlign="start"
-              boxShadow="md"
-              _hover={{ transform: "scale(1.03)", transition: "0.3s ease" }}
+              boxShadow={
+                isHighlighting
+                  ? "0 0 0 4px rgba(66, 153, 225, 0.4)"
+                  : "md"
+              }
+              zIndex={isHighlighting ? "popover" : "auto"}
+              animation={
+                isHighlighting ? "pulse-glow 1.5s infinite" : undefined
+              }
+              _hover={{
+                transform: "scale(1.03)",
+                transition: "0.3s ease",
+              }}
             >
               <Image
                 src={category.image_url}

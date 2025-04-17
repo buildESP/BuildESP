@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useRef } from "react";
 import { useNavigate } from "react-router-dom"; 
 import { ItemContext } from "../../context/ItemContext";
 import usePostData from "../../hooks/usePostData";
@@ -12,22 +12,23 @@ const AddItemPage = () => {
   const { data: subcategories, loading: subLoading } = useFetchData("/subcategories");
   const { user } = useAuth();
   const navigate = useNavigate(); 
-  const { refetch, addNewItem  } = useContext(ItemContext); // ✅ Get refetch function
+  const { refetch  } = useContext(ItemContext); // ✅ Get refetch function
+  const generatedId = useRef(`${Date.now()}`).current;
 
 
   const fields = [
-    { name: "name", label: "Item Name", helperText: "Give your item a clear name" },
-    { name: "description", label: "Description", type: "textarea", helperText: "Describe your item" },
-    { name: "picture", label: "Image URL", type: "file", helperText: "Upload an image" }, 
+    { name: "name", label: "Nom de l'objet", helperText: "Indique un nom claire pour ton objet" },
+    { name: "description", label: "Description", type: "textarea" },
+    { name: "picture", label: "Ajoute ton Image", type: "file" }, 
     {
       name: "subcategory_id",
-      label: "Subcategory",
+      label: "Sous-Categorie",
       type: "select",
       options: subcategories ? subcategories.map((sub) => ({ value: sub.id, label: sub.name })) : [],
     },
     { name: "status", label: "Status", type: "select", options: [
-      { value: "Available", label: "Available" },
-      { value: "Unavailable", label: "Unavailable" },
+      { value: "Available", label: "Disponible" },
+      { value: "Unavailable", label: "Indisponible" },
     ]},
   ];
   
@@ -38,8 +39,8 @@ const AddItemPage = () => {
 
     const response = await postData(
       { ...formData, user_id: user.id },
-      " Item added successfully!",
-      " Failed to add item."
+      "Objet ajouté avec succes!",
+      "Echec de l'ajout de l'objet."
     );
   
     if (response) {
@@ -53,9 +54,11 @@ const AddItemPage = () => {
       schema={addItemSchema}
       fields={fields}
       onSubmit={handleSubmit}
-      submitLabel="Add Item"
+      submitLabel="Partager"
       loading={loading || subLoading} 
-      title="List a New Item"
+      entityType = "item"
+      entityId= {generatedId}
+      title="Ajoute un nouvel objet"
     />
   );
 };
