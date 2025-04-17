@@ -5,8 +5,8 @@ const Footer = () => (
     <Grid templateColumns={{ base: '1fr', md: 'repeat(3, 1fr)' }} placeItems="center" gap={6}>
       <VStack align="start">
         <Heading size="md" mb={2}>Nous suivre</Heading>
-        <Link color={"whiteAlpha.700"} href="#">TikTok</Link>
-        <Link color={"whiteAlpha.700"} href="#">Instagram</Link>
+        <Link color={"whiteAlpha.700"} href="https://www.tiktok.com/@neighborrow_">TikTok</Link>
+        <Link color={"whiteAlpha.700"} href="https://www.instagram.com/neigh_borrow/">Instagram</Link>
       </VStack>
       <VStack align="start">
         <Heading size="md" mb={2}>Informations Légales</Heading>

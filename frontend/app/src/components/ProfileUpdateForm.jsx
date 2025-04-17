@@ -11,11 +11,8 @@ const ProfileUpdateForm = ({ userData, onSuccess, onCancel }) => {
     { name: "lastname", label: "Nom" },
     { name: "email", label: "Email", type: "email", disabled: true },
     { name: "address", label: "Addresse",  },
-    { name: "password", label: "Mot de passe", type: 'password' },
     { name: "phone", label: "Téléphone", type: "tel" },
     { name: "picture", label: "Photo", type: "file" },
-
-
   ];
 
   const handleSubmit = async (updatedData) => {

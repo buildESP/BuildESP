@@ -48,13 +48,16 @@ exports.createUser = async (req, res) => {
     }
 
     // ✅ Envoi de l'email de bienvenue
-    try {
-      await sendWelcomeEmail(email, firstname);
-    } catch (emailError) {
-      console.warn("User created but failed to send welcome email:", emailError.message);
-    }
+    setImmediate(async () => {
+      try {
+        await sendWelcomeEmail(email, firstname);
+        console.log("Welcome email sent successfully");
+      } catch (emailError) {
+        console.warn("User created but failed to send welcome email:", emailError.message);
+      }
+    });
 
-    res.status(201).json({ message: 'User created successfully', user: newUser });
+    res.status(201).json({ message: 'User created successfully: welcome mail will be sent shortly', user: newUser });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Error during user creation' });
@@ -77,7 +80,6 @@ exports.getUsers = async (req, res) => {
 exports.getUserById = async (req, res) => {
   try {
     const userId = req.params.user_id;
-    console.log(userId);
     const user = await User.findByPk(userId, {
       include: [
         { model: Exchange, as: 'lender_exchanges' },

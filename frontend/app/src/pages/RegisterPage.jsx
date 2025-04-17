@@ -36,7 +36,7 @@ const RegisterPage = () => {
       schema={registerSchema}
       fields={fields}
       onSubmit={handleSubmit}
-      submitLabel="Register"
+      submitLabel="S'enregistrer"
       entityType="user"
       entityId={generatedId}
       loading={loading}
