@@ -108,12 +108,11 @@ services:
     ports:
       - 3001:3001
     volumes:
-      - ./uptime-kuma-data:/app/data
-      - ./monitoring/kuma/init-kuma.sh:/app/init-kuma.sh
+      - ./monitoring/kuma/data:/app/data
     container_name: uptime-kuma
     networks:
      - buildesp_network
-    command: /bin/sh -c "chmod +x /app/init-kuma.sh && node server/server.js & sleep 15 && /app/init-kuma.sh && wait"
+    command: /bin/sh -c "node server/server.js"
     depends_on:
       - loki
       - promtail
