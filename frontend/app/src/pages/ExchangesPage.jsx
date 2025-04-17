@@ -32,7 +32,7 @@ const ExchangesPage = () => {
                 {myBorrowings.length === 0 ? (
                     <Text color="gray.500">Vous n'avez pas encore emprunté d'objets.</Text>
                 ) : (
-                    <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={4}>
+                    <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} gap={4} spacing={6}>
                         {myBorrowings.map(exchange => (
                             <ExchangeCard key={exchange.id} exchange={exchange} />
                         ))}
