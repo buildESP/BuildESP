@@ -6,7 +6,6 @@ import { CiMenuBurger } from "react-icons/ci";
 import { LuBell, LuMoon, LuSun } from "react-icons/lu";
 import {
   DrawerRoot,
-  DrawerBackdrop,
   DrawerTrigger,
   DrawerContent,
   DrawerCloseTrigger,
