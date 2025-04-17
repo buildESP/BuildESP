@@ -113,7 +113,7 @@ services:
     container_name: uptime-kuma
     networks:
      - buildesp_network
-    command: /bin/sh -c "chmod +x /app/init-kuma.sh && node server/server.js & /app/init-kuma.sh && wait"
+    command: /bin/sh -c "node server/server.js"
     depends_on:
       - loki
       - promtail
