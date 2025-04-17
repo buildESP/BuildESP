@@ -10,7 +10,7 @@ const Footer = () => (
       </VStack>
       <VStack align="start">
         <Heading size="md" mb={2}>Informations Légales</Heading>
-        <Link color={"whiteAlpha.700"} href="#">Mentions légales</Link>
+        <Link color={"whiteAlpha.700"} href="/Mention-legales">Mentions légales</Link>
         <Link color={"whiteAlpha.700"} href="/condition-of-us">Conditions générales</Link>
       </VStack>
       <VStack align="start">
