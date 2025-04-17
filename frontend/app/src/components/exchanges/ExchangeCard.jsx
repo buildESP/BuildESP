@@ -1,7 +1,22 @@
-import { Box, Text, Badge, VStack } from "@chakra-ui/react";
+import {
+    Box,
+    Text,
+    Badge,
+    VStack,
+    Button,
+    HStack,
+    Tooltip,
+} from "@chakra-ui/react";
+import { useNavigate } from "react-router-dom";
+import { ChatIcon } from "@chakra-ui/icons";
 
 const ExchangeCard = ({ exchange }) => {
-    const { item, status, start_date, end_date } = exchange;
+    const { item, status, start_date, end_date, id: exchangeId } = exchange;
+    const navigate = useNavigate();
+
+    const handleChatClick = () => {
+        navigate(`/chat/${exchangeId}`);
+    };
 
     return (
         <Box
@@ -11,18 +26,46 @@ const ExchangeCard = ({ exchange }) => {
             shadow="md"
             bg="white"
             width="100%"
+            _hover={{ bg: "gray.50", transition: "0.2s" }}
         >
             {item ? (
                 <>
                     <Text fontSize="lg" fontWeight="bold" mb={2}>
                         {item.name}
                     </Text>
-                    <Badge colorPalette={status === "Accepted" ? "green" : status === "Pending" ? "yellow" : "red"}>
-                        {status}
-                    </Badge>
-                    <VStack align="start" spacing={1} mt={3}>
+
+                    <HStack justify="space-between" mb={2}>
+                        <Badge
+                            colorPalette={
+                                status === "Approved"
+                                    ? "green"
+                                    : status === "Pending"
+                                        ? "yellow"
+                                        : "red"
+                            }
+                        >
+                            {status}
+                        </Badge>
+
+                        {status === "Approved" && (
+                            <Tooltip label="Ouvrir le chat" hasArrow>
+                                <Button
+                                    size="sm"
+                                    colorPalette="blue"
+                                    variant="outline"
+                                    leftIcon={<ChatIcon />}
+                                    onClick={handleChatClick}
+                                >
+                                    Discuter
+                                </Button>
+                            </Tooltip>
+                        )}
+                    </HStack>
+
+                    <VStack align="start" spacing={1} mt={1}>
                         <Text fontSize="sm" color="gray.600">
-                            Du {new Date(start_date).toLocaleDateString()} au {new Date(end_date).toLocaleDateString()}
+                            Du {new Date(start_date).toLocaleDateString()} au{" "}
+                            {new Date(end_date).toLocaleDateString()}
                         </Text>
                     </VStack>
                 </>

@@ -20,6 +20,7 @@ import MyNeighborsItemsPages from "../pages/items/MyNeighborsItemsPage";
 import AdminPage from "@/pages/AdminPage";
 import ConditionOfUs from "@/pages/ConditionOfUs";
 import ExchangesPage from "../pages/ExchangesPage";
+import ChatPage from "../pages/ChatPage"; // ✅ AJOUT ICI
 
 /**
  * @component AppRoutes
@@ -48,13 +49,13 @@ const AppRoutes = () => {
             <Route path="my-neighbors" element={<MyNeighborsPage />} />
             <Route path="my-neighbors/:id" element={<MyNeighborsItemsPages />} />
 
-          {/* 🚪 Routes accessibles uniquement aux utilisateurs non connectés */}
-          <Route element={<PublicRoutes />}>
-            <Route path="login" element={<LoginPage />} />
-            <Route path="register" element={<RegisterPage />} />
-            <Route path="forgot-password" element={<ForgotPasswordPage />} />
-            <Route path="reset-password/:token" element={<ResetPasswordPage />} />
-          </Route>
+            {/* 🚪 Routes accessibles uniquement aux utilisateurs non connectés */}
+            <Route element={<PublicRoutes />}>
+              <Route path="login" element={<LoginPage />} />
+              <Route path="register" element={<RegisterPage />} />
+              <Route path="forgot-password" element={<ForgotPasswordPage />} />
+              <Route path="reset-password/:token" element={<ResetPasswordPage />} />
+            </Route>
 
             {/* 🔒 Routes protégées nécessitant une authentification */}
             <Route element={<PrivateRoute />}>
@@ -63,7 +64,11 @@ const AppRoutes = () => {
               <Route path="items/:id" element={<ItemDetailsPage />} />
               <Route path="add-item" element={<AddItemPage />} />
               <Route path="exchanges" element={<ExchangesPage />} />
+              <Route path="chat/:exchangeId" element={<ChatPage />} />
             </Route>
+
+            {/* 📄 Détail d’un objet (utilisé pour les clics sur ExchangeCard) */}
+            <Route path="items/:id" element={<ItemDetailsPage />} />
 
             {/* 🔐 Route admin */}
             <Route element={<AdminRoute />}>
