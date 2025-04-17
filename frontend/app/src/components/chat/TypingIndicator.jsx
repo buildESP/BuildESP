@@ -1,9 +1,6 @@
-import { Text, HStack, Box, keyframes } from "@chakra-ui/react";
+import { Text, HStack, Box } from "@chakra-ui/react";
 
-const bounce = keyframes`
-  0%, 80%, 100% { transform: scale(0) }
-  40% { transform: scale(1.0) }
-`;
+
 
 const TypingIndicator = ({ isTyping }) => {
     if (!isTyping) return null;
@@ -21,7 +18,6 @@ const TypingIndicator = ({ isTyping }) => {
                         h="6px"
                         bg="gray.400"
                         borderRadius="full"
-                        animation={`${bounce} 1.4s infinite ease-in-out ${i * 0.2}s`}
                     />
                 ))}
             </HStack>
