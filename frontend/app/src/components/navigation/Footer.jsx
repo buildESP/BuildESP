@@ -4,9 +4,9 @@ const Footer = () => (
   <Box as="footer"  bg="yellow.950" color="yellow.100" py={10}>
     <Grid templateColumns={{ base: '1fr', md: 'repeat(3, 1fr)' }} placeItems="center" gap={6}>
       <VStack align="start">
-        <Heading size="md" mb={2}> A propos de nous</Heading>
-        <Link color={"whiteAlpha.700"} href="#">Confidentialité</Link>
-        <Link color={"whiteAlpha.700"} href="#">FAQ</Link>
+        <Heading size="md" mb={2}>Nous suivre</Heading>
+        <Link color={"whiteAlpha.700"} href="#">TikTok</Link>
+        <Link color={"whiteAlpha.700"} href="#">Instagram</Link>
       </VStack>
       <VStack align="start">
         <Heading size="md" mb={2}>Informations Légales</Heading>
@@ -14,8 +14,9 @@ const Footer = () => (
         <Link color={"whiteAlpha.700"} href="/condition-of-us">Conditions générales</Link>
       </VStack>
       <VStack align="start">
-        <Heading size="md" mb={2}>Des Questions</Heading>
-        <Link color={"whiteAlpha.700"} href="#">Contactez-nous</Link>
+        <Heading size="md" mb={2}>Des Questions ?</Heading>
+        <Link color={"whiteAlpha.700"} href="mailto:neighborrow@hephel.fr">Contactez-nous</Link>
+        <Link color={"whiteAlpha.700"} href="#">FAQ</Link>
       </VStack>
     </Grid>
   </Box>

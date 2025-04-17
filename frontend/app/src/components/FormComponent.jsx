@@ -213,7 +213,7 @@ const handleFormSubmit = async (data) => {
                   )}
                 </>
           ) : type === "password" ? (
-            <PasswordInput  bg="green.contrast" visible={false} {...register(name)} placeholder={label} />
+            <PasswordInput  bg="green.contrast" {...register(name)} placeholder={label} />
           ) : (
             <Input bg="green.contrast" {...register(name)} type={type} placeholder={label} />
           )}
