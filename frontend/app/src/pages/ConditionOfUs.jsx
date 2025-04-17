@@ -17,8 +17,8 @@ export default function CGU() {
           <Heading as="h2" size="lg">PRÉAMBULE</Heading>
           <Text>
             Les présentes conditions générales d’utilisation (dites « CGU ») ont pour objet de régir les modalités d’accès et d’utilisation du site internet{" "}
-            <Link color="blue.500" href="http://neighborrow.fr/" isExternal>
-              http://neighborrow.fr/
+            <Link color="blue.500" href="http://neighborrow.hephel.fr" isExternal>
+              http://neighborrow.hephel.fr
             </Link>{" "}
             et de l’application mobile éditée par la société Neighborrow. Elles encadrent juridiquement la mise à disposition des services de prêt d’objets entre voisins et définissent les droits et obligations des utilisateurs.
           </Text>
@@ -216,8 +216,8 @@ export default function CGU() {
           <Heading as="h2" size="lg">ARTICLE 1 : PRÉAMBULE</Heading>
           <Text>
             La présente politique de confidentialité a pour but d’informer les utilisateurs du site{" "}
-            <Link color="blue.500" href="http://neighborrow.fr/" isExternal>
-              http://neighborrow.fr/
+            <Link color="blue.500" href="http://neighborrow.hephel.fr" isExternal>
+              http://neighborrow.hephel.fr
             </Link>
             :
           </Text>
@@ -230,8 +230,8 @@ export default function CGU() {
           <Text>Sur la politique du site en matière de cookies.</Text>
           <Text>
             Cette politique complète les mentions légales et les Conditions Générales d’Utilisation consultables à l’adresse suivante :{" "}
-            <Link color="blue.500" href="http://neighborrow.fr/cgu" isExternal>
-              http://neighborrow.fr/cgu
+            <Link color="blue.500" href="http://neighborrow.hephel.frcgu" isExternal>
+              http://neighborrow.hephel.frcgu
             </Link>
           </Text>
         </Box>
@@ -305,8 +305,8 @@ export default function CGU() {
           <Heading as="h2" size="lg">Article 3.3 : Hébergement des données</Heading>
           <Text>
             Le site{" "}
-            <Link color="blue.500" href="http://neighborrow.fr/" isExternal>
-              http://neighborrow.fr/
+            <Link color="blue.500" href="http://neighborrow.hephel.fr" isExternal>
+              http://neighborrow.hephel.fr
             </Link>{" "}
             est hébergé par :
           </Text>
