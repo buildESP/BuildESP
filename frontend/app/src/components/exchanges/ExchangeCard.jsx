@@ -7,12 +7,13 @@ import {
     HStack,
 } from "@chakra-ui/react";
 import { IoChatboxEllipses } from "react-icons/io5";
-import { Link as RouterLink } from "react-router-dom";
+import { Link as RouterLink, useNavigate } from "react-router-dom";
 import { Tooltip } from "../ui/tooltip";
 const ExchangeCard = ({ exchange }) => {
-    const { item, status, start_date, end_date, id: exchangeId } = exchange;
+    const { item, status, start_date, end_date } = exchange;
 
-
+    const navigate = useNavigate()
+console.log(exchange)
     return (
         <Box
             borderWidth="1px"
@@ -48,11 +49,10 @@ const ExchangeCard = ({ exchange }) => {
                                     size="sm"
                                     colorPalette="blue"
                                     variant="outline"
-                                    leftIcon={<IoChatboxEllipses />}
-                                    as={RouterLink}
-                                    to={`/chat/${exchangeId}`}
+                                    onClick={() => navigate(`/chat/${exchange.id}`, { state: { exchange } })}
+
                                 >
-                                    Discuter
+                                   <IoChatboxEllipses />   Discuter
                                 </Button>
                             </Tooltip>
                         )}

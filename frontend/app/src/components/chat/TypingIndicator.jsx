@@ -2,13 +2,13 @@ import { Text, HStack, Box,  } from "@chakra-ui/react";
 
 
 
-const TypingIndicator = ({ isTyping }) => {
+const TypingIndicator = ({ isTyping , name}) => {
     if (!isTyping) return null;
 
     return (
         <HStack mb={3} spacing={1} align="center">
             <Text fontSize="sm" color="gray.500">
-                ✍️ L'utilisateur écrit
+                ✍️ {name} écrit
             </Text>
             <HStack spacing={1}>
                 {[...Array(3)].map((_, i) => (

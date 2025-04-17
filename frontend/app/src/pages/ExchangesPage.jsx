@@ -1,12 +1,10 @@
 import { Box, Heading, SimpleGrid, Text, Spinner, Button, VStack } from "@chakra-ui/react";
-import { useNavigate } from "react-router-dom";
 import useFetchData from "../hooks/useFetchData";
 import useAuth from "../hooks/useAuth";
 import ExchangeCard from "../components/exchanges/ExchangeCard";
 
 const ExchangesPage = () => {
     const { user } = useAuth();
-    const navigate = useNavigate();
     const { data: exchanges, loading, error, refetch } = useFetchData("/exchanges", { requiresAuth: true });
 
     if (loading) return <Spinner />;
@@ -33,18 +31,9 @@ const ExchangesPage = () => {
                 {myBorrowings.length === 0 ? (
                     <Text color="gray.500">Vous n'avez pas encore emprunté d'objets.</Text>
                 ) : (
-                    <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={4}>
+                    <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} gap={4} spacing={4}>
                         {myBorrowings.map((exchange) => (
-                            <VStack key={exchange.id} align="stretch">
                                 <ExchangeCard exchange={exchange} onRefetch={refetch} />
-                                <Button
-                                    colorPalette="blue"
-                                    size="sm"
-                                    onClick={() => navigate(`/chat/${exchange.id}`, { state: { exchange } })}
-                                >
-                                    💬 Ouvrir le chat
-                                </Button>
-                            </VStack>
                         ))}
                     </SimpleGrid>
                 )}
@@ -57,18 +46,10 @@ const ExchangesPage = () => {
                 {myLendings.length === 0 ? (
                     <Text color="gray.500">Vous n'avez pas encore prêté d'objets.</Text>
                 ) : (
-                    <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={4}>
+                    <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} gap={4} spacing={4}>
                         {myLendings.map((exchange) => (
-                            <VStack key={exchange.id} align="stretch">
                                 <ExchangeCard exchange={exchange} onRefetch={refetch} />
-                                <Button
-                                    colorPalette="blue"
-                                    size="sm"
-                                    onClick={() => navigate(`/chat/${exchange.id}`)}
-                                >
-                                    💬 Ouvrir le chat
-                                </Button>
-                            </VStack>
+                                
                         ))}
                     </SimpleGrid>
                 )}
