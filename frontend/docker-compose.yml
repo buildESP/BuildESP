@@ -102,22 +102,21 @@ services:
     networks:
       - buildesp_network
 
-    uptime-kuma:
-      image: louislam/uptime-kuma:1
-      restart: always
-      ports:
-        - 3001:3001
-      volumes:
-        - ./uptime-kuma-data:/app/data
-        - ./monitoring/kuma/init-kuma.sh:/app/init-kuma.sh
-
-      container_name: uptime-kuma
-      networks:
-        - buildesp_network
-      entrypoint: ["/bin/sh", "-c", "/app/docker-entrypoint.sh & sleep 10 && /app/init-kuma.sh && wait"]
-      depends_on:
-        - loki
-        - promtail
+  uptime-kuma:
+    image: louislam/uptime-kuma:1
+    restart: always
+    ports:
+      - 3001:3001
+    volumes:
+      - ./uptime-kuma-data:/app/data
+      - ./monitoring/kuma/init-kuma.sh:/app/init-kuma.sh
+    container_name: uptime-kuma
+    networks:
+     - buildesp_network
+    entrypoint: ["/bin/sh", "-c", "/app/docker-entrypoint.sh & sleep 10 && /app/init-kuma.sh && wait"]
+    depends_on:
+      - loki
+      - promtail
 
 volumes:
   grafana-data:
