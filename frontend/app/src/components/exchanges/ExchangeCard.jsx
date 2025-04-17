@@ -8,8 +8,7 @@ import {
     Tooltip,
 } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
-import { ChatIcon } from "@chakra-ui/icons";
-
+import { IoChatboxEllipses } from "react-icons/io5";
 const ExchangeCard = ({ exchange }) => {
     const { item, status, start_date, end_date, id: exchangeId } = exchange;
     const navigate = useNavigate();
@@ -53,7 +52,7 @@ const ExchangeCard = ({ exchange }) => {
                                     size="sm"
                                     colorPalette="blue"
                                     variant="outline"
-                                    leftIcon={<ChatIcon />}
+                                    leftIcon={<IoChatboxEllipses />}
                                     onClick={handleChatClick}
                                 >
                                     Discuter
