@@ -108,7 +108,7 @@ services:
     ports:
       - 3001:3001
     volumes:
-      - ./uptime-kuma-data:/app/data
+      - ./monitoring/kuma/data:/app/data
       - ./monitoring/kuma/init-kuma.sh:/app/init-kuma.sh
     container_name: uptime-kuma
     networks:
