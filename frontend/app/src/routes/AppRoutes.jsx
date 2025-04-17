@@ -20,6 +20,7 @@ import MyNeighborsItemsPages from "../pages/items/MyNeighborsItemsPage";
 import AdminPage from "@/pages/AdminPage";
 import ConditionOfUs from "@/pages/ConditionOfUs";
 import MentionLegales from "@/pages/MentionLegales";
+import ExchangesPage from "@/pages/ExchangesPage";
 
 /**
  * @component AppRoutes
