@@ -5,10 +5,10 @@ import {
     VStack,
     Button,
     HStack,
-    Tooltip,
 } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import { IoChatboxEllipses } from "react-icons/io5";
+import { Tooltip } from "../ui/tooltip";
 const ExchangeCard = ({ exchange }) => {
     const { item, status, start_date, end_date, id: exchangeId } = exchange;
     const navigate = useNavigate();

@@ -1,4 +1,4 @@
-import { Text, HStack, Box } from "@chakra-ui/react";
+import { Text, HStack, Box,  } from "@chakra-ui/react";
 
 
 
@@ -18,6 +18,7 @@ const TypingIndicator = ({ isTyping }) => {
                         h="6px"
                         bg="gray.400"
                         borderRadius="full"
+                        animation={` 1.4s infinite ease-in-out ${i * 0.2}s`}
                     />
                 ))}
             </HStack>

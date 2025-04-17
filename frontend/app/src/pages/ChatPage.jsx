@@ -4,6 +4,7 @@ import { io } from "socket.io-client";
 import useAuth from "../hooks/useAuth";
 import useFetchData from "../hooks/useFetchData";
 import ChatWindow from "../components/chat/ChatWindow";
+import {SOCKET_BASE_URL} from "@/config"
 
 const ChatPage = () => {
     const { exchangeId } = useParams();
@@ -15,18 +16,19 @@ const ChatPage = () => {
     const [message, setMessage] = useState("");
     const [isTyping, setIsTyping] = useState(false);
 
-    const { data: history, loading, error } = useFetchData(`/chats/${exchangeId}/history`, {
+    const { data: history, loading,  } = useFetchData(`/chats/${exchangeId}/history`, {
         requiresAuth: true,
     });
 
     // Load historique à l'ouverture
     useEffect(() => {
-        if (history) setChat(history);
+        if (history?.messages) setChat(history.messages);
     }, [history]);
+    
 
     // Connexion socket
     useEffect(() => {
-        const socket = io("http://localhost:3000", {
+        const socket = io(SOCKET_BASE_URL, {
             auth: { token },
             query: { exchangeId },
         });
