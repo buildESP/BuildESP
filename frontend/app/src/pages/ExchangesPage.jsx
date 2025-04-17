@@ -40,7 +40,7 @@ const ExchangesPage = () => {
                                 <Button
                                     colorPalette="blue"
                                     size="sm"
-                                    onClick={() => navigate(`/chat/${exchange.id}`)}
+                                    onClick={() => navigate(`/chat/${exchange.id}`, { state: { exchange } })}
                                 >
                                     💬 Ouvrir le chat
                                 </Button>

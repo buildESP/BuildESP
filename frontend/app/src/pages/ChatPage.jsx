@@ -5,6 +5,7 @@ import useAuth from "../hooks/useAuth";
 import useFetchData from "../hooks/useFetchData";
 import ChatWindow from "../components/chat/ChatWindow";
 import {SOCKET_BASE_URL} from "@/config"
+import { useLocation } from "react-router-dom";
 
 const ChatPage = () => {
     const { exchangeId } = useParams();
@@ -15,6 +16,9 @@ const ChatPage = () => {
     const [chat, setChat] = useState([]);
     const [message, setMessage] = useState("");
     const [isTyping, setIsTyping] = useState(false);
+
+    const location = useLocation();
+    const { exchange } = location.state || {};
 
     const { data: history, loading,  } = useFetchData(`/chats/${exchangeId}/history`, {
         requiresAuth: true,
@@ -75,6 +79,7 @@ const ChatPage = () => {
             isTyping={isTyping}
             userId={user?.id}
             isLoading={loading}
+            exchange={exchange}
         />
     );
 };
