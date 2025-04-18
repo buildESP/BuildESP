@@ -109,7 +109,7 @@ const ChatWindow = ({
                         </VStack>
                     )}
                 </Card.Body>
-                <TypingIndicator isTyping={isTyping} />
+                <TypingIndicator isTyping={isTyping} name={`${borrower?.firstname} ${borrower?.lastname}`} />
 
                 {/* Footer (Input) */}
                 <Card.Footer borderTopWidth="1px" bg="teal.50">
