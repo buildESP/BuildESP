@@ -72,10 +72,10 @@ app.use('/api', chatRoutes);
 const server = createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: allowedOrigins, // ✅ ici on utilise la liste, pas une fonction
+    origin: allowedOrigins,
     methods: ["GET", "POST"],
-    credentials: true,
-  },
+    credentials: true
+  }
 });
 
 // ✅ Middleware d'authentification Socket.io
@@ -103,4 +103,8 @@ server.listen(port, () => {
   console.log(chalk.green.bold(`🚀 API running on http://localhost:${port}`));
   console.log(chalk.blue(`📚 Swagger docs at: http://localhost:${port}/doc`));
   console.log(chalk.yellow(`🌐 Environment: ${process.env.NODE_ENV || 'development'}`));
+  console.log(`Server is running on port ${port}`);
+});
+server.listen(port, '0.0.0.0', () => {
+  console.log(`Server is running on port ${port}`);
 });

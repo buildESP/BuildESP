@@ -35,6 +35,8 @@ const ChatPage = () => {
         const socket = io(SOCKET_BASE_URL, {
             auth: { token },
             query: { exchangeId },
+            withCredentials: true,
+            transports: ["websocket", "polling"]
         });
 
         socketRef.current = socket;
