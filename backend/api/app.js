@@ -67,18 +67,12 @@ app.use('/api', chatRoutes);
 const server = createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: (origin, callback) => {
-      if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        console.warn(`CORS blocked origin: ${origin}`);
-        callback(new Error('Not allowed by CORS (Socket.io)'));
-      }
-    },
+    origin: allowedOrigins,
     methods: ["GET", "POST"],
-    credentials: true,
-  },
+    credentials: true
+  }
 });
+
 
 // Socket auth middleware
 io.use((socket, next) => {
