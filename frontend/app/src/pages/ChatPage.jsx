@@ -4,7 +4,7 @@ import { io } from "socket.io-client";
 import useAuth from "../hooks/useAuth";
 import useFetchData from "../hooks/useFetchData";
 import ChatWindow from "../components/chat/ChatWindow";
-import {SOCKET_BASE_URL} from "@/config"
+import { SOCKET_BASE_URL } from "@/config";
 import { useLocation } from "react-router-dom";
 
 const ChatPage = () => {
@@ -20,7 +20,7 @@ const ChatPage = () => {
     const location = useLocation();
     const { exchange } = location.state || {};
 
-    const { data: history, loading,  } = useFetchData(`/chats/${exchangeId}/history`, {
+    const { data: history, loading } = useFetchData(`/chats/${exchangeId}/history`, {
         requiresAuth: true,
     });
 
@@ -28,11 +28,11 @@ const ChatPage = () => {
     useEffect(() => {
         if (history?.messages) setChat(history.messages);
     }, [history]);
-    
 
     // Connexion socket
     useEffect(() => {
         const socket = io(SOCKET_BASE_URL, {
+            path: '/socket.io', // Ajoutez cette ligne
             auth: { token },
             query: { exchangeId },
             withCredentials: true,
