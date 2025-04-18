@@ -3,7 +3,7 @@ import { Box, Skeleton, Text, SimpleGrid, Image, Badge, LinkBox, LinkOverlay } f
 import { Link } from "react-router-dom";
 import NeighborGallery from "../components/users/NeighborsGallery"
 
-const ItemsPage = () => {
+const MyNeighborsPage = () => {
     const { data: users, loading, error } = useFetchData("/users", { requiresAuth: true });
 
     if (loading) return <Skeleton height="200px" />;
@@ -20,4 +20,4 @@ const ItemsPage = () => {
     );
 };
 
-export default ItemsPage;
+export default MyNeighborsPage;

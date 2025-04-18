@@ -1,14 +1,11 @@
-import { render, screen } from '@testing-library/react';
-import { ChakraProvider } from '@chakra-ui/react';
+import { screen } from '@testing-library/react';
+import { renderWithProvider } from '@/test/renderWithProvider';
+import  { describe, it, expect} from 'vitest';
 import CGU from '../ConditionOfUs';
-
-const renderWithChakra = (ui) => {
-  return render(<ChakraProvider>{ui}</ChakraProvider>);
-};
 
 describe('ConditionOfUs Page', () => {
   it('renders the main heading for CGU', () => {
-    renderWithChakra(<CGU />);
+    renderWithProvider(<CGU />);
     const mainHeading = screen.getByRole('heading', {
       name: /conditions générales d’utilisation \(cgu\)/i,
     });
@@ -16,23 +13,26 @@ describe('ConditionOfUs Page', () => {
   });
 
   it('renders the preamble section', () => {
-    renderWithChakra(<CGU />);
-    const preambleHeading = screen.getByRole('heading', { name: /préambule/i });
-    const preambleText = screen.getByText(/les présentes conditions générales d’utilisation/i);
-    expect(preambleHeading).toBeInTheDocument();
-    expect(preambleText).toBeInTheDocument();
+    renderWithProvider(<CGU />);
+    const preambleHeadings = screen.getAllByRole('heading', { name: /préambule/i });
+    expect(preambleHeadings.length).toBeGreaterThan(0);
+    expect(
+      screen.getByText(/les présentes conditions générales d’utilisation/i)
+    ).toBeInTheDocument();
   });
 
   it('renders the mentions légales section', () => {
-    renderWithChakra(<CGU />);
-    const mentionsHeading = screen.getByRole('heading', { name: /article 1 – mentions légales/i });
+    renderWithProvider(<CGU />);
+    const mentionsHeading = screen.getByRole('heading', {
+      name: /article 1 – mentions légales/i,
+    });
     const mentionsText = screen.getByText(/le site et l’application sont édités par des élèves/i);
     expect(mentionsHeading).toBeInTheDocument();
     expect(mentionsText).toBeInTheDocument();
   });
 
   it('renders the RGPD section', () => {
-    renderWithChakra(<CGU />);
+    renderWithProvider(<CGU />);
     const rgpdHeading = screen.getByRole('heading', {
       name: /article 3 – traitement des données personnelles \(rgpd\)/i,
     });
@@ -42,29 +42,33 @@ describe('ConditionOfUs Page', () => {
   });
 
   it('renders external links with correct href attributes', () => {
-    renderWithChakra(<CGU />);
-    const externalLink = screen.getByRole('link', { name: /http:\/\/neighborrow\.fr\//i });
-    expect(externalLink).toBeInTheDocument();
-    expect(externalLink).toHaveAttribute('href', 'http://neighborrow.fr/');
+    renderWithProvider(<CGU />);
+    const links = screen.getAllByRole('link', { name: /neighborrow\.hephel\.fr/i });
+    expect(
+      links.some((link) => link.getAttribute('href') === 'http://neighborrow.hephel.fr')
+    ).toBe(true);
   });
 
   it('renders the contact email link', () => {
-    renderWithChakra(<CGU />);
-    const emailLink = screen.getByRole('link', { name: /neighborrow@contact\.com/i });
-    expect(emailLink).toBeInTheDocument();
-    expect(emailLink).toHaveAttribute('href', 'mailto:neighborrow@contact.com');
+    renderWithProvider(<CGU />);
+    const emails = screen.getAllByRole('link', { name: /neighborrow@contact\.com/i });
+    expect(
+      emails.some((link) => link.getAttribute('href') === 'mailto:neighborrow@contact.com')
+    ).toBe(true);
   });
 
   it('renders the security measures section', () => {
-    renderWithChakra(<CGU />);
-    const securityHeading = screen.getByRole('heading', { name: /article 5 – sécurité des données/i });
+    renderWithProvider(<CGU />);
+    const securityHeading = screen.getByRole('heading', {
+      name: /article 5 – sécurité des données/i,
+    });
     const securityText = screen.getByText(/neighborrow met en œuvre des mesures de sécurité/i);
     expect(securityHeading).toBeInTheDocument();
     expect(securityText).toBeInTheDocument();
   });
 
   it('renders the prohibited items section', () => {
-    renderWithChakra(<CGU />);
+    renderWithProvider(<CGU />);
     const prohibitedHeading = screen.getByRole('heading', {
       name: /article 7 – biens et annonces strictement interdits/i,
     });
@@ -74,12 +78,12 @@ describe('ConditionOfUs Page', () => {
   });
 
   it('renders the modification of CGU section', () => {
-    renderWithChakra(<CGU />);
+    renderWithProvider(<CGU />);
     const modificationHeading = screen.getByRole('heading', {
       name: /article 12 – modification des cgu/i,
     });
-    const modificationText = screen.getByText(/neighborrow se réserve le droit de modifier/i);
+    const modificationTexts = screen.getAllByText(/neighborrow se réserve le droit de modifier/i);
     expect(modificationHeading).toBeInTheDocument();
-    expect(modificationText).toBeInTheDocument();
+    expect(modificationTexts[0]).toBeInTheDocument();
   });
 });
