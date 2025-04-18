@@ -30,7 +30,6 @@ const { initSockets } = require('./sockets/chatSocket');
 const allowedOrigins = [
   'http://15.237.77.97',
   'http://neighborrow.hephel.fr',
-  'https://neighborrow.hephel.fr',
   'http://localhost:3000',
   'http://localhost:5173',
 ];
