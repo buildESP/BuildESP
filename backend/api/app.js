@@ -9,11 +9,11 @@ const chalk = require('chalk');
 const jwt = require('jsonwebtoken');
 const { createServer } = require('http');
 const { Server } = require('socket.io');
- 
+
 const JWT_SECRET = process.env.JWT_SECRET;
 const app = express();
 const port = process.env.PORT || 3000;
- 
+
 // Import routes
 const authRoutes = require('./routes/authRoutes');
 const userRoutes = require('./routes/userRoutes');
@@ -25,7 +25,7 @@ const imageRoutes = require('./routes/imageRoutes');
 const groupRoutes = require('./routes/groupRoutes');
 const chatRoutes = require('./routes/chatRoutes');
 const { initSockets } = require('./sockets/chatSocket');
- 
+
 // ✅ Liste des domaines autorisés
 const allowedOrigins = [
   'http://15.237.77.97',
@@ -34,13 +34,15 @@ const allowedOrigins = [
   'http://localhost:3000',
   'http://localhost:5173',
 ];
- 
+
 // ✅ CORS pour Express
 app.use(cors({
   origin: (origin, callback) => {
     if (!origin || allowedOrigins.includes(origin)) {
+      console.log(`CORS: Allowing origin ${origin}`);
       callback(null, true);
     } else {
+      console.log(`CORS: Blocking origin ${origin}`);
       callback(new Error('Not allowed by CORS'));
     }
   },
@@ -48,13 +50,13 @@ app.use(cors({
   methods: 'GET,POST,PUT,DELETE,OPTIONS',
   allowedHeaders: 'Content-Type,Authorization',
 }));
- 
+
 app.use(bodyParser.json());
- 
+
 // Swagger documentation
 const swaggerSpec = swaggerJsdoc(swaggerOptions);
 app.use('/doc', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
- 
+
 // API routes
 app.use('/api', userRoutes);
 app.use('/api', authRoutes);
@@ -65,7 +67,7 @@ app.use('/api', exchangeRoutes);
 app.use('/api', groupRoutes);
 app.use('/api/', imageRoutes);
 app.use('/api', chatRoutes);
- 
+
 // ✅ Serveur HTTP + Socket.io
 const server = createServer(app);
 const io = new Server(server, {
@@ -75,7 +77,7 @@ const io = new Server(server, {
     credentials: true,
   },
 });
- 
+
 // ✅ Middleware d'authentification Socket.io
 io.use((socket, next) => {
   const token = socket.handshake.auth.token;
@@ -92,10 +94,10 @@ io.use((socket, next) => {
     next(new Error('Authentication error'));
   }
 });
- 
+
 // Init des sockets
 initSockets(io);
- 
+
 // Lancement du serveur
 server.listen(port, () => {
   console.log(chalk.green.bold(`🚀 API running on http://localhost:${port}`));
