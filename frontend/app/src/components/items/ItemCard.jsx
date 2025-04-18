@@ -1,4 +1,3 @@
-
 import { Box, Text, Image, Badge, Button, VStack, HStack } from "@chakra-ui/react";
 import { Link, useNavigate } from "react-router-dom";
 import useAuth from "../../hooks/useAuth";
@@ -22,10 +21,23 @@ const ItemCard = ({ item }) => {
   };
 
   const isOwner = user && item.user_id === user.id;
+  const displayStatus = item.status === "Available" ? "Disponible" : "Indisponible";
+  const statusColor = item.status === "Available" ? "green" : "orange";
 
   return (
-    <Box p={4} bg="green.50" borderRadius="md" _hover={{ transform: "scale(1.03)", transition: "0.2s ease-in-out" }}>
-      {/* ✅ Wrap only the image and title in a Link */}
+    <Box
+      p={4}
+      borderRadius="xl"
+      bg="rgba(220, 252, 231, 0.3)"
+      backdropFilter="blur(10px)"
+      boxShadow="0 8px 24px rgba(18, 74, 40, 0.1)"
+      border="1px solid #bbf7d0"
+      _hover={{
+        transform: "scale(1.03)",
+        transition: "0.3s ease-in-out",
+        boxShadow: "0 12px 36px rgba(18, 74, 40, 0.2)",
+      }}
+    >
       <Link to={`/items/${item.id}`}>
         <Image
           src={item.picture || "https://via.placeholder.com/150"}
@@ -38,32 +50,28 @@ const ItemCard = ({ item }) => {
       </Link>
 
       <VStack align="start" mt={2} spacing={2}>
-        <Text fontWeight="bold">{item.name}</Text>
-        <Text fontSize="sm" color="gray.600">
-          {item.description || "No description available."}
-        </Text>
-
+        {/* 🧾 Nom + statut */}
         <HStack justify="space-between" w="full">
-          <Badge colorPalette={item.status === "Available" ? "green" : "red"}>
-            {item.status}
-          </Badge>
-          {isOwner ? (
-            <HStack>
-              <Button size="xs" colorPalette="red" onClick={handleDelete} isLoading={loading}>
-                Supprimer
-              </Button>
-              <Button size="xs" colorPalette="orange">
-                Indisponible
-              </Button>
-            </HStack>
-          ) : (
-            <Link to={`/items/${item.id}`}>
-              <Button size="xs" colorPalette="blue">
-                Emprunter
-              </Button>
-            </Link>
-          )}
+          <Text fontWeight="bold">{item.name}</Text>
+          <Badge colorPalette={statusColor}>{displayStatus}</Badge>
         </HStack>
+        {/* 🛠️ Actions pour le propriétaire en dessous du titre */}
+        {isOwner && (
+          <HStack spacing={2}>
+            <Button
+              size="xs"
+              variant="surface"
+              colorPalette="red"
+              onClick={handleDelete}
+              isLoading={loading}
+            >
+              Supprimer
+            </Button>
+            {/* <Button size="xs" variant="surface" colorPalette="orange">
+              Indisponible
+            </Button> */}
+          </HStack>
+        )}
       </VStack>
     </Box>
   );

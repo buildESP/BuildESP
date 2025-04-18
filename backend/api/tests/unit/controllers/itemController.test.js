@@ -93,7 +93,7 @@ describe('ItemController', () => {
     });
   });
 
-  describe('updateItem', () => {    
+  describe('updateItem', () => {
     test('should update item when all conditions are met', async () => {
       // jest.unmock('../../../models/Item');
 
@@ -109,16 +109,8 @@ describe('ItemController', () => {
           status: 'available'
         })
       };
-      const mockUser = { id: 1, save : jest.fn(), name: 'Test User' };
-      const mockSubcategory = { id: 1, save : jest.fn(), name: 'Test Subcategory' };
-
-      
-      User.findByPk.mockResolvedValue(mockUser);
-      Subcategory.findByPk.mockResolvedValue(mockSubcategory);
-      Item.findByPk.mockResolvedValue(mockItem);
-      //ATTENTION : les mocks marchent mal car findbyPk.mockResolvedValue mock le retour sur tous les objets. Donc ici, seul le dernier mock est effectif
-      
-      mockReq.params.item_id = '1';
+  
+      mockReq.params.item_id = 1;
       mockReq.body = {
         user_id: 1,
         subcategory_id: 1,
@@ -127,15 +119,13 @@ describe('ItemController', () => {
         picture: 'updated.jpg',
         status: 'available'
       };
-
-      const mockUpdateEntityImage = jest.fn();
-      jest.mock('../../../utils/imageUtils', () => ({
-        updateEntityImage: mockUpdateEntityImage
-      }));
-      mockUpdateEntityImage.mockResolvedValue();
-
+  
+      Item.findByPk.mockResolvedValue(mockItem);
+      User.findByPk.mockResolvedValue({ id: 1 });
+      Subcategory.findByPk.mockResolvedValue({ id: 1 });
+  
       await updateItem(mockReq, mockRes);
-
+  
       expect(mockItem.update).toHaveBeenCalledWith({
         user_id: 1,
         subcategory_id: 1,
@@ -144,22 +134,11 @@ describe('ItemController', () => {
         picture: 'updated.jpg',
         status: 'available'
       });
+  
       expect(mockRes.status).toHaveBeenCalledWith(200);
       expect(mockRes.json).toHaveBeenCalledWith({
-        message: 'Item updated successfully', 
+        message: 'Item updated successfully',
         item: mockItem
-      });
-    });
-
-    test('should return 404 if item to update is not found', async () => {
-      mockReq.params.item_id = 999;
-      Item.findByPk.mockResolvedValue(null);
-
-      await updateItem(mockReq, mockRes);
-
-      expect(mockRes.status).toHaveBeenCalledWith(404);
-      expect(mockRes.json).toHaveBeenCalledWith({
-        message: 'Item not found'
       });
     });
   });

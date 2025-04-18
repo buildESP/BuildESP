@@ -10,7 +10,6 @@ import { API_BASE_URL } from "@/config";
  * @throws {Error} - En cas d'échec de connexion.
  */
 export const login = async (login, password) => {
-  console.log(API_BASE_URL)
   try {
     const response = await fetch(`${API_BASE_URL}/access-token`, {
       method: "POST",
@@ -61,4 +60,59 @@ export const getUserInfo = async (token, userId) => {
  */
 export const logout = () => {
   localStorage.removeItem("token");
+};
+
+/**
+ * Envoie une demande de réinitialisation de mot de passe.
+ * @async
+ * @function forgotPassword
+ * @param {string} email - L'adresse email de l'utilisateur.
+ * @returns {Promise<Object>} - Réponse du serveur.
+ * @throws {Error} - En cas d'erreur lors de la requête.
+ */
+export const forgotPassword = async (email) => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/forgot-password`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ login: email }),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || "Erreur lors de la demande de réinitialisation.");
+    }
+
+    return await response.json();
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
+
+/**
+ * Réinitialise le mot de passe avec un token.
+ * @async
+ * @function resetPassword
+ * @param {string} token - Le token reçu par email.
+ * @param {string} newPassword - Le nouveau mot de passe choisi par l'utilisateur.
+ * @returns {Promise<Object>} - Réponse du serveur.
+ * @throws {Error} - En cas d'échec de réinitialisation.
+ */
+export const resetPassword = async (token, newPassword) => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/reset-password`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ token, newPassword }),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || "Erreur lors de la réinitialisation.");
+    }
+
+    return await response.json();
+  } catch (error) {
+    throw new Error(error.message);
+  }
 };

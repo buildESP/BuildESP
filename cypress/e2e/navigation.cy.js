@@ -1,3 +1,7 @@
+/* global cy */
+/// <reference types="cypress" />
+// This test suite is for testing the navigation functionality of a web application using Cypress.
+
 describe('Test navigation', () => {
     it('should login successfully with valid credentials', () => {
       // Visit the login page

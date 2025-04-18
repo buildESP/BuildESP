@@ -1,10 +1,11 @@
 import { useParams } from "react-router-dom";
 import useFetchData from "../../hooks/useFetchData";
-import { Box, Spinner, Text, Button } from "@chakra-ui/react";
+import { Box, Spinner, Text, Button, Flex, useBreakpointValue } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import useAuth from "../../hooks/useAuth";
 import usePutData from "../../hooks/usePutData";
+import { HiChevronLeft } from "react-icons/hi"
 
 import ItemDetails from "../../components/items/ItemDetails";
 import ItemEditForm from "../../components/items/ItemEditForm";
@@ -15,6 +16,7 @@ const ItemDetailsPage = () => {
     const { user } = useAuth();
     const { putData, loading: updating } = usePutData(`/items/${id}`);
     const [isEditing, setIsEditing] = useState(false);
+    const isMobile = useBreakpointValue({ base: true, md: false });
   
     if (loading) return <Spinner />;
     if (error) return <Text color="red.500">{error}</Text>;
@@ -29,23 +31,40 @@ const ItemDetailsPage = () => {
             subcategory_id: updatedData.subcategory_id || item.subcategory_id 
 
           };
-      await putData(payload, item, "🎉 Item mis à jour!", "❌ Échec de la mise à jour.");
+      await putData(payload, item, " Item mis à jour!", " Échec de la mise à jour.");
       setIsEditing(false);
       refetch();
     };
   
+
     return (
-      <Box p={6} bg="gray.100" borderRadius="md">
-        <Button onClick={() => navigate(-1)} colorScheme="gray" mb={4}>
-          ⬅ Retour
+      <Box maxW="6xl" mx="auto" p={{ base: 4, md: 6 }}>
+      {/* ✅ Wrap fleche + content in the same flex */}
+      <Flex align="start" gap={6} direction={{ base: "column", md: "row" }}>
+        <Button
+          onClick={() => navigate(-1)}
+          colorPalette="yellow"
+          variant="surface"
+          minW="40px"
+          alignSelf="flex-start"
+          mt="1"
+        >
+          <HiChevronLeft />
         </Button>
-  
-        {isEditing ? (
-          <ItemEditForm item={item} onSubmit={handleSubmit} loading={updating} />
-        ) : (
-          <ItemDetails item={item} isOwner={isOwner} onEdit={() => setIsEditing(true)} />
-        )}
-      </Box>
+
+        <Box flex="1">
+          {isEditing ? (
+            <ItemEditForm item={item} onSubmit={handleSubmit} loading={updating} />
+          ) : (
+            <ItemDetails
+              item={item}
+              isOwner={isOwner}
+              onEdit={() => setIsEditing(true)}
+            />
+          )}
+        </Box>
+      </Flex>
+    </Box>
     );
   };
   

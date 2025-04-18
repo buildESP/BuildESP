@@ -1,3 +1,6 @@
+/* global cy */
+/// <reference types="cypress" />
+
 describe('Login Test', () => {
     it('should login successfully with valid credentials', () => {
       // Visit the login page

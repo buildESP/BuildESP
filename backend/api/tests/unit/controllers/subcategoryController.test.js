@@ -6,9 +6,10 @@ const {
   deleteSubcategory
 } = require('../../../controllers/subcategoryController');
 const { Category, Subcategory } = require('../../../models/associations');
-//const { updateEntityImage } = require('../../../utils/imageUtils');
+const { updateEntityImage } = require('../../../utils/imageUtils');  // Import pour la simulation
 
 jest.mock('../../../models/associations');
+jest.mock('../../../utils/imageUtils'); // Simulation de updateEntityImage
 
 describe('SubcategoryController', () => {
   let req, res;
@@ -27,6 +28,7 @@ describe('SubcategoryController', () => {
       expect(res.status).toHaveBeenCalledWith(201);
       expect(res.json).toHaveBeenCalledWith({ message: 'Subcategory created successfully', subcategory: newSub });
     });
+
     test('should return 404 if category does not exist', async () => {
       req.body = { category_id: 1, name: 'Sub1' };
       Category.findByPk.mockResolvedValue(null);
@@ -53,6 +55,7 @@ describe('SubcategoryController', () => {
       expect(res.status).toHaveBeenCalledWith(200);
       expect(res.json).toHaveBeenCalledWith({ id: 1 });
     });
+
     test('should return 404 when subcategory not found', async () => {
       req.params.subcategory_id = 1;
       Subcategory.findByPk.mockResolvedValue(null);
@@ -65,14 +68,29 @@ describe('SubcategoryController', () => {
   describe('updateSubcategory', () => {
     test('should update subcategory', async () => {
       req.params.subcategory_id = 1;
-      req.body = { name: 'Updated Name' };
-      const subcategory = { id: 1, update: jest.fn().mockResolvedValue({}), save : jest.fn() };
+      req.body = { name: 'Updated Name', image_url: 'new-image-url' };
+
+      const subcategory = {
+        id: 1,
+        update: jest.fn().mockResolvedValue({ id: 1, name: 'Updated Name', image_url: 'new-image-url' }),
+        image_url: 'old-image-url',
+      };
+
       Subcategory.findByPk.mockResolvedValue(subcategory);
+
+      // Simule le comportement de la fonction updateEntityImage
+      updateEntityImage.mockResolvedValue();
+
       await updateSubcategory(req, res);
+
+      expect(updateEntityImage).toHaveBeenCalledWith(subcategory, req.body.image_url);
+      expect(subcategory.update).toHaveBeenCalledWith({ name: 'Updated Name', image_url: 'new-image-url' });
       expect(res.status).toHaveBeenCalledWith(200);
-      expect(res.json).toHaveBeenCalledWith({ message: 'Subcategory updated successfully', subcategory });
+      expect(res.json).toHaveBeenCalledWith({
+        message: 'Subcategory updated successfully',
+        subcategory: { id: 1, name: 'Updated Name', image_url: 'new-image-url' },
+      });
     });
-    
     test('should return 404 if subcategory not found', async () => {
       req.params.subcategory_id = 1;
       Subcategory.findByPk.mockResolvedValue(null);
@@ -91,6 +109,7 @@ describe('SubcategoryController', () => {
       expect(res.status).toHaveBeenCalledWith(200);
       expect(res.json).toHaveBeenCalledWith({ message: 'Subcategory deleted successfully' });
     });
+
     test('should return 404 when subcategory not found', async () => {
       req.params.subcategory_id = 1;
       Subcategory.findByPk.mockResolvedValue(null);

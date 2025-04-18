@@ -77,7 +77,7 @@ exports.getExchangeById = async (req, res) => {
   }
 };
 
-// Update exchange + Met à jour automatiquement le statut de l'item
+
 exports.updateExchange = async (req, res) => {
   try {
     const exchangeId = req.params.exchange_id;
@@ -113,10 +113,11 @@ exports.updateExchange = async (req, res) => {
       status,
     });
 
-    // ⚡️ NOUVELLE FONCTIONNALITÉ :
-    // Change automatiquement le statut de l'item associé quand l'échange est accepté
-    if (status === "Accepted") {
-      await item.update({ status: "Rented" });
+    // 🛠️ Ici on change aussi le statut de l'item si accepté ou décliné
+    if (status === "Approved") {
+      await item.update({ status: "Unavailable" });
+    } else if (status === "Declined") {
+      await item.update({ status: "Available" });
     }
 
     res.status(200).json({ message: 'Exchange updated successfully', exchange });

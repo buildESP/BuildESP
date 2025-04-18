@@ -59,18 +59,6 @@ services:
     ports:
       - 9100:9100
 
-  alert-manager:
-    image: prom/alertmanager
-    volumes:
-      - "./monitoring/alertmanager.yml:/alertmanager/alertmanager.yml"
-    command:
-    - "--config.file=/alertmanager/alertmanager.yml"
-    - "--web.external-url=http://10.0.0.1:9093"
-    networks:
-    - buildesp_network
-    ports:
-    - 9093:9093
-
   grafana:
     image: grafana/grafana
     container_name: grafana
@@ -120,10 +108,11 @@ services:
     ports:
       - 3001:3001
     volumes:
-      - ./uptime-kuma-data:/app/data
+      - ./monitoring/kuma/data:/app/data
     container_name: uptime-kuma
     networks:
-      - buildesp_network
+     - buildesp_network
+    command: /bin/sh -c "node server/server.js"
     depends_on:
       - loki
       - promtail

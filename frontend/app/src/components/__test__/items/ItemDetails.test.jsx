@@ -37,7 +37,7 @@ vi.mock("react-router", async () => {
   }
 })
 
-// 🧪 Test item
+// 🧪 Test item avec structure complète
 const item = {
   id: 123,
   name: "Chaise",
@@ -45,6 +45,14 @@ const item = {
   status: "Available",
   picture: "https://via.placeholder.com/300",
   user_id: 123,
+  user: {
+    firstname: "Alice",
+    lastname: "Dupont",
+    email: "alice@example.com",
+    picture: "https://via.placeholder.com/50",
+    rating: 4.2,
+  },
+  exchanges: [],
 }
 
 const renderItem = (isOwner = true, onEdit = vi.fn(), customItem = item) => {
@@ -62,7 +70,7 @@ describe("ItemDetails", () => {
     renderItem()
     expect(screen.getByText("Chaise")).toBeInTheDocument()
     expect(screen.getByText(/Une chaise confortable/)).toBeInTheDocument()
-    expect(screen.getByText(/Statut: Available/)).toBeInTheDocument()
+    expect(screen.getByText(/Disponible/)).toBeInTheDocument()
   })
 
   it("affiche les boutons d'action si owner", () => {
@@ -79,7 +87,8 @@ describe("ItemDetails", () => {
   })
 
   it("affiche un message si l'utilisateur est le propriétaire", () => {
-    renderItem(false)
+    const ownItem = { ...item, user_id: 123 }
+    renderItem(false, vi.fn(), ownItem)
     expect(
       screen.getByText(/vous ne pouvez pas emprunter votre propre objet/i)
     ).toBeInTheDocument()
@@ -87,7 +96,6 @@ describe("ItemDetails", () => {
 
   it("supprime l'objet et redirige après confirmation", async () => {
     vi.spyOn(window, "confirm").mockReturnValueOnce(true)
-
     renderItem()
 
     fireEvent.click(screen.getByText(/supprimer/i))

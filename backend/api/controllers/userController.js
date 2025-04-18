@@ -1,7 +1,8 @@
 // controllers/userController.js
 
-const { User, Group, Exchange} = require('../models/associations');
+const { User, Group, Exchange } = require('../models/associations');
 const { updateEntityImage } = require('../utils/imageUtils');
+const { sendWelcomeEmail } = require('../services/emailService');
 
 // Create user
 exports.createUser = async (req, res) => {
@@ -46,7 +47,17 @@ exports.createUser = async (req, res) => {
       await newUser.addGroups(groupInstances);
     }
 
-    res.status(201).json({ message: 'User created successfully', user: newUser });
+    // ✅ Envoi de l'email de bienvenue
+    setImmediate(async () => {
+      try {
+        await sendWelcomeEmail(email, firstname);
+        console.log("Welcome email sent successfully");
+      } catch (emailError) {
+        console.warn("User created but failed to send welcome email:", emailError.message);
+      }
+    });
+
+    res.status(201).json({ message: 'User created successfully: welcome mail will be sent shortly', user: newUser });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Error during user creation' });
@@ -69,7 +80,6 @@ exports.getUsers = async (req, res) => {
 exports.getUserById = async (req, res) => {
   try {
     const userId = req.params.user_id;
-    console.log(userId);
     const user = await User.findByPk(userId, {
       include: [
         { model: Exchange, as: 'lender_exchanges' },
@@ -125,7 +135,7 @@ exports.updateUser = async (req, res) => {
       picture: picture || user.picture,
       is_admin: is_admin !== undefined ? is_admin : user.is_admin,
       ...(password ? { password } : {})
-  
+
     });
 
 
