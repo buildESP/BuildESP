@@ -22,6 +22,7 @@ import ConditionOfUs from "@/pages/ConditionOfUs";
 import ExchangesPage from "../pages/ExchangesPage";
 import ChatPage from "../pages/ChatPage";
 import MentionLegales from "@/pages/MentionLegales";
+import Faq from "@/pages/Faq";
 
 /**
  * @component AppRoutes
@@ -44,6 +45,7 @@ const AppRoutes = () => {
            {/* ⚖️Pages légales */}
           <Route path="condition-of-us" element={<ConditionOfUs />} />
           <Route path="Mention-legales" element={<MentionLegales />} />
+          <Route path="faq" element={<Faq />} />
            
 
 
