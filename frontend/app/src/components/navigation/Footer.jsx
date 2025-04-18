@@ -16,7 +16,7 @@ const Footer = () => (
       <VStack align="start">
         <Heading size="md" mb={2}>Des questions ?</Heading>
         <Link color={"whiteAlpha.700"} href="mailto:neighborrow@hephel.fr">Contactez-nous</Link>
-        <Link color={"whiteAlpha.700"} href="#">FAQ</Link>
+        <Link color={"whiteAlpha.700"} href="/faq">FAQ</Link>
       </VStack>
     </Grid>
   </Box>
