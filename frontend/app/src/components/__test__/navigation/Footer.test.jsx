@@ -7,16 +7,17 @@ describe('Footer', () => {
   it('render le footer avec les sections et liens', () => {
     renderWithProvider(<Footer />)
 
-    // ✅ Titres des sections
-    expect(screen.getByRole('heading', { name: /a propos de nous/i })).toBeInTheDocument()
-    expect(screen.getByRole('heading', { name: /informations légales/i })).toBeInTheDocument()
-    expect(screen.getByRole('heading', { name: /des questions/i })).toBeInTheDocument()
+    // ✅ Titres des sections EXACTS présents dans le composant
+    expect(screen.getByRole('heading', { name: /Nous suivre/i })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: /Informations légales/i })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: /Des questions \?/i })).toBeInTheDocument()
 
     // ✅ Liens importants
-    expect(screen.getByRole('link', { name: /confidentialité/i })).toBeInTheDocument()
-    expect(screen.getByRole('link', { name: /faq/i })).toBeInTheDocument()
-    expect(screen.getByRole('link', { name: /mentions légales/i })).toBeInTheDocument()
-    expect(screen.getByRole('link', { name: /conditions générales/i })).toBeInTheDocument()
-    expect(screen.getByRole('link', { name: /contactez-nous/i })).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: /TikTok/i })).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: /Instagram/i })).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: /Mentions légales/i })).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: /Conditions générales/i })).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: /Contactez-nous/i })).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: /FAQ/i })).toBeInTheDocument()
   })
 })

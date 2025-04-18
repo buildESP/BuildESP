@@ -16,7 +16,7 @@ const RegisterPage = () => {
     { name: "address", label: "Addresse" },
     { name: "postcode", label: "Code Postal" },
     { name: "phone", label: "Téléphone", type: "tel" },
-    { name: "picture", label: "Avatar" },
+    { name: "picture", label: "Avatar" , type: "file" },
   ];
 
   const handleSubmit = async (formData) => {

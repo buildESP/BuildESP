@@ -1,147 +1,75 @@
 import {
-  Box,
-  Text,
-  Badge,
-  Button,
-  VStack,
+    Box,
+    Text,
+    Badge,
+    VStack,
+    Button,
+    HStack,
 } from "@chakra-ui/react";
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
-import useDeleteData from "../../hooks/useDeleteData";
-import {
-  DialogRoot,
-  DialogTrigger,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogBody,
-  DialogFooter,
-  DialogActionTrigger,
-} from "../ui/dialog";
-import useAuth from "@/hooks/useAuth";
+import { IoChatboxEllipses } from "react-icons/io5";
+import { Link as RouterLink, useNavigate } from "react-router-dom";
+import { Tooltip } from "../ui/tooltip";
+const ExchangeCard = ({ exchange }) => {
+    const { item, status, start_date, end_date } = exchange;
 
-
-const ExchangeCard = ({ exchange, onRefetch }) => {
-  const navigate = useNavigate();
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const { deleteData, loading } = useDeleteData("/exchanges");
-  const { user } = useAuth();
-
-  const isBorrower = user?.id === exchange.borrow_user_id;
-  const otherUser = isBorrower ? exchange.lender_user : exchange.borrow_user;
-
-  const handleCardClick = () => {
-    navigate(`/items/${exchange.item.id}`);
-  };
-
-  const handleCancelExchange = async () => {
-    const success = await deleteData(exchange.id);
-    if (success) {
-      toast.success("Échange annulé/terminé avec succès.");
-      if (onRefetch) await onRefetch();
-    } else {
-      toast.error("Erreur lors de l'annulation de l'échange.");
-    }
-    setIsDialogOpen(false);
-  };
-
-  return (
-    <Box
-      bg="yellow.100"
-      borderWidth="1px"
-      borderRadius="lg"
-      p={4}
-      shadow="md"
-      cursor="pointer"
-      _hover={{ bg: "gray.50" }}
-      onClick={handleCardClick}
-    >
-      <VStack align="start" spacing={3}>
-        <Text fontWeight="bold" fontSize="lg">
-          {exchange.item?.name || "Objet inconnu"}
-        </Text>
-
-        <Badge
-          colorPalette={
-            exchange.status === "Approved"
-              ? "green"
-              : exchange.status === "Pending"
-                ? "yellow"
-                : "gray"
-          }
+    const navigate = useNavigate()
+console.log(exchange)
+    return (
+        <Box
+            borderWidth="1px"
+            borderRadius="lg"
+            p={4}
+            shadow="md"
+            bg="white"
+            width="100%"
+            _hover={{ bg: "gray.50", transition: "0.2s" }}
         >
-          {exchange.status}
-        </Badge>
+            {item ? (
+                <>
+                    <Text fontSize="lg" fontWeight="bold" mb={2}>
+                        {item.name}
+                    </Text>
 
-        {/* Infos de l'autre utilisateur */}
-        <Box>
-          <Text fontSize="sm" color="gray.600">
-            {isBorrower ? "Propriétaire :" : "Emprunteur :"}
-          </Text>
-          <Text fontWeight="medium">
-            {otherUser.firstname} {otherUser.lastname}
-          </Text>
-          <Text fontSize="sm" color="gray.500">📧 {otherUser.email}</Text>
-          <Text fontSize="sm" color="gray.500">📞 {otherUser.phone}</Text>
+                    <HStack justify="space-between" mb={2}>
+                        <Badge
+                            colorPalette={
+                                status === "Approved"
+                                    ? "green"
+                                    : status === "Pending"
+                                        ? "yellow"
+                                        : "red"
+                            }
+                        >
+                            {status}
+                        </Badge>
+
+                        {status === "Approved" && (
+                            <Tooltip label="Ouvrir le chat" hasArrow>
+                                <Button
+                                    size="sm"
+                                    colorPalette="blue"
+                                    variant="outline"
+                                    onClick={() => navigate(`/chat/${exchange.id}`, { state: { exchange } })}
+
+                                >
+                                   <IoChatboxEllipses />   Discuter
+                                </Button>
+                            </Tooltip>
+                        )}
+                    </HStack>
+
+                    <VStack align="start" spacing={1} mt={1}>
+                        <Text fontSize="sm" color="gray.600">
+                            Du {new Date(start_date).toLocaleDateString()} au{" "}
+                            {new Date(end_date).toLocaleDateString()}
+                        </Text>
+                    </VStack>
+                </>
+            ) : (
+                <Text color="gray.500">Objet supprimé</Text>
+            )}
         </Box>
-
-        {/* Bouton d'action */}
-        <DialogRoot open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-          <DialogTrigger asChild>
-            <Button
-              size="sm"
-              colorPalette="red"
-              variant="outline"
-              onClick={(e) => {
-                e.stopPropagation(); // évite d’ouvrir la fiche item
-                setIsDialogOpen(true);
-              }}
-              isLoading={loading}
-            >
-              Annuler / Terminer
-            </Button>
-          </DialogTrigger>
-
-          <DialogContent>
-            <DialogHeader style={{ position: "relative" }}>
-              <DialogTitle>Confirmer l'action</DialogTitle>
-              <Button
-                size="sm"
-                variant="ghost"
-                onClick={() => setIsDialogOpen(false)}
-                style={{
-                  position: "absolute",
-                  top: "0.5rem",
-                  right: "0.5rem",
-                  fontSize: "1.2rem",
-                  lineHeight: "1",
-                }}
-                aria-label="Fermer"
-              >
-                ✕
-              </Button>
-            </DialogHeader>
-
-            <DialogBody>
-              <Text>
-                Voulez-vous vraiment annuler ou terminer cet échange pour{" "}
-                <strong>{exchange.item?.name}</strong> ?
-              </Text>
-            </DialogBody>
-
-            <DialogFooter>
-              <DialogActionTrigger asChild>
-                <Button colorPalette="red" onClick={handleCancelExchange}>
-                  Oui, confirmer
-                </Button>
-              </DialogActionTrigger>
-            </DialogFooter>
-          </DialogContent>
-        </DialogRoot>
-      </VStack>
-    </Box>
-  );
+    );
 };
 
 export default ExchangeCard;
