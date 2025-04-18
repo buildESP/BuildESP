@@ -9,7 +9,7 @@ const chalk = require('chalk');
 const { createServer } = require('http');
 const { Server } = require('socket.io');
 
-
+const JWT_SECRET = process.env.JWT_SECRET;
 const app = express();
 const port = process.env.PORT || 3000;
 
