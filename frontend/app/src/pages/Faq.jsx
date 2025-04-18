@@ -56,7 +56,7 @@ export default function Faq() {
               Comment m’inscrire sur Neighborrow ?
             </Heading>
             <Text mt={2}>
-              Téléchargez l’application (iOS/Android) ou visitez{" "}
+              connectez vous sur {" "}
               <Link
                 color="blue.500"
                 href="http://neighborrow.hephel.fr"
@@ -73,9 +73,7 @@ export default function Faq() {
               Dois-je fournir une pièce d’identité ?
             </Heading>
             <Text mt={2}>
-              Une vérification d’identité peut être requise pour prêter ou
-              emprunter des objets de valeur, afin de garantir la sécurité des
-              utilisateurs.
+              Non aucune pièce d'identité n'est requise, cependant  nous pouvons faire une vérification de votre profil et démander des documents en cas de doute.
             </Text>
           </Box>
           <Box mt={4}>
@@ -154,7 +152,7 @@ export default function Faq() {
               >
                 http://neighborrow.hephel.fr
               </Link>{" "}
-              ou via l’application.
+              et connectez-vous à votre compte.
             </Text>
             <Text mt={2}>
               2. Accédez à la page d’accueil ou à la section « Objets disponibles
