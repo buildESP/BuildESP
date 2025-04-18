@@ -22,7 +22,7 @@ import ConditionOfUs from "@/pages/ConditionOfUs";
 import ExchangesPage from "../pages/ExchangesPage";
 import ChatPage from "../pages/ChatPage";
 import MentionLegales from "@/pages/MentionLegales";
-import ExchangesPage from "@/pages/ExchangesPage";
+
 
 /**
  * @component AppRoutes
