@@ -33,6 +33,7 @@ app.use('/doc', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // CORS configuration
 const allowedOrigins = [
+  'http://15.237.77.97',
   'http://neighborrow.hephel.fr',
   'https://neighborrow.hephel.fr',
   'http://localhost:3000',
@@ -66,9 +67,16 @@ app.use('/api', chatRoutes);
 const server = createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: process.env.FRONTEND_URL || "*", 
-    methods: "*",
-    allowedHeaders: "*",
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        console.warn(`CORS blocked origin: ${origin}`);
+        callback(new Error('Not allowed by CORS (Socket.io)'));
+      }
+    },
+    methods: ["GET", "POST"],
+    credentials: true,
   },
 });
 
