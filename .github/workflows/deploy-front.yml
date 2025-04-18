@@ -3,7 +3,7 @@ name: Deploy Frontend
 on:
   push:
     branches:
-      - main
+      - master
     paths:
       - 'frontend/**'
 
@@ -43,8 +43,8 @@ jobs:
             git stash push -m "Sauvegarde des modifications locales" --keep-index || echo "Aucune modification locale à stasher"
 
             echo "📥 Pulling latest changes..."
-            git checkout main || git checkout -b main
-            git pull origin main --rebase
+            git checkout master || git checkout -b master
+            git pull origin master --rebase
 
             echo "📥 Restauration du .env..."
             git stash pop || echo "⚠️ Aucun stash à restaurer"
