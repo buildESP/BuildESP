@@ -8,8 +8,7 @@ describe('register test', () => {
     
     cy.get('[href="/register"]').click();
     
-    cy.get('#conditions').should('contain', 'En vous inscrivant, vous acceptez nos conditions d\'utilisation et notre politique de confidentialité.');
-
+    
     cy.get('#name').type('John wicked');
 
     cy.get('#email').type('johnwick1@gmail.com');

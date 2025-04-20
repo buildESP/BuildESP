@@ -6,7 +6,6 @@ describe('Logout test', () => {
       // Visit the login page
       cy.visit('http://localhost:8080/login'); // Update the URL to match your login page
   
-      cy.get('.css-e2gte6').click(); // Click on the login button to open the login dialog
       // Enter email
       cy.get('[placeholder="Email"]').type('alice.dupont@example.com'); // Update the selector to match your email input field
   
@@ -23,6 +22,5 @@ describe('Logout test', () => {
       cy.get('.css-cf46sk').click();
       cy.wait(1000);
       cy.url().should('include', '/'); // Update the URL to match your home page
-       // Update the selector to match your home page button
     });
 });
