@@ -1,6 +1,7 @@
-// Cypress Cheatsheet
-
+/* global cy */
+/// <reference types="cypress" />
 // Visiting a URL
+
 cy.visit('http://example.com');
 
 // Getting an element
