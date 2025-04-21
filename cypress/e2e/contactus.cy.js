@@ -14,9 +14,7 @@ describe('Contactez nous', () => {
   
       cy.get('button').should('be.visible');
       cy.get('.css-hek76k > .chakra-button').should('contain', 'Emprunter un objet');
-      cy.get('[href="mailto:neighborrow@hephel.fr"]').should('contain', 'Contactez-nous');
-    ; // Click on the "Mentions légales" button
-    
+      cy.get('[href="mailto:neighborrow@hephel.fr"]').should('contain', 'Contactez-nous');    
     });
   });
   

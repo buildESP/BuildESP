@@ -49,12 +49,7 @@ cy.get('.modal-close').click();        // Close a modal
 cy.debug(); // Pause and debug
 cy.log('Custom message'); // Log a custom message to the Cypress console
 
-// Custom Commands (Example)
-Cypress.Commands.add('login', (email, password) => {
-  cy.get('#email').type(email);
-  cy.get('#password').type(password);
-  cy.get('.login-button').click();
-});
+
 
 // Usage of custom command
 cy.login('user@example.com', 'password');
