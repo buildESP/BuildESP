@@ -3,10 +3,10 @@ name: Fullstack-CI-Pipeline
 on:
   push:
     branches:
-      - develop
+      - e2e-last-tests
   pull_request:
     branches:
-      - develop
+      - e2e-last-tests
 
 env:
   NODE_VERSION: '20.x'
