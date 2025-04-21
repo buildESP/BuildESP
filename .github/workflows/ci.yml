@@ -191,3 +191,45 @@ jobs:
         uses: codecov/codecov-action@v3
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
+
+  cypress-run:
+    needs: [init, test]  # Wait for both init and unit tests to complete
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        containers: [1, 2]  # Uses 2 parallel instances
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Restore frontend dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            frontend/app/node_modules
+            ~/.npm
+          key: ${{ runner.os }}-frontend-${{ hashFiles('frontend/app/package-lock.json') }}
+          restore-keys: ${{ runner.os }}-frontend-
+
+      - name: Install Cypress dependencies
+        working-directory: frontend/app
+        run: npm install cypress --save-dev --prefer-offline --no-audit
+
+      - name: Cypress run
+        uses: cypress-io/github-action@v6
+        with:
+          working-directory: frontend/app  # Your frontend directory
+          start: npm start  # Command to start your frontend server
+          wait-on: 'http://localhost:8080'  # Changed to port 8080
+          config-file: '../../cypress.config.js'  # Points to root cypress config
+          record: true
+          parallel: true
+        env:
+          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -1,6 +1,3 @@
-// cypress/support/e2e.js
-import '@cypress/code-coverage/support';
-// ... other support file imports
 // ***********************************************************
 // This example support/e2e.js is processed and
 // loaded automatically before your test files.
