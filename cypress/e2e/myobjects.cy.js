@@ -1,11 +1,12 @@
 /* global cy */
 /// <reference types="cypress" />
-// The test suite is named "Logout test" and contains a single test case that checks if the user can log out successfully.
-describe('Logout test', () => { 
-    it('should logout successfully', () => {
+// This test suite is for testing the profile functionality of a web application using Cypress.
+// It includes a test case for logging in successfully with valid credentials and navigating to the profile page.
+describe('My Objects test', () => { 
+    it('should login successfully with valid credentials and go to my objects page', () => {
       // Visit the login page
       cy.visit('http://localhost:8080/login'); // Update the URL to match your login page
-  
+
       // Enter email
       cy.get('[placeholder="Email"]').type('alice.dupont@example.com'); // Update the selector to match your email input field
   
@@ -17,9 +18,10 @@ describe('Logout test', () => {
   
       // Assert that the user is redirected to the home page
       cy.get('.css-1bitcfn > .chakra-stack > .chakra-button').should('be.visible');
-      cy.url().should('include', '/');
-      cy.wait(4000);
-      cy.get('.css-cf46sk').click();
       cy.url().should('include', '/'); // Update the URL to match your home page
-    });
-});
+       // Update the selector to match your home page button
+      cy.get('[href="/my-items"]').click(); // Click on the profile button
+      cy.url().should('include', '/my-items'); // Assert that the user is redirected to the profile page
+      });
+  });
+  

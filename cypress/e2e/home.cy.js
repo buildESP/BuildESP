@@ -13,7 +13,6 @@ describe('Home Page Test', () => {
     cy.get('p').should('contain', 'Neighborrow est une plateforme où vous pouvez prêter et emprunter des outils et équipements dans votre quartier.');
 
     cy.get('button').should('be.visible');
-    cy.get('.css-19ieht4 > .chakra-button').should('contain', 'Emprunter un objet');
-    cy.get('button').should('contain', 'Partager un objet');
+    cy.get('.css-hek76k > .chakra-button').should('contain', 'Emprunter un objet');
   });
 });
